@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+
+    <color name="main_grey_dark">#424242</color>
+    <color name="main_grey_light">#9e9e9e</color>
+    <color name="card">#fff</color>
+    <color name="divider">#1f000000</color>
+    <color name="dialog_background">#7f000000</color>
+
+    <color name="selected_item_color">#30d1d5</color>
+    <color name="navdrawer_selected_item_background">#1a000000</color>
 </resources>

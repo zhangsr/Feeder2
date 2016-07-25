@@ -1,3 +1,70 @@
 <resources>
     <string name="app_name">Feeder2</string>
+
+    <string name="remove_subscription">Remove Subscription</string>
+    <string name="today">Today</string>
+    <string name="yestoday">Yestoday</string>
+    <string name="before_yestoday">Day before Yestoday</string>
+    <string name="add_star_mark">Star</string>
+    <string name="remove_star_mark">Unstar</string>
+    <string name="mark_as_read">Mark as Read</string>
+    <string name="mark_as_unread">Mark as Unread</string>
+    <string name="add_subscription">Add Subscription</string>
+    <string name="add">Add</string>
+    <string name="cancel">cancel</string>
+    <string name="invalid_input">Invalid Input</string>
+    <string name="no_subscription_found">No Subscription Found</string>
+    <string name="add_subscription_content">Title, URL or Topic</string>
+    <string name="add_subscription_hint">e.g. cool</string>
+    <string name="none"/>
+    <string name="got_it">Got it</string>
+    <string name="all">All</string>
+    <string name="coming_soon">Coming Soon</string>
+    <string name="already_add">Already Added</string>
+    <string name="version">Version</string>
+    <string name="changelog">Change Log</string>
+    <string name="author">Author</string>
+    <string name="author_name">Match</string>
+    <string name="author_from">GuangZhou, China</string>
+    <string name="add_to_google_plus_circles">Add to Google Plus circles</string>
+    <string name="contact_on_wechat">Contact on Wechat</string>
+    <string name="fork_on_github">Fork on GitHub</string>
+    <string name="visit_website">Visit website</string>
+    <string name="support_development">Support development</string>
+    <string name="report_bugs">Report bugs</string>
+    <string name="report_bugs_summary">Report bugs or request new features.</string>
+    <string name="rate">Rate</string>
+    <string name="rate_summary">Leave a positive rating on store if you like Feeder.</string>
+    <string name="special_thanks_to">Special thanks to</string>
+    <string name="wechat_summary">ID: matchzsr</string>
+    <string name="aaron_swartz">Aaron Swartz</string>
+    <string name="about">About</string>
+    <string name="wechat">Wechat</string>
+    <string name="moment">Moments</string>
+    <string name="weibo">Weibo</string>
+    <string name="instapaper">Instapaper</string>
+    <string name="share_to">Share To</string>
+    <string name="google_plus">Google Plus</string>
+    <string name="pocket">Pocket</string>
+    <string name="share_complete">Share Complete</string>
+    <string name="share_failed">Share Failed</string>
+    <string name="share_cancel">Share Cancel</string>
+    <string name="share">Share</string>
+    <string name="share_summary">Share to friends if you like Feeder.</string>
+    <string name="app_share_desc">Rss app with material design and open source.</string>
+    <string name="settings">Settings</string>
+    <string name="reading_font_size">Reading font size</string>
+    <string name="account_management">Account Management</string>
+    <string name="account_feedly_add">Add Feedly Account</string>
+    <string name="font">Font</string>
+    <string name="account">Account</string>
+    <string name="small">Small</string>
+    <string name="big">Big</string>
+    <string name="medium">Medium</string>
+    <string name="copied">Copied</string>
+    <string-array name="font_size">
+        <item>@string/small</item>
+        <item>@string/medium</item>
+        <item>@string/big</item>
+    </string-array>
 </resources>

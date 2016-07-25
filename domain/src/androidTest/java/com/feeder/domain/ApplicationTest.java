@@ -1,4 +1,4 @@
-package me.zsr.feeder2;
+package com.feeder.domain;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

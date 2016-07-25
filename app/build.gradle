@@ -23,4 +23,17 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.android.support:cardview-v7:23.3.0'
+    compile 'com.bignerdranch.android:expandablerecyclerview:1.0.3'
+    compile project (':model')
+    compile project (':common')
+    compile project (':domain')
+    // Loading Animation
+    compile 'com.wang.avi:library:1.0.5'
+    compile 'com.nineoldandroids:library:2.4.0'
+    // Dialog
+    compile 'com.afollestad.material-dialogs:core:0.8.6.2'
+    // SystemBar
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 }

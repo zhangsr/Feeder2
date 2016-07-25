@@ -1,13 +1,27 @@
-<manifest package="me.zsr.feeder2"
+<manifest package="me.zsr.feeder"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
+        android:name="com.feeder.android.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <activity
+            android:name="com.feeder.android.views.MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.feeder.android.views.SettingsActivity"
+            android:label="@string/settings">
+        </activity>
     </application>
 
 </manifest>

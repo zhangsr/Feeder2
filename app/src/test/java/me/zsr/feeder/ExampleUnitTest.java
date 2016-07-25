@@ -1,4 +1,4 @@
-package me.zsr.feeder2;
+package me.zsr.feeder;
 
 import org.junit.Test;
 
