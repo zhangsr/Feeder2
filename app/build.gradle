@@ -34,6 +34,7 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     // Dialog
     compile 'com.afollestad.material-dialogs:core:0.8.6.2'
+    compile 'com.afollestad.material-dialogs:commons:0.8.6.2'
     // SystemBar
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 }

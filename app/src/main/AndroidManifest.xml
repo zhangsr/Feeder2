@@ -22,6 +22,10 @@
             android:name="com.feeder.android.views.SettingsActivity"
             android:label="@string/settings">
         </activity>
+        <activity
+            android:name="com.feeder.android.views.AboutActivity"
+            android:label="@string/about">
+        </activity>
     </application>
 
 </manifest>
