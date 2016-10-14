@@ -5,17 +5,15 @@ import com.feeder.model.Account;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * @description:
  * @author: Match
  * @date: 7/22/16
  */
-public class AccountController {
+public class AccountController extends BaseController {
     private static AccountController sAccountController;
     private List<Account> mAccountList = new ArrayList<>();
-    private List<AccountObserver> mObserverList = new ArrayList<>();
 
     private AccountController(){}
 
@@ -26,10 +24,12 @@ public class AccountController {
         return sAccountController;
     }
 
+    @Override
     public List<Account> getDataSource() {
         return mAccountList;
     }
 
+    @Override
     public void requestUpdate() {
         // TODO: 7/22/16 Test
         ThreadManager.postDelay(new Runnable() {
@@ -47,19 +47,4 @@ public class AccountController {
         }, 5000);
     }
 
-    public void registerObserver(AccountObserver observer) {
-        mObserverList.add(observer);
-    }
-
-    public void unRegisterObserver(AccountObserver observer) {
-        mObserverList.remove(observer);
-    }
-
-    private void notifyAll(ResponseState state) {
-        for (AccountObserver observer : mObserverList) {
-            if (observer != null) {
-                observer.onResponse(state);
-            }
-        }
-    }
 }

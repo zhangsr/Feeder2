@@ -3,7 +3,7 @@ package com.feeder.android.presenters;
 import com.feeder.android.mvp.IAccountsView;
 import com.feeder.android.mvp.MVPPresenter;
 import com.feeder.domain.AccountController;
-import com.feeder.domain.AccountObserver;
+import com.feeder.domain.DataObserver;
 import com.feeder.domain.ResponseState;
 
 /**
@@ -11,7 +11,7 @@ import com.feeder.domain.ResponseState;
  * @author: Match
  * @date: 7/18/16
  */
-public class AccountsPresenter implements MVPPresenter, AccountObserver {
+public class AccountsPresenter implements MVPPresenter, DataObserver {
     private IAccountsView mAccountsView;
 
     public AccountsPresenter(IAccountsView accountsView) {

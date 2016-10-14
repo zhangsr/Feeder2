@@ -1,5 +1,6 @@
 package com.feeder.android.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -151,6 +152,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     @OnClick({
+            R.id.account_feedly_layout,
             R.id.font_size_layout,
             R.id.wechat_layout,
             R.id.moment_layout,
@@ -161,6 +163,9 @@ public class SettingsActivity extends BaseActivity {
     })
     public void layoutOnClick(View view) {
         switch (view.getId()) {
+            case R.id.account_feedly_layout:
+                startActivity(new Intent(SettingsActivity.this, AuthInoreaderActivity.class));
+                break;
             case R.id.font_size_layout:
                 showSingleChoice();
                 break;

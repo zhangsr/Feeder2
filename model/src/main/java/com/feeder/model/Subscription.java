@@ -26,6 +26,8 @@ public class Subscription {
 
     private String desc;
 
+    private String category;
+
     public String getDesc() {
         return this.desc;
     }
@@ -82,9 +84,17 @@ public class Subscription {
         this.id = id;
     }
 
-    @Generated(hash = 2026528081)
+    public String getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    @Generated(hash = 1983330477)
     public Subscription(Long id, String title, String iconUrl, String url,
-            Long time, String siteUrl, String desc) {
+            Long time, String siteUrl, String desc, String category) {
         this.id = id;
         this.title = title;
         this.iconUrl = iconUrl;
@@ -92,6 +102,7 @@ public class Subscription {
         this.time = time;
         this.siteUrl = siteUrl;
         this.desc = desc;
+        this.category = category;
     }
 
     @Generated(hash = 1800298428)

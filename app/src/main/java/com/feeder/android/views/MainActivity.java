@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.feeder.android.mvp.IAccountsView;
+import com.feeder.android.mvp.ISubscriptionsView;
 import com.feeder.android.mvp.MVPPresenter;
 import com.feeder.android.presenters.AccountsPresenter;
+import com.feeder.android.presenters.SubscriptionsPresenter;
 
 import me.zsr.feeder.R;
 
@@ -21,6 +23,7 @@ import me.zsr.feeder.R;
  */
 public class MainActivity extends BaseActivity {
     private MVPPresenter mAccountsPresenter;
+    private MVPPresenter mSubscriptionsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class MainActivity extends BaseActivity {
         initDetailsPanel();
 
         mAccountsPresenter.onCreate();
+        mSubscriptionsPresenter.onCreate();
     }
 
     private void initDrawerPanel() {
@@ -63,7 +67,11 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initDetailsPanel() {
-        ViewGroup detailsPanel = (ViewGroup) findViewById(R.id.details_panel);
+        LinearLayout detailsPanel = (LinearLayout) findViewById(R.id.details_panel);
+        ISubscriptionsView subscriptionsView = new SubscriptionsView(this);
+        LinearLayout.LayoutParams subscriptionsViewLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);
+        detailsPanel.addView(subscriptionsView, subscriptionsViewLp);
+        mSubscriptionsPresenter = new SubscriptionsPresenter(subscriptionsView);
     }
 
     @Override
@@ -71,6 +79,7 @@ public class MainActivity extends BaseActivity {
         super.onStart();
 
         mAccountsPresenter.onStart();
+        mSubscriptionsPresenter.onStart();
     }
 
     @Override
@@ -78,5 +87,6 @@ public class MainActivity extends BaseActivity {
         super.onStop();
 
         mAccountsPresenter.onStop();
+        mSubscriptionsPresenter.onStop();
     }
 }

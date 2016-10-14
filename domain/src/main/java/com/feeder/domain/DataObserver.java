@@ -5,6 +5,6 @@ package com.feeder.domain;
  * @author: Match
  * @date: 7/22/16
  */
-public interface AccountObserver {
+public interface DataObserver {
     void onResponse(ResponseState state);
 }
