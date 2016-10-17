@@ -37,6 +37,10 @@
             android:screenOrientation="portrait"
             android:label="AuthInoreader">
         </activity>
+        <activity
+            android:name="com.feeder.android.views.AddSubscriptionActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

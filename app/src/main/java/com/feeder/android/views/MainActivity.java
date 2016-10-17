@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -68,6 +69,13 @@ public class MainActivity extends BaseActivity {
 
     private void initDetailsPanel() {
         LinearLayout detailsPanel = (LinearLayout) findViewById(R.id.details_panel);
+        Button addSubscriptionButton = (Button) detailsPanel.findViewById(R.id.add_subscription_btn);
+        addSubscriptionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AddSubscriptionActivity.class));
+            }
+        });
         ISubscriptionsView subscriptionsView = new SubscriptionsView(this);
         LinearLayout.LayoutParams subscriptionsViewLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);
         detailsPanel.addView(subscriptionsView, subscriptionsViewLp);

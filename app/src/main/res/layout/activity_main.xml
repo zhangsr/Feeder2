@@ -10,7 +10,25 @@
         android:orientation="vertical"
         android:background="@android:color/holo_red_dark"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:padding="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/add_subscription_btn"
+                android:layout_gravity="center_vertical"
+                android:layout_width="48dp"
+                android:layout_height="48dp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/drawer_panel"
@@ -18,5 +36,6 @@
         android:background="@android:color/white"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
