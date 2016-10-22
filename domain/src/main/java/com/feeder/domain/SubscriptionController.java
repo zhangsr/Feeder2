@@ -36,12 +36,12 @@ public class SubscriptionController extends BaseController {
 
     @Override
     public void requestUpdate() {
-        // TODO: 7/22/16 Test
         ThreadManager.postDelay(new Runnable() {
             @Override
             public void run() {
                 mSubscriptionList.clear();
                 mSubscriptionList.addAll(mQuery.list());
+                // TODO: 10/22/16 network sync
                 SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
             }
         }, 1000);
