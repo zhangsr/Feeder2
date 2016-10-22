@@ -47,7 +47,7 @@ public class SubscriptionsView extends ISubscriptionsView {
 
     @Override
     public void notifyDataChanged() {
-
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.feeder.domain;
 import com.feeder.common.ThreadManager;
 import com.feeder.model.Subscription;
 
+import org.greenrobot.greendao.query.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +16,11 @@ import java.util.List;
 public class SubscriptionController extends BaseController {
     private static SubscriptionController sAccountController;
     private List<Subscription> mSubscriptionList = new ArrayList<>();
+    private Query<Subscription> mQuery;
 
-    private SubscriptionController(){}
+    private SubscriptionController(){
+        mQuery = DBManager.getSubscriptionDao().queryBuilder().build();
+    }
 
     public static SubscriptionController getInstance() {
         if (sAccountController == null) {
@@ -35,18 +40,21 @@ public class SubscriptionController extends BaseController {
         ThreadManager.postDelay(new Runnable() {
             @Override
             public void run() {
-                if (mSubscriptionList.size() == 0) {
-                    mSubscriptionList.add(new Subscription());
-                    mSubscriptionList.add(new Subscription());
-                    mSubscriptionList.add(new Subscription());
-                    mSubscriptionList.add(new Subscription());
-                    mSubscriptionList.add(new Subscription());
-                    mSubscriptionList.add(new Subscription());
-                    SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
-                } else {
-                    SubscriptionController.this.notifyAll(ResponseState.NO_CHANGE);
-                }
+                mSubscriptionList.clear();
+                mSubscriptionList.addAll(mQuery.list());
+                SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
             }
-        }, 3000);
+        }, 1000);
+    }
+
+    public void insert(final Subscription subscription) {
+        ThreadManager.postInBackground(new Runnable() {
+            @Override
+            public void run() {
+                DBManager.getSubscriptionDao().insertOrReplace(subscription);
+                SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
+                // TODO: 10/18/16 how about error ?
+            }
+        });
     }
 }

@@ -3,6 +3,7 @@ package com.feeder.model;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Index;
 
 /**
  * @description:
@@ -13,6 +14,9 @@ import org.greenrobot.greendao.annotation.Generated;
 public class Subscription {
     @Id
     private Long id;
+
+    @Index(unique = true)
+    private String key;
     
     private String title;
 
@@ -27,6 +31,8 @@ public class Subscription {
     private String desc;
 
     private String category;
+
+    private String sortid;
 
     public String getDesc() {
         return this.desc;
@@ -92,10 +98,27 @@ public class Subscription {
         this.category = category;
     }
 
-    @Generated(hash = 1983330477)
-    public Subscription(Long id, String title, String iconUrl, String url,
-            Long time, String siteUrl, String desc, String category) {
+    public String getSortid() {
+        return this.sortid;
+    }
+
+    public void setSortid(String sortid) {
+        this.sortid = sortid;
+    }
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    @Generated(hash = 1919070078)
+    public Subscription(Long id, String key, String title, String iconUrl, String url,
+            Long time, String siteUrl, String desc, String category, String sortid) {
         this.id = id;
+        this.key = key;
         this.title = title;
         this.iconUrl = iconUrl;
         this.url = url;
@@ -103,6 +126,7 @@ public class Subscription {
         this.siteUrl = siteUrl;
         this.desc = desc;
         this.category = category;
+        this.sortid = sortid;
     }
 
     @Generated(hash = 1800298428)

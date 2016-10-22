@@ -6,6 +6,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -14,8 +15,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.feeder.common.ThreadManager;
+import com.feeder.domain.FeedlyUtils;
+import com.feeder.domain.SubscriptionController;
 import com.feeder.domain.VolleySingleton;
 import com.feeder.model.FeedlyResult;
+import com.feeder.model.Subscription;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -98,6 +102,15 @@ public class AddSubscriptionActivity extends BaseActivity {
                     mResultListView.setVisibility(View.GONE);
                 }
                 return true;
+            }
+        });
+        mResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final FeedlyResult result = mResultList.get(position);
+                Subscription subscription = FeedlyUtils.result2Subscription(result);
+                SubscriptionController.getInstance().insert(subscription);
+                dismiss();
             }
         });
     }

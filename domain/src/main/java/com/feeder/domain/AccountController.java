@@ -36,9 +36,6 @@ public class AccountController extends BaseController {
             @Override
             public void run() {
                 if (mAccountList.size() == 0) {
-                    mAccountList.add(new Account(1L, "TestAccount1", ""));
-                    mAccountList.add(new Account(2L, "TestAccount2", ""));
-                    mAccountList.add(new Account(3L, "TestAccount3", ""));
                     AccountController.this.notifyAll(ResponseState.SUCCESS);
                 } else {
                     AccountController.this.notifyAll(ResponseState.NO_CHANGE);

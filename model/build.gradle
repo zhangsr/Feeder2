@@ -24,7 +24,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.greenrobot:greendao-gradle-plugin:3.0.0'
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.0'
     }
 }
 
@@ -32,7 +32,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'org.greenrobot:greendao:3.0.1'
+    compile 'org.greenrobot:greendao:3.2.0'
     compile project (':common')
 }
 
