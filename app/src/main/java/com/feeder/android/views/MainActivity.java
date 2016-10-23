@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity {
         ISubscriptionsView subscriptionsView = new SubscriptionsView(this);
         LinearLayout.LayoutParams subscriptionsViewLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);
         detailsPanel.addView(subscriptionsView, subscriptionsViewLp);
-        mSubscriptionsPresenter = new SubscriptionsPresenter(subscriptionsView);
+        mSubscriptionsPresenter = new SubscriptionsPresenter(this, subscriptionsView);
     }
 
     @Override

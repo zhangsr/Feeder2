@@ -1,10 +1,13 @@
 package com.feeder.android.presenters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import com.feeder.android.mvp.ISubscriptionsView;
 import com.feeder.android.mvp.MVPPresenter;
 import com.feeder.android.utils.SubscriptionViewObserver;
+import com.feeder.android.views.ArticleActivity;
 import com.feeder.domain.DataObserver;
 import com.feeder.domain.ResponseState;
 import com.feeder.domain.SubscriptionController;
@@ -16,9 +19,11 @@ import com.feeder.model.Subscription;
  * @date: 8/4/16
  */
 public class SubscriptionsPresenter implements MVPPresenter, DataObserver, SubscriptionViewObserver {
-    ISubscriptionsView mSubscriptionView;
+    private ISubscriptionsView mSubscriptionView;
+    private Context mContext;
 
-    public SubscriptionsPresenter(ISubscriptionsView subscriptionsView) {
+    public SubscriptionsPresenter(Context context, ISubscriptionsView subscriptionsView) {
+        mContext = context;
         mSubscriptionView = subscriptionsView;
         mSubscriptionView.setObserver(this);
     }
@@ -56,5 +61,6 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     @Override
     public void onItemClick(View view, Subscription data) {
         mSubscriptionView.showToast(data.getTitle() + " clicked");
+        mContext.startActivity(new Intent(mContext, ArticleActivity.class));
     }
 }
