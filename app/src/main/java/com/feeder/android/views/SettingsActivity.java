@@ -87,11 +87,11 @@ public class SettingsActivity extends BaseActivity {
     private void initView() {
         initSystemBar();
 
-        mAccountManageImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mFeedlyIconImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mFeedlyAddImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
+        mAccountManageImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mFeedlyIconImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mFeedlyAddImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
 
-        mFontSizeImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
+        mFontSizeImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
         setFontSizeText(SPManager.getInt(KEY_FONT_SIZE, FONT_SIZE_MEDIUM));
 
         mWechatSwitch.setChecked(SPManager.getBoolean(KEY_SWITCH_SHARE_WECHAT, true));

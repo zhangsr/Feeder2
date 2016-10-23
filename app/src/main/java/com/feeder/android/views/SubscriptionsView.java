@@ -29,7 +29,6 @@ public class SubscriptionsView extends ISubscriptionsView {
         super(context);
         mRecyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.view_subscriptions, this, false);
 
-
         mLayoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(mLayoutManager);
         addView(mRecyclerView);
@@ -55,7 +54,7 @@ public class SubscriptionsView extends ISubscriptionsView {
         List<Category> categoryList = new ArrayList<>();
         categoryList.add(new Category(subscriptionList));
 
-        mAdapter = new SubscriptionAdapter(getContext(), categoryList);
+        mAdapter = new SubscriptionAdapter(getContext(), categoryList, mObserver);
         mRecyclerView.setAdapter(mAdapter);
     }
 }

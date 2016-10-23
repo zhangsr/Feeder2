@@ -66,16 +66,16 @@ public class AboutActivity extends BaseActivity {
         initSystemBar();
 
         mVersionNameTextView.setText(BuildConfig.VERSION_NAME);
-        mInfoImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mChangelogImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mAuthorImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mGooglePlusImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mGithubImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mWebImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mBugImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mStoreImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mWechatImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
-        mShareImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
+        mInfoImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mChangelogImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mAuthorImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mGooglePlusImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mGithubImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mWebImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mBugImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mStoreImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mWechatImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mShareImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
     }
 
     @Override

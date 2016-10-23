@@ -1,4 +1,5 @@
 <android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:fitsSystemWindows="true"
     android:clipToPadding="false"
@@ -8,23 +9,41 @@
     <LinearLayout
         android:id="@+id/details_panel"
         android:orientation="vertical"
-        android:background="@android:color/holo_red_dark"
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
             android:padding="2dp"
+            android:background="@color/main_grey_dark"
             android:layout_width="match_parent"
             android:layout_height="48dp">
 
-            <View
+            <ImageButton
+                android:id="@+id/open_drawer_btn"
+                android:src="@drawable/ic_menu_white_24dp"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:tint="@color/white_87"
+                android:layout_width="48dp"
+                android:layout_height="48dp" />
+
+            <TextView
+                android:id="@+id/account_name_txt"
+                android:text="账号名"
+                android:textColor="@color/white_87"
+                android:gravity="center"
+                android:textSize="20sp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/add_subscription_btn"
+                android:src="@drawable/ic_add_white_24dp"
                 android:layout_gravity="center_vertical"
+                android:background="@drawable/button_background"
+                android:tint="@color/white_87"
                 android:layout_width="48dp"
                 android:layout_height="48dp" />
         </LinearLayout>

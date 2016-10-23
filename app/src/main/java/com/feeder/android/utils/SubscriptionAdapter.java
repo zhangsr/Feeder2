@@ -21,23 +21,26 @@ import me.zsr.feeder.R;
  */
 public class SubscriptionAdapter extends ExpandableRecyclerAdapter<CategoryViewHolder, SubscriptionViewHolder> {
     private Context mContext;
+    private SubscriptionViewObserver mObserver;
 
-    public SubscriptionAdapter(Context context, @NonNull List<? extends ParentListItem> parentItemList) {
+    public SubscriptionAdapter(Context context, @NonNull List<? extends ParentListItem> parentItemList,
+                               SubscriptionViewObserver observer) {
         super(parentItemList);
         mContext = context;
+        mObserver = observer;
     }
 
     // onCreate ...
     @Override
     public CategoryViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
-        View recipeView = LayoutInflater.from(mContext).inflate(R.layout.subscriptions_category, parentViewGroup, false);
-        return new CategoryViewHolder(recipeView);
+        View categoryView = LayoutInflater.from(mContext).inflate(R.layout.subscriptions_category, parentViewGroup, false);
+        return new CategoryViewHolder(categoryView);
     }
 
     @Override
     public SubscriptionViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
-        View ingredientView = LayoutInflater.from(mContext).inflate(R.layout.subscriptions_item, childViewGroup, false);
-        return new SubscriptionViewHolder(ingredientView);
+        View itemView = LayoutInflater.from(mContext).inflate(R.layout.subscriptions_item, childViewGroup, false);
+        return new SubscriptionViewHolder(itemView);
     }
 
     // onBind ...
@@ -49,7 +52,12 @@ public class SubscriptionAdapter extends ExpandableRecyclerAdapter<CategoryViewH
 
     @Override
     public void onBindChildViewHolder(SubscriptionViewHolder subscriptionViewHolder, int position, Object childListItem) {
-        Subscription subscription = (Subscription) childListItem;
-        subscriptionViewHolder.bind(subscription);
+        final Subscription subscription = (Subscription) childListItem;
+        subscriptionViewHolder.bind(subscription, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mObserver.onItemClick(v, subscription);
+            }
+        });
     }
 }

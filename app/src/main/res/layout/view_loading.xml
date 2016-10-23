@@ -5,5 +5,5 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:indicator_color="@color/main_grey_light"
+    app:indicator_color="@color/main_grey_normal"
     app:indicator="BallClipRotateMultiple"/>

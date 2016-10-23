@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import me.zsr.feeder.R;
 
@@ -27,4 +28,8 @@ public abstract class MVPView extends FrameLayout {
     public abstract void showLoading();
     public abstract void hideLoading();
     public abstract void notifyDataChanged();
+
+    public void showToast(String content) {
+        Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
+    }
 }

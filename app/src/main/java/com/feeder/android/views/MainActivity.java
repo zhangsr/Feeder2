@@ -2,10 +2,12 @@ package com.feeder.android.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -25,6 +27,7 @@ import me.zsr.feeder.R;
 public class MainActivity extends BaseActivity {
     private MVPPresenter mAccountsPresenter;
     private MVPPresenter mSubscriptionsPresenter;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class MainActivity extends BaseActivity {
 
         initSystemBar();
         setContentView(R.layout.activity_main);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         initDrawerPanel();
         initDetailsPanel();
 
@@ -48,7 +52,7 @@ public class MainActivity extends BaseActivity {
 
         View settingsEntrance = LayoutInflater.from(this).inflate(R.layout.settings_entrance, drawerPanel, false);
         drawerPanel.addView(settingsEntrance);
-        ((ImageView) settingsEntrance.findViewById(R.id.settings_img)).setColorFilter(getResources().getColor(R.color.main_grey_light));
+        ((ImageView) settingsEntrance.findViewById(R.id.settings_img)).setColorFilter(getResources().getColor(R.color.main_grey_normal));
         settingsEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +62,7 @@ public class MainActivity extends BaseActivity {
 
         View aboutEntrance = LayoutInflater.from(this).inflate(R.layout.about_entrance, drawerPanel, false);
         drawerPanel.addView(aboutEntrance);
-        ((ImageView) aboutEntrance.findViewById(R.id.about_img)).setColorFilter(getResources().getColor(R.color.main_grey_light));
+        ((ImageView) aboutEntrance.findViewById(R.id.about_img)).setColorFilter(getResources().getColor(R.color.main_grey_normal));
         aboutEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,11 +73,18 @@ public class MainActivity extends BaseActivity {
 
     private void initDetailsPanel() {
         LinearLayout detailsPanel = (LinearLayout) findViewById(R.id.details_panel);
-        Button addSubscriptionButton = (Button) detailsPanel.findViewById(R.id.add_subscription_btn);
+        ImageButton addSubscriptionButton = (ImageButton) detailsPanel.findViewById(R.id.add_subscription_btn);
         addSubscriptionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, AddSubscriptionActivity.class));
+            }
+        });
+        ImageButton openDrawerButton = (ImageButton) detailsPanel.findViewById(R.id.open_drawer_btn);
+        openDrawerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawerLayout.openDrawer(GravityCompat.START);
             }
         });
         ISubscriptionsView subscriptionsView = new SubscriptionsView(this);
