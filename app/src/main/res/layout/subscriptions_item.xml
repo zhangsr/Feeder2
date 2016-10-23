@@ -8,12 +8,12 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <ImageButton
-        android:src="@drawable/ic_rss_feed_white_24dp"
-        android:background="@null"
-        android:tint="@color/black_87"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/subscription_icon"
+        android:src="@drawable/ic_rss_feed_black_24dp"
+        android:alpha="0.87"
+        android:layout_width="24dp"
+        android:layout_height="24dp"/>
 
     <TextView
         android:id="@+id/subscription_name"
