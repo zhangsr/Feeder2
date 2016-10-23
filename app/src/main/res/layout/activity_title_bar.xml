@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/title_bar"
+              android:gravity="center_vertical"
+              android:background="@color/main_grey_dark"
+              android:layout_width="match_parent"
+              android:layout_height="48dp">
+
+    <ImageButton
+        android:id="@+id/back_btn"
+        android:src="@drawable/ic_keyboard_backspace_white_24dp"
+        android:background="@drawable/rect_selector"
+        android:tint="@color/white_87"
+        android:layout_width="48dp"
+        android:layout_height="48dp"/>
+
+    <TextView
+        android:id="@+id/title_txt"
+        android:textColor="@color/white_87"
+        android:textSize="20sp"
+        android:layout_marginLeft="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

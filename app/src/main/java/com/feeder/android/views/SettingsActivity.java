@@ -3,10 +3,10 @@ package com.feeder.android.views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,8 +29,11 @@ public class SettingsActivity extends BaseActivity {
     public static final String KEY_SWITCH_SHARE_INSTAPAPER = "switch_share_instapaper";
     public static final String KEY_SWITCH_SHARE_GOOGLE_PLUS = "switch_share_google_plus";
     public static final String KEY_SWITCH_SHARE_POCKET = "switch_share_pocket";
-    @Bind(R.id.toolbar)
-    Toolbar mToolbar;
+
+    @Bind(R.id.back_btn)
+    ImageButton mBackButton;
+    @Bind(R.id.title_txt)
+    TextView mTitleTextView;
 
     @Bind(R.id.account_manage_img)
     ImageView mAccountManageImageView;
@@ -86,6 +89,8 @@ public class SettingsActivity extends BaseActivity {
 
     private void initView() {
         initSystemBar();
+
+        mTitleTextView.setText(getTitle());
 
         mAccountManageImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
         mFeedlyIconImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
@@ -152,6 +157,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     @OnClick({
+            R.id.back_btn,
             R.id.account_feedly_layout,
             R.id.font_size_layout,
             R.id.wechat_layout,
@@ -163,6 +169,9 @@ public class SettingsActivity extends BaseActivity {
     })
     public void layoutOnClick(View view) {
         switch (view.getId()) {
+            case R.id.back_btn:
+                finish();
+                break;
             case R.id.account_feedly_layout:
                 startActivity(new Intent(SettingsActivity.this, AuthInoreaderActivity.class));
                 break;

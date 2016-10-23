@@ -108,4 +108,14 @@ public class MainActivity extends BaseActivity {
         mAccountsPresenter.onStop();
         mSubscriptionsPresenter.onStop();
     }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            // TODO: 10/23/16 add confirm dialog to avoid accident exit
+            super.onBackPressed();
+        }
+    }
 }

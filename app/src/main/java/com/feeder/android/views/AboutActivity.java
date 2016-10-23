@@ -5,9 +5,9 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +31,10 @@ public class AboutActivity extends BaseActivity {
     private static final String URL_STORE = "http://www.wandoujia.com/apps/me.zsr.feeder";
     private static final String URL_AARON_SWARTZ = "https://en.wikipedia.org/wiki/Aaron_Swartz";
     private static final String URL_SHARE = "http://fir.im/vdwa";
+    @Bind(R.id.back_btn)
+    ImageButton mBackButton;
+    @Bind(R.id.title_txt)
+    TextView mTitleTextView;
     @Bind(R.id.version_name_txt)
     TextView mVersionNameTextView;
     @Bind(R.id.info_img)
@@ -53,8 +57,6 @@ public class AboutActivity extends BaseActivity {
     ImageView mWechatImageView;
     @Bind(R.id.share_img)
     ImageView mShareImageView;
-    @Bind(R.id.toolbar)
-    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class AboutActivity extends BaseActivity {
         // TODO: 11/26/15 why not work to call in BaseActivity ?
         initSystemBar();
 
+        mTitleTextView.setText(getTitle());
         mVersionNameTextView.setText(BuildConfig.VERSION_NAME);
         mInfoImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
         mChangelogImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
@@ -96,6 +99,7 @@ public class AboutActivity extends BaseActivity {
     }
 
     @OnClick({
+            R.id.back_btn,
             R.id.change_log_layout,
             R.id.wechat_layout,
             R.id.google_plus_layout,
@@ -107,6 +111,9 @@ public class AboutActivity extends BaseActivity {
     })
     public void layoutOnClick(View view) {
         switch (view.getId()) {
+            case R.id.back_btn:
+                finish();
+                break;
             case R.id.change_log_layout:
                 showChangeLogDialog();
                 break;
