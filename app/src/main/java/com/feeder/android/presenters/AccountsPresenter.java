@@ -32,7 +32,6 @@ public class AccountsPresenter implements MVPPresenter, DataObserver {
 
     @Override
     public void onStop() {
-
         AccountController.getInstance().unRegisterObserver(this);
     }
 

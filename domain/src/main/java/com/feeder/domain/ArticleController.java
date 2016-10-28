@@ -2,9 +2,11 @@ package com.feeder.domain;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.feeder.common.ThreadManager;
 import com.feeder.model.Article;
 import com.feeder.model.Subscription;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,15 +16,35 @@ import java.util.List;
  */
 
 public class ArticleController extends BaseController {
+    private static ArticleController sArticleController;
+    private List<Article> mArticleList = new ArrayList<>();
+
+    private ArticleController(){}
+
+    public static ArticleController getInstance() {
+        if (sArticleController == null) {
+            sArticleController = new ArticleController();
+        }
+        return sArticleController;
+    }
 
     @Override
-    public List<?> getDataSource() {
-        return null;
+    public List<Article> getDataSource() {
+        return mArticleList;
     }
 
     @Override
     public void requestUpdate() {
-
+        ThreadManager.postDelay(new Runnable() {
+            @Override
+            public void run() {
+                mArticleList.clear();
+                Article a1 = new Article();
+                a1.setDescription("Test");
+                mArticleList.add(a1);
+                ArticleController.this.notifyAll(ResponseState.SUCCESS);
+            }
+        }, 1000);
     }
 
     public void requestUpdate(Subscription subscription) {

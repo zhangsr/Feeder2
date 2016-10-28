@@ -42,6 +42,7 @@ public class SubscriptionController extends BaseController {
                 mSubscriptionList.clear();
                 mSubscriptionList.addAll(mQuery.list());
                 // TODO: 10/22/16 network sync
+                // TODO: 10/28/16 do in background
                 SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
             }
         }, 1000);

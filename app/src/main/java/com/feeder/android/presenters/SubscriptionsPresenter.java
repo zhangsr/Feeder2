@@ -7,7 +7,7 @@ import android.view.View;
 import com.feeder.android.mvp.ISubscriptionsView;
 import com.feeder.android.mvp.MVPPresenter;
 import com.feeder.android.utils.SubscriptionViewObserver;
-import com.feeder.android.views.ArticleActivity;
+import com.feeder.android.views.ArticleListActivity;
 import com.feeder.domain.DataObserver;
 import com.feeder.domain.ResponseState;
 import com.feeder.domain.SubscriptionController;
@@ -61,6 +61,6 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     @Override
     public void onItemClick(View view, Subscription data) {
         mSubscriptionView.showToast(data.getTitle() + " clicked");
-        mContext.startActivity(new Intent(mContext, ArticleActivity.class));
+        mContext.startActivity(new Intent(mContext, ArticleListActivity.class));
     }
 }
