@@ -3,6 +3,7 @@ package com.feeder.domain;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.feeder.model.ArticleDao;
 import com.feeder.model.DaoMaster;
 import com.feeder.model.DaoSession;
 import com.feeder.model.SubscriptionDao;
@@ -28,4 +29,7 @@ public class DBManager {
         return sDaoSession.getSubscriptionDao();
     }
 
+    public static ArticleDao getArticleDao() {
+        return sDaoSession.getArticleDao();
+    }
 }

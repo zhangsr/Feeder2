@@ -64,7 +64,7 @@ public class ArticleActivity extends BaseActivity {
     private void loadDataAsync(Long articleId) {
         Article article = new Article();
         article.setTitle("如何读懂并写出装逼的函数式代码");
-        article.setPublished(DateUtil.parseRfc822("Sun, 23 Oct 2016 09:56:29 +0000").getTime());
+        article.setPublished(com.feeder.common.DateUtil.parseRfc822("Sun, 23 Oct 2016 09:56:29 +0000").getTime());
         article.setContent("<![CDATA[<p><img src=\"http://coolshell.cn//wp-content/uploads/2016/10/drawing-recursive-300x204.jpg\" alt=\"drawing-recursive\" width=\"300\" height=\"204\" class=\"alignright size-medium wp-image-17535\" srcset=\"http://coolshell.cn//wp-content/uploads/2016/10/drawing-recursive-300x204.jpg 300w, http://coolshell.cn//wp-content/uploads/2016/10/drawing-recursive-768x522.jpg 768w, http://coolshell.cn//wp-content/uploads/2016/10/drawing-recursive-1024x696.jpg 1024w, http://coolshell.cn//wp-content/uploads/2016/10/drawing-recursive.jpg 1100w\" sizes=\"(max-width: 300px) 100vw, 300px\" />今天在微博上看到了 有人<a href=\"http://weibo.com/1655747731/Ee4gU0qNn\" target=\"_blank\">分享了下面的这段函数式代码</a>，我把代码贴到下面，不过我对原来的代码略有改动，对于函数式的版本，咋一看，的确令人非常费解，仔细看一下，你可能就晕掉了，似乎完全就是天书，看上去非常装逼，哈哈。不过，我感觉解析那段函数式的代码可能会一个比较有趣过程，而且，我以前写过一篇《<a href=\"http://coolshell.cn/articles/10822.html\" target=\"_blank\">函数式编程</a>》的入门式的文章，正好可以用这个例子，再升华一下原来的那篇文章，顺便可以向大家更好的介绍很多基础知识，所以写下这篇文章。</p>\n" +
                 "<h4>先看代码</h4>\n" +
                 "<p>这个代码平淡无奇，就是从一个数组中找到一个数，O(n)的算法，找不到就返回 null。</p>\n" +

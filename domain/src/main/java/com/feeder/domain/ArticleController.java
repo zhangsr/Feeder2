@@ -6,6 +6,8 @@ import com.feeder.common.ThreadManager;
 import com.feeder.model.Article;
 import com.feeder.model.Subscription;
 
+import org.greenrobot.greendao.query.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +20,11 @@ import java.util.List;
 public class ArticleController extends BaseController {
     private static ArticleController sArticleController;
     private List<Article> mArticleList = new ArrayList<>();
+    private Query<Article> mQuery;
 
-    private ArticleController(){}
+    private ArticleController(){
+        mQuery = DBManager.getArticleDao().queryBuilder().build();
+    }
 
     public static ArticleController getInstance() {
         if (sArticleController == null) {
@@ -39,25 +44,26 @@ public class ArticleController extends BaseController {
             @Override
             public void run() {
                 mArticleList.clear();
-                Article a1 = new Article();
-                a1.setDescription("Test");
-                mArticleList.add(a1);
+                mArticleList.addAll(mQuery.list());
+
                 ArticleController.this.notifyAll(ResponseState.SUCCESS);
             }
         }, 1000);
     }
 
-    public void requestUpdate(Subscription subscription) {
+    public void requestNetwork(Subscription subscription) {
         if (subscription == null) {
             ArticleController.this.notifyAll(ResponseState.ERROR);
             return;
         }
         ArticleListRequest request = new ArticleListRequest(
-                subscription.getUrl(),
+                subscription,
                 new Response.Listener<List<Article>>() {
                     @Override
                     public void onResponse(List<Article> response) {
-
+                        // TODO: 10/29/16 remove dulplicated
+                        response.size();
+//                        insert(response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -68,5 +74,19 @@ public class ArticleController extends BaseController {
                 }
         );
         VolleySingleton.getInstance().addToRequestQueue(request);
+    }
+
+    public void insert(final List<Article> articleList) {
+        if (articleList == null) {
+            return;
+        }
+        ThreadManager.postInBackground(new Runnable() {
+            @Override
+            public void run() {
+                DBManager.getArticleDao().insertOrReplaceInTx(articleList);
+                ArticleController.this.notifyAll(ResponseState.SUCCESS);
+                // TODO: 10/18/16 how about error ?
+            }
+        });
     }
 }

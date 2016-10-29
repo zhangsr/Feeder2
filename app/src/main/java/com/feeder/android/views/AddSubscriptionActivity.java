@@ -15,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.feeder.common.ThreadManager;
+import com.feeder.domain.ArticleController;
 import com.feeder.domain.FeedlyUtils;
 import com.feeder.domain.SubscriptionController;
 import com.feeder.domain.VolleySingleton;
@@ -110,6 +111,7 @@ public class AddSubscriptionActivity extends BaseActivity {
                 final FeedlyResult result = mResultList.get(position);
                 Subscription subscription = FeedlyUtils.result2Subscription(result);
                 SubscriptionController.getInstance().insert(subscription);
+                ArticleController.getInstance().requestNetwork(subscription);
                 dismiss();
             }
         });
