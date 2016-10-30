@@ -2,7 +2,6 @@ package com.feeder.android.mvp;
 
 import android.content.Context;
 
-import com.feeder.android.utils.SubscriptionViewObserver;
 import com.feeder.model.Subscription;
 
 import java.util.List;

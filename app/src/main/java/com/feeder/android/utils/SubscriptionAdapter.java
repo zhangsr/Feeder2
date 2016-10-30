@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
+import com.feeder.android.mvp.SubscriptionViewObserver;
 import com.feeder.model.Subscription;
 
 import java.util.List;

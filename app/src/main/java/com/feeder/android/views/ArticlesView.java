@@ -35,7 +35,7 @@ public class ArticlesView extends IArticlesView {
 
     @Override
     public void setDataSource(List<Article> articleList) {
-        mAdapter = new ArticleAdapter(articleList);
+        mAdapter = new ArticleAdapter(articleList, mObserver);
         mRecyclerView.setAdapter(mAdapter);
     }
 

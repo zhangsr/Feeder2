@@ -15,15 +15,27 @@ import me.zsr.feeder.R;
  */
 
 public class ArticleViewHolder extends RecyclerView.ViewHolder {
+    private View mItemView;
+    private TextView mTitleTextView;
     private TextView mDescTextView;
+    private TextView mTimeTextView;
 
     public ArticleViewHolder(View itemView) {
         super(itemView);
 
+        mItemView = itemView;
+        mTitleTextView = (TextView) itemView.findViewById(R.id.article_title);
         mDescTextView = (TextView) itemView.findViewById(R.id.article_desc);
+        mTimeTextView = (TextView) itemView.findViewById(R.id.article_time);
     }
 
-    public void bind(Article article) {
+    public void bind(Article article, View.OnClickListener listener) {
+        if (article == null) {
+            return;
+        }
+        mItemView.setOnClickListener(listener);
+        mTitleTextView.setText(article.getTitle());
         mDescTextView.setText(article.getDescription());
+        mTimeTextView.setText(DateUtil.formatTime(article.getPublished()));
     }
 }

@@ -1,4 +1,4 @@
-package com.feeder.android.utils;
+package com.feeder.android.mvp;
 
 import android.view.View;
 

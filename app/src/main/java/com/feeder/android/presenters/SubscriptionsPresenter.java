@@ -8,7 +8,7 @@ import android.view.View;
 import com.feeder.android.mvp.ISubscriptionsView;
 import com.feeder.android.mvp.MVPPresenter;
 import com.feeder.android.utils.Constants;
-import com.feeder.android.utils.SubscriptionViewObserver;
+import com.feeder.android.mvp.SubscriptionViewObserver;
 import com.feeder.android.views.ArticleListActivity;
 import com.feeder.domain.DataObserver;
 import com.feeder.domain.ResponseState;

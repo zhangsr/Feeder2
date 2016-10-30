@@ -33,12 +33,7 @@ public class SubscriptionViewHolder extends ChildViewHolder {
         if (subscription == null) {
             return;
         }
-        mItemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onClick(v);
-            }
-        });
+        mItemView.setOnClickListener(listener);
         mNameTextView.setText(subscription.getTitle());
         mIconImageView.setImageUrl(subscription.getIconUrl(), VolleySingleton.getInstance().getImageLoader());
     }

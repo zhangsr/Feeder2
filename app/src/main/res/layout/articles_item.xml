@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp"
+              android:paddingTop="8dp"
+              android:paddingBottom="8dp"
+              android:background="@drawable/rect_selector"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/article_title"
+        android:maxLines="2"
+        android:layout_width="match_parent"
+        android:ellipsize="end"
+        android:textSize="16sp"
+        android:textColor="@color/main_grey_dark"
+        android:alpha="0.87"
+        android:text="大数据营销分析公司 Amplero 获得 800万美元 A 轮融资，利用机器学习技术预测客户生命周期价值"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/article_desc"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textSize="12sp"
+        android:textColor="@color/main_grey_normal"
+        android:alpha="0.54"
+        android:text="Amplero 是一个利用大数据技术，预测、管理客户生命周期价值的服务平台，可以帮助企业客户减少获取客户成本"
         android:layout_width="match_parent"
-        android:layout_height="100dp"/>
+        android:layout_height="wrap_content"/>
+
+    <!-- TODO optimize time position -->
+    <TextView
+        android:id="@+id/article_time"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textSize="12sp"
+        android:textColor="@color/main_grey_normal"
+        android:alpha="0.54"
+        android:text="14:36"
+        android:gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
