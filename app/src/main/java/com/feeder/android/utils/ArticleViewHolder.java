@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 import com.feeder.model.Article;
 
+import org.jsoup.Jsoup;
+
 import me.zsr.feeder.R;
 
 /**
@@ -35,7 +37,18 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
         }
         mItemView.setOnClickListener(listener);
         mTitleTextView.setText(article.getTitle());
-        mDescTextView.setText(article.getDescription());
+        mDescTextView.setText(getOptimizedDesc(article.getDescription()));
         mTimeTextView.setText(DateUtil.formatTime(article.getPublished()));
+    }
+
+    private String getOptimizedDesc(String originDesc) {
+        // Shrink string to optimize render time
+        String result = "";
+        String parsedStr = Jsoup.parse(originDesc).text();
+        int showLength = parsedStr.length() < 50 ? parsedStr.length() : 50;
+        if (showLength > 0) {
+            result = parsedStr.substring(0, showLength - 1);
+        }
+        return result;
     }
 }

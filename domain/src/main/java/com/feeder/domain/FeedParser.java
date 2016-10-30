@@ -140,18 +140,7 @@ public class FeedParser {
         parser.require(XmlPullParser.START_TAG, null, DESC);
         String desc = readText(parser);
         parser.require(XmlPullParser.END_TAG, null, DESC);
-        return optimizeDesc(desc);
-    }
-
-    private static String optimizeDesc(String originStr) {
-        // Shrink string to optimize render time
-        String result = "";
-        String parsedStr = Jsoup.parse(originStr).text();
-        int showLength = parsedStr.length() < 50 ? parsedStr.length() : 50;
-        if (showLength > 0) {
-            result = parsedStr.substring(0, showLength - 1);
-        }
-        return result;
+        return desc;
     }
 
     private static String readContent(XmlPullParser parser) throws IOException, XmlPullParserException {

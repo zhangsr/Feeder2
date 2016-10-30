@@ -32,7 +32,7 @@ public class ArticleListActivity extends BaseActivity {
         container.addView(articlesView, articlesViewLp);
 
         Long id = getIntent().getExtras().getLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID);
-        mArticlePresenter = new ArticlesPresenter(articlesView, id);
+        mArticlePresenter = new ArticlesPresenter(this, articlesView, id);
         mArticlePresenter.onCreate();
     }
 

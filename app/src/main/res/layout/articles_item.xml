@@ -40,7 +40,6 @@
         android:textColor="@color/main_grey_normal"
         android:alpha="0.54"
         android:text="14:36"
-        android:gravity="end"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>
