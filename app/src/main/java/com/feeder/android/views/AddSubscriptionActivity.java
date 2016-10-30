@@ -111,7 +111,6 @@ public class AddSubscriptionActivity extends BaseActivity {
                 final FeedlyResult result = mResultList.get(position);
                 Subscription subscription = FeedlyUtils.result2Subscription(result);
                 SubscriptionController.getInstance().insert(subscription);
-                ArticleController.getInstance().requestNetwork(subscription);
                 dismiss();
             }
         });

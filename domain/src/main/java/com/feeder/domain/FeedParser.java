@@ -130,23 +130,24 @@ public class FeedParser {
 
     private static String readPubDate(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, PUB_DATE);
-        String title = readText(parser);
+        String pubData = readText(parser);
         parser.require(XmlPullParser.END_TAG, null, PUB_DATE);
-        return title;
+        return pubData;
     }
 
     private static String readDesc(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, DESC);
-        String title = readText(parser);
+        String desc = readText(parser);
+        // TODO: 10/30/16 optimize desc
         parser.require(XmlPullParser.END_TAG, null, DESC);
-        return title;
+        return desc;
     }
 
     private static String readContent(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, CONTENT);
-        String title = readText(parser);
+        String content = readText(parser);
         parser.require(XmlPullParser.END_TAG, null, CONTENT);
-        return title;
+        return content;
     }
 
     private static String readText(XmlPullParser parser) throws IOException, XmlPullParserException {

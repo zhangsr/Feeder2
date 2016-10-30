@@ -27,7 +27,7 @@ public class AccountsPresenter implements MVPPresenter, DataObserver {
     @Override
     public void onStart() {
         AccountController.getInstance().registerObserver(this);
-        AccountController.getInstance().requestUpdate();
+        AccountController.getInstance().requestData();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class AccountsPresenter implements MVPPresenter, DataObserver {
     }
 
     @Override
-    public void onResponse(ResponseState state) {
+    public void onDataResponse(ResponseState state) {
         switch (state) {
             case SUCCESS:
                 mAccountsView.hideLoading();

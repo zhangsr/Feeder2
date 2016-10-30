@@ -35,7 +35,7 @@ public class SubscriptionController extends BaseController {
     }
 
     @Override
-    public void requestUpdate() {
+    public void requestData() {
         ThreadManager.postDelay(new Runnable() {
             @Override
             public void run() {
@@ -54,6 +54,7 @@ public class SubscriptionController extends BaseController {
             public void run() {
                 DBManager.getSubscriptionDao().insertOrReplace(subscription);
                 SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
+                ArticleController.getInstance().requestNetwork(subscription);
                 // TODO: 10/18/16 how about error ?
             }
         });

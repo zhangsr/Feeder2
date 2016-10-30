@@ -14,21 +14,24 @@ import com.feeder.domain.ResponseState;
 
 public class ArticlesPresenter implements MVPPresenter, DataObserver {
     private IArticlesView mArticlesView;
+    private long mSubscriptionId;
 
-    public ArticlesPresenter(IArticlesView articlesView) {
+    public ArticlesPresenter(IArticlesView articlesView, long subscriptionId) {
         mArticlesView = articlesView;
+        mSubscriptionId = subscriptionId;
     }
 
     @Override
     public void onCreate() {
         mArticlesView.showLoading();
-        mArticlesView.setDataSource(ArticleController.getInstance().getDataSource());
+        mArticlesView.setDataSource(ArticleController.getInstance().getDataSource(mSubscriptionId));
     }
 
     @Override
     public void onStart() {
         ArticleController.getInstance().registerObserver(this);
-        ArticleController.getInstance().requestUpdate();
+        ArticleController.getInstance().requestData(mSubscriptionId);
+        ArticleController.getInstance().requestNetwork(mSubscriptionId);
     }
 
     @Override
@@ -37,7 +40,7 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver {
     }
 
     @Override
-    public void onResponse(ResponseState state) {
+    public void onDataResponse(ResponseState state) {
         switch (state) {
             case SUCCESS:
                 mArticlesView.hideLoading();

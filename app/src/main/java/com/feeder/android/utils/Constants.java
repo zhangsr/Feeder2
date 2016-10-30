@@ -7,5 +7,5 @@ package com.feeder.android.utils;
  */
 
 public class Constants {
-    public static final String KEY_BUNDLE_ITEM_ID = "article_id";
+    public static final String KEY_BUNDLE_SUBSCRIPTION_ID = "subscription_id";
 }

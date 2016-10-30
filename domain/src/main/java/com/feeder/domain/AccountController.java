@@ -30,7 +30,7 @@ public class AccountController extends BaseController {
     }
 
     @Override
-    public void requestUpdate() {
+    public void requestData() {
         // TODO: 7/22/16 Test
         ThreadManager.postDelay(new Runnable() {
             @Override

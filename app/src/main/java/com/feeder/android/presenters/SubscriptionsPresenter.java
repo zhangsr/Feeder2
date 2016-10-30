@@ -2,10 +2,12 @@ package com.feeder.android.presenters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 
 import com.feeder.android.mvp.ISubscriptionsView;
 import com.feeder.android.mvp.MVPPresenter;
+import com.feeder.android.utils.Constants;
 import com.feeder.android.utils.SubscriptionViewObserver;
 import com.feeder.android.views.ArticleListActivity;
 import com.feeder.domain.DataObserver;
@@ -37,7 +39,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     @Override
     public void onStart() {
         SubscriptionController.getInstance().registerObserver(this);
-        SubscriptionController.getInstance().requestUpdate();
+        SubscriptionController.getInstance().requestData();
     }
 
     @Override
@@ -46,7 +48,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     }
 
     @Override
-    public void onResponse(ResponseState state) {
+    public void onDataResponse(ResponseState state) {
         switch (state) {
             case SUCCESS:
                 mSubscriptionView.hideLoading();
@@ -61,6 +63,10 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     @Override
     public void onItemClick(View view, Subscription data) {
         mSubscriptionView.showToast(data.getTitle() + " clicked");
-        mContext.startActivity(new Intent(mContext, ArticleListActivity.class));
+        Intent intent = new Intent(mContext, ArticleListActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID, data.getId());
+        intent.putExtras(bundle);
+        mContext.startActivity(intent);
     }
 }

@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import com.feeder.android.mvp.IArticlesView;
 import com.feeder.android.mvp.MVPPresenter;
 import com.feeder.android.presenters.ArticlesPresenter;
+import com.feeder.android.utils.Constants;
 
 import me.zsr.feeder.R;
 
@@ -29,7 +30,9 @@ public class ArticleListActivity extends BaseActivity {
         IArticlesView articlesView = new ArticlesView(this);
         LinearLayout.LayoutParams articlesViewLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);
         container.addView(articlesView, articlesViewLp);
-        mArticlePresenter = new ArticlesPresenter(articlesView);
+
+        Long id = getIntent().getExtras().getLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID);
+        mArticlePresenter = new ArticlesPresenter(articlesView, id);
         mArticlePresenter.onCreate();
     }
 

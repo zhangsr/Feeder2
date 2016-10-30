@@ -1,5 +1,7 @@
 package com.feeder.domain;
 
+import com.feeder.common.ThreadManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ public abstract class BaseController {
 
     public abstract List<?> getDataSource();
 
-    public abstract void requestUpdate();
+    public abstract void requestData();
 
     public void registerObserver(DataObserver observer) {
         mObserverList.add(observer);
@@ -23,11 +25,16 @@ public abstract class BaseController {
         mObserverList.remove(observer);
     }
 
-    protected void notifyAll(ResponseState state) {
-        for (DataObserver observer : mObserverList) {
-            if (observer != null) {
-                observer.onResponse(state);
+    protected void notifyAll(final ResponseState state) {
+        ThreadManager.post(new Runnable() {
+            @Override
+            public void run() {
+                for (DataObserver observer : mObserverList) {
+                    if (observer != null) {
+                        observer.onDataResponse(state);
+                    }
+                }
             }
-        }
+        });
     }
 }

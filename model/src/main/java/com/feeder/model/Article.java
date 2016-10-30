@@ -121,4 +121,16 @@ public class Article {
     @Generated(hash = 742516792)
     public Article() {
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return trash;
+        }
+        if (o.getClass() == Article.class) {
+            Article article = (Article) o;
+            return article.getTitle().equals(getTitle());
+        }
+        return false;
+    }
 }
