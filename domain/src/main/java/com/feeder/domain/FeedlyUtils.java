@@ -24,7 +24,9 @@ public class FeedlyUtils {
                 result.website,
                 result.description,
                 "",
-                ""
+                "",
+                0L,
+                0L
         );
         return subscription;
     }

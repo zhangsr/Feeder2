@@ -1,6 +1,7 @@
 package com.feeder.android.utils;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
+import com.feeder.model.Subscription;
 
 import java.util.List;
 
@@ -12,14 +13,14 @@ import java.util.List;
 public class Category implements ParentListItem {
 
     // a recipe contains several ingredients
-    private List mSubscriptionList;
+    private List<Subscription> mSubscriptionList;
 
-    public Category(List subscriptionList) {
+    public Category(List<Subscription> subscriptionList) {
         mSubscriptionList = subscriptionList;
     }
 
     @Override
-    public List getChildItemList() {
+    public List<Subscription> getChildItemList() {
         return mSubscriptionList;
     }
 

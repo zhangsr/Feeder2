@@ -34,6 +34,10 @@ public class Subscription {
 
     private String sortid;
 
+    private Long totalCount;
+
+    private Long unreadCount;
+
     public String getDesc() {
         return this.desc;
     }
@@ -114,9 +118,26 @@ public class Subscription {
         this.key = key;
     }
 
-    @Generated(hash = 1919070078)
+    public Long getTotalCount() {
+        return this.totalCount;
+    }
+
+    public void setTotalCount(Long totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    public Long getUnreadCount() {
+        return this.unreadCount;
+    }
+
+    public void setUnreadCount(Long unreadCount) {
+        this.unreadCount = unreadCount;
+    }
+
+    @Generated(hash = 776652558)
     public Subscription(Long id, String key, String title, String iconUrl, String url,
-            Long time, String siteUrl, String desc, String category, String sortid) {
+            Long time, String siteUrl, String desc, String category, String sortid,
+            Long totalCount, Long unreadCount) {
         this.id = id;
         this.key = key;
         this.title = title;
@@ -127,6 +148,8 @@ public class Subscription {
         this.desc = desc;
         this.category = category;
         this.sortid = sortid;
+        this.totalCount = totalCount;
+        this.unreadCount = unreadCount;
     }
 
     @Generated(hash = 1800298428)

@@ -1,6 +1,7 @@
 package com.feeder.domain;
 
 import com.feeder.common.ThreadManager;
+import com.feeder.model.ArticleDao;
 import com.feeder.model.Subscription;
 
 import org.greenrobot.greendao.query.Query;
@@ -43,7 +44,7 @@ public class SubscriptionController extends BaseController {
                 mSubscriptionList.addAll(mQuery.list());
                 // TODO: 10/22/16 network sync
                 // TODO: 10/28/16 do in background
-                SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
+                fillAndNotify();
             }
         }, 1000);
     }
@@ -53,10 +54,26 @@ public class SubscriptionController extends BaseController {
             @Override
             public void run() {
                 DBManager.getSubscriptionDao().insertOrReplace(subscription);
-                SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
+                fillAndNotify();
                 ArticleController.getInstance().requestNetwork(subscription);
                 // TODO: 10/18/16 how about error ?
             }
         });
+    }
+
+    /**
+     * Must run in background
+     */
+    private void fillAndNotify() {
+        for (Subscription subscription : mSubscriptionList) {
+            long totalCount = DBManager.getArticleDao().queryBuilder().where(
+                    ArticleDao.Properties.SubscriptionId.eq(subscription.getId())).count();
+            long unreadCount = DBManager.getArticleDao().queryBuilder().where(
+                    ArticleDao.Properties.SubscriptionId.eq(subscription.getId()),
+                    ArticleDao.Properties.Read.eq(false)).count();
+            subscription.setTotalCount(totalCount);
+            subscription.setUnreadCount(unreadCount);
+        }
+        SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
     }
 }

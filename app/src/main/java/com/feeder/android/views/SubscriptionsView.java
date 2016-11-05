@@ -8,9 +8,7 @@ import android.view.LayoutInflater;
 import com.feeder.android.mvp.ISubscriptionsView;
 import com.feeder.android.utils.Category;
 import com.feeder.android.utils.SubscriptionAdapter;
-import com.feeder.model.Subscription;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.zsr.feeder.R;
@@ -22,7 +20,7 @@ import me.zsr.feeder.R;
  */
 public class SubscriptionsView extends ISubscriptionsView {
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private SubscriptionAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public SubscriptionsView(Context context) {
@@ -50,10 +48,7 @@ public class SubscriptionsView extends ISubscriptionsView {
     }
 
     @Override
-    public void setDataSource(List<Subscription> subscriptionList) {
-        List<Category> categoryList = new ArrayList<>();
-        categoryList.add(new Category(subscriptionList));
-
+    public void setDataSource(List<Category> categoryList) {
         mAdapter = new SubscriptionAdapter(getContext(), categoryList, mObserver);
         mRecyclerView.setAdapter(mAdapter);
     }

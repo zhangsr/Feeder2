@@ -2,7 +2,7 @@ package com.feeder.android.mvp;
 
 import android.content.Context;
 
-import com.feeder.model.Subscription;
+import com.feeder.android.utils.Category;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public abstract class ISubscriptionsView extends MVPView {
         super(context);
     }
 
-    public abstract void setDataSource(List<Subscription> subscriptionList);
+    public abstract void setDataSource(List<Category> categoryList);
 
     public void setObserver(SubscriptionViewObserver observer) {
         mObserver = observer;
