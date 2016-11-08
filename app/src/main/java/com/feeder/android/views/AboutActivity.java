@@ -25,9 +25,9 @@ import me.zsr.feeder.R;
 
 public class AboutActivity extends BaseActivity {
     private static final String ID_WECHAT = "matchzsr";
-    private static final String URL_GITHUB = "https://github.com/zhangsr/Feeder";
+    private static final String URL_GITHUB = "https://github.com/zhangsr/Feeder2";
     private static final String URL_GOOGLE_PLUS = "https://plus.google.com/108838785221141135915";
-    private static final String URL_BUG = "https://github.com/zhangsr/Feeder/issues";
+    private static final String URL_BUG = "https://github.com/zhangsr/Feeder2/issues";
     private static final String URL_STORE = "http://www.wandoujia.com/apps/me.zsr.feeder";
     private static final String URL_AARON_SWARTZ = "https://en.wikipedia.org/wiki/Aaron_Swartz";
     private static final String URL_SHARE = "http://fir.im/vdwa";
@@ -39,8 +39,8 @@ public class AboutActivity extends BaseActivity {
     TextView mVersionNameTextView;
     @Bind(R.id.info_img)
     ImageView mInfoImageView;
-    @Bind(R.id.change_log_img)
-    ImageView mChangelogImageView;
+//    @Bind(R.id.change_log_img)
+//    ImageView mChangelogImageView;
     @Bind(R.id.author_img)
     ImageView mAuthorImageView;
     @Bind(R.id.google_plus_img)
@@ -70,7 +70,7 @@ public class AboutActivity extends BaseActivity {
         mTitleTextView.setText(getTitle());
         mVersionNameTextView.setText(BuildConfig.VERSION_NAME);
         mInfoImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
-        mChangelogImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+//        mChangelogImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
         mAuthorImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
         mGooglePlusImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
         mGithubImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
@@ -100,7 +100,7 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick({
             R.id.back_btn,
-            R.id.change_log_layout,
+//            R.id.change_log_layout,
             R.id.wechat_layout,
             R.id.google_plus_layout,
             R.id.github_layout,
@@ -114,9 +114,9 @@ public class AboutActivity extends BaseActivity {
             case R.id.back_btn:
                 finish();
                 break;
-            case R.id.change_log_layout:
-                showChangeLogDialog();
-                break;
+//            case R.id.change_log_layout:
+//                showChangeLogDialog();
+//                break;
             case R.id.wechat_layout:
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("Wechat ID", ID_WECHAT);
@@ -139,7 +139,8 @@ public class AboutActivity extends BaseActivity {
                 openUrl(URL_AARON_SWARTZ);
                 break;
             case R.id.share_layout:
-                showShareMenu();
+                // TODO: 11/6/16
+//                showShareMenu();
                 break;
         }
     }

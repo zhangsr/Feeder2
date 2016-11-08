@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">Feeder</string>
+
+    <string name="remove_subscription">取消订阅</string>
+    <string name="today">今天</string>
+    <string name="yestoday">昨天</string>
+    <string name="before_yestoday">前天</string>
+    <string name="add_star_mark">加上星标</string>
+    <string name="remove_star_mark">取消星标</string>
+    <string name="mark_as_read">标记为已读</string>
+    <string name="mark_as_unread">标记为未读</string>
+    <string name="add_subscription">添加订阅</string>
+    <string name="add">添加</string>
+    <string name="cancel">取消</string>
+    <string name="invalid_input">无效的输入</string>
+    <string name="no_subscription_found">没有找到订阅</string>
+    <string name="add_subscription_content">标题、网址或主题</string>
+    <string name="add_subscription_hint">例如输入：酷</string>
+    <string name="none"/>
+    <string name="got_it">知道了</string>
+    <string name="all">全部</string>
+    <string name="coming_soon">敬请期待</string>
+    <string name="already_add">已经添加过了</string>
+    <string name="version">版本</string>
+    <string name="changelog">更新日志</string>
+    <string name="author">作者</string>
+    <string name="author_name">Match</string>
+    <string name="author_from">中国，广州</string>
+    <string name="add_to_google_plus_circles">添加到 Google+ 圈子</string>
+    <string name="contact_on_wechat">通过微信联系</string>
+    <string name="fork_on_github">参与 GitHub 项目</string>
+    <string name="visit_website">访问网站</string>
+    <string name="support_development">支持开发者</string>
+    <string name="report_bugs">提交 bug</string>
+    <string name="report_bugs_summary">提交 bug 或新功能建议</string>
+    <string name="rate">评价</string>
+    <string name="rate_summary">如果你喜欢 Feeder 请在应用市场中留下你的好评。</string>
+    <string name="special_thanks_to">特别感谢</string>
+    <string name="wechat_summary">ID: matchzsr</string>
+    <string name="aaron_swartz">亚伦 斯沃茨</string>
+    <string name="about">关于</string>
+    <string name="wechat">微信</string>
+    <string name="moment">朋友圈</string>
+    <string name="weibo">微博</string>
+    <string name="instapaper">Instapaper</string>
+    <string name="share_to">分享到</string>
+    <string name="google_plus">Google+</string>
+    <string name="pocket">Pocket</string>
+    <string name="share_complete">分享完成</string>
+    <string name="share_failed">分享失败</string>
+    <string name="share_cancel">分享取消</string>
+    <string name="share">分享</string>
+    <string name="share_summary">如果你喜欢 Feeder 请把它分享给你的朋友</string>
+    <string name="app_share_desc">Rss 阅读器，开源，Material Design。</string>
+    <string name="settings">设置</string>
+    <string name="reading_font_size">阅读字体大小</string>
+    <string name="account_management">账号管理</string>
+    <string name="font">字体</string>
+    <string name="account">账号</string>
+    <string name="small">小</string>
+    <string name="big">大</string>
+    <string name="medium">中</string>
+    <string name="copied">ID已复制</string>
+    <string name="account_feedly_add">添加 Feedly 账号</string>
+    <string-array name="font_size">
+        <item>@string/small</item>
+        <item>@string/medium</item>
+        <item>@string/big</item>
+    </string-array>
+</resources>

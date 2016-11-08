@@ -37,7 +37,7 @@ public class DateUtil {
         } else if (isSameDay(date, beforeYestoday)) {
             return context.getResources().getString(R.string.before_yestoday);
         } else {
-            return DateFormat.format("yyyy年MM月dd日 EEEE", date);
+            return DateFormat.format("yyyy年MM月dd日", date);
         }
     }
 

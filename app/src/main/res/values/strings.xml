@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Feeder2</string>
+    <string name="app_name">Feeder</string>
 
     <string name="remove_subscription">Remove Subscription</string>
     <string name="today">Today</string>
@@ -61,7 +61,7 @@
     <string name="small">Small</string>
     <string name="big">Big</string>
     <string name="medium">Medium</string>
-    <string name="copied">Copied</string>
+    <string name="copied">ID Copied</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>

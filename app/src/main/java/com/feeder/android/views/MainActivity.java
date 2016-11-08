@@ -50,15 +50,15 @@ public class MainActivity extends BaseActivity {
         drawerPanel.addView(accountsView, accountsViewLp);
         mAccountsPresenter = new AccountsPresenter(accountsView);
 
-        View settingsEntrance = LayoutInflater.from(this).inflate(R.layout.settings_entrance, drawerPanel, false);
-        drawerPanel.addView(settingsEntrance);
-        ((ImageView) settingsEntrance.findViewById(R.id.settings_img)).setColorFilter(getResources().getColor(R.color.main_grey_normal));
-        settingsEntrance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-            }
-        });
+//        View settingsEntrance = LayoutInflater.from(this).inflate(R.layout.settings_entrance, drawerPanel, false);
+//        drawerPanel.addView(settingsEntrance);
+//        ((ImageView) settingsEntrance.findViewById(R.id.settings_img)).setColorFilter(getResources().getColor(R.color.main_grey_normal));
+//        settingsEntrance.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+//            }
+//        });
 
         View aboutEntrance = LayoutInflater.from(this).inflate(R.layout.about_entrance, drawerPanel, false);
         drawerPanel.addView(aboutEntrance);
