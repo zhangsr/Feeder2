@@ -29,7 +29,6 @@
 
             <TextView
                 android:id="@+id/account_name_txt"
-                android:text="账号名"
                 android:textColor="@color/white_87"
                 android:gravity="center"
                 android:textSize="20sp"

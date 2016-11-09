@@ -36,6 +36,11 @@ public class AccountsPresenter implements MVPPresenter, DataObserver {
     }
 
     @Override
+    public void onDestroy() {
+
+    }
+
+    @Override
     public void onDataResponse(ResponseState state) {
         switch (state) {
             case SUCCESS:

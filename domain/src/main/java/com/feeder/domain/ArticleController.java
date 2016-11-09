@@ -8,9 +8,8 @@ import com.feeder.model.ArticleDao;
 import com.feeder.model.Subscription;
 import com.feeder.model.SubscriptionDao;
 
-import org.greenrobot.greendao.query.Query;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,12 +23,7 @@ public class ArticleController extends BaseController {
     private static final long ID_ALL = 0L;
     private static ArticleController sArticleController;
     private List<Article> mArticleList = new ArrayList<>();
-    private Query<Article> mQuery;
     private long mCurrentSubscriptionId = ID_UNKNOWN;
-
-    private ArticleController(){
-        mQuery = DBManager.getArticleDao().queryBuilder().build();
-    }
 
     public static ArticleController getInstance() {
         if (sArticleController == null) {
@@ -53,27 +47,29 @@ public class ArticleController extends BaseController {
 
     @Override
     public void requestData() {
-        ThreadManager.postDelay(new Runnable() {
+        ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
                 mCurrentSubscriptionId = ID_ALL;
                 mArticleList.clear();
-                mArticleList.addAll(mQuery.list());
+                mArticleList.addAll(DBManager.getArticleDao().queryBuilder().where(
+                        ArticleDao.Properties.Trash.eq(false)).list());
                 ArticleController.this.notifyAll(ResponseState.SUCCESS);
             }
-        }, 1000);
+        });
     }
 
     public void requestData(final long subscriptionId) {
-        ThreadManager.postDelay(new Runnable() {
+        ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
                 mCurrentSubscriptionId = subscriptionId;
                 mArticleList.clear();
                 updateMemoryIfNeed(subscriptionId, DBManager.getArticleDao().queryBuilder().where(
-                        ArticleDao.Properties.SubscriptionId.eq(subscriptionId)).list());
+                        ArticleDao.Properties.SubscriptionId.eq(subscriptionId),
+                        ArticleDao.Properties.Trash.eq(false)).list(), false);
             }
-        }, 1000);
+        });
     }
 
     public void requestNetwork(final long subscriptionId) {
@@ -135,26 +131,69 @@ public class ArticleController extends BaseController {
                     // TODO: 10/18/16 how about error ?
                     DBManager.getArticleDao().insertInTx(newArticleList);
                 }
-                updateMemoryIfNeed(subscriptionId, newArticleList);
+                updateMemoryIfNeed(subscriptionId, newArticleList, false);
             }
         });
     }
 
-    private void updateMemoryIfNeed(long subscriptionId, List<Article> articleList) {
+    private void updateMemoryIfNeed(long subscriptionId, List<Article> articleList, boolean force) {
         if (subscriptionId != mCurrentSubscriptionId) {
             return;
         }
-        boolean changed = false;
-        for (Article article : articleList) {
-            if (!mArticleList.contains(article)) {
-                mArticleList.add(article);
-                changed = true;
+        if (!force) {
+            boolean changed = false;
+            for (Article article : articleList) {
+                if (!mArticleList.contains(article)) {
+                    mArticleList.add(article);
+                    changed = true;
+                }
             }
-        }
-        if (changed) {
-            ArticleController.this.notifyAll(ResponseState.SUCCESS);
+            if (changed) {
+                ArticleController.this.notifyAll(ResponseState.SUCCESS);
+            } else {
+                ArticleController.this.notifyAll(ResponseState.NO_CHANGE);
+            }
         } else {
-            ArticleController.this.notifyAll(ResponseState.NO_CHANGE);
+            ArticleController.this.notifyAll(ResponseState.SUCCESS);
         }
+    }
+    
+    public void markArticlesRead(Article... articles) {
+        if (articles == null) {
+            return;
+        }
+        final List<Article> articleList = Arrays.asList(articles);
+        if (articleList.size() == 0) {
+            return;
+        }
+        ThreadManager.postInBackground(new Runnable() {
+            @Override
+            public void run() {
+                for (Article article : articleList) {
+                    article.setRead(true);
+                }
+                DBManager.getArticleDao().updateInTx(articleList);
+                updateMemoryIfNeed(articleList.get(0).getSubscriptionId(), mArticleList, true);
+            }
+        });
+    }
+
+    /**
+     * Mark trashed to avoid pull again
+     */
+    public void markReadTrash() {
+        // TODO: 11/9/16 print key value, ex: time cost by delete
+        ThreadManager.postInBackground(new Runnable() {
+            @Override
+            public void run() {
+                List<Article> articleListToTrash = DBManager.getArticleDao().queryBuilder().where(
+                        ArticleDao.Properties.Read.eq(true),
+                        ArticleDao.Properties.Trash.eq(false)).list();
+                for (Article article : articleListToTrash) {
+                    article.setTrash(true);
+                }
+                DBManager.getArticleDao().updateInTx(articleListToTrash);
+            }
+        });
     }
 }

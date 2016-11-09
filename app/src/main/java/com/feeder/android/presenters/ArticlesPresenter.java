@@ -52,6 +52,11 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
     }
 
     @Override
+    public void onDestroy() {
+
+    }
+
+    @Override
     public void onDataResponse(ResponseState state) {
         switch (state) {
             case SUCCESS:
@@ -66,7 +71,10 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
 
     @Override
     public void onItemClick(View view, Article data) {
-        mArticlesView.showToast(data.getTitle());
+        if (!data.getRead()) {
+            ArticleController.getInstance().markArticlesRead(data);
+        }
+
         Intent intent = new Intent(mContext, ArticleActivity.class);
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.KEY_BUNDLE_ARTICLE_ID, data.getId());

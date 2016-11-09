@@ -17,11 +17,6 @@ import java.util.List;
 public class SubscriptionController extends BaseController {
     private static SubscriptionController sAccountController;
     private List<Subscription> mSubscriptionList = new ArrayList<>();
-    private Query<Subscription> mQuery;
-
-    private SubscriptionController(){
-        mQuery = DBManager.getSubscriptionDao().queryBuilder().build();
-    }
 
     public static SubscriptionController getInstance() {
         if (sAccountController == null) {
@@ -37,16 +32,16 @@ public class SubscriptionController extends BaseController {
 
     @Override
     public void requestData() {
-        ThreadManager.postDelay(new Runnable() {
+        ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
                 mSubscriptionList.clear();
-                mSubscriptionList.addAll(mQuery.list());
+                mSubscriptionList.addAll(DBManager.getSubscriptionDao().loadAll());
                 // TODO: 10/22/16 network sync
                 // TODO: 10/28/16 do in background
                 fillAndNotify();
             }
-        }, 1000);
+        });
     }
 
     public void insert(final Subscription subscription) {

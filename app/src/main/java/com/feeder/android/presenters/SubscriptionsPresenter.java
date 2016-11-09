@@ -11,6 +11,7 @@ import com.feeder.android.utils.Category;
 import com.feeder.android.utils.Constants;
 import com.feeder.android.mvp.SubscriptionViewObserver;
 import com.feeder.android.views.ArticleListActivity;
+import com.feeder.domain.ArticleController;
 import com.feeder.domain.DataObserver;
 import com.feeder.domain.ResponseState;
 import com.feeder.domain.SubscriptionController;
@@ -56,6 +57,11 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     }
 
     @Override
+    public void onDestroy() {
+        ArticleController.getInstance().markReadTrash();
+    }
+
+    @Override
     public void onDataResponse(ResponseState state) {
         switch (state) {
             case SUCCESS:
@@ -72,7 +78,6 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
 
     @Override
     public void onItemClick(View view, Subscription data) {
-        mSubscriptionView.showToast(data.getTitle() + " clicked");
         Intent intent = new Intent(mContext, ArticleListActivity.class);
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID, data.getId());
