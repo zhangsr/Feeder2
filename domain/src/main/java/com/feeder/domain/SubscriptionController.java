@@ -47,6 +47,7 @@ public class SubscriptionController extends BaseController {
             @Override
             public void run() {
                 DBManager.getSubscriptionDao().insertOrReplace(subscription);
+                mSubscriptionList.add(subscription);
                 fillAndNotify();
                 ArticleController.getInstance().requestNetwork(subscription);
                 // TODO: 10/18/16 how about error ?

@@ -3,7 +3,7 @@ package com.feeder.android.utils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
+import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
 import com.feeder.model.Subscription;
 
 import me.zsr.feeder.R;
@@ -27,13 +27,13 @@ public class CategoryViewHolder extends ParentViewHolder {
 
     public void bind(Category category) {
         if (category == null
-                || category.getChildItemList() == null
-                || category.getChildItemList().size() == 0) {
+                || category.getChildList() == null
+                || category.getChildList().size() == 0) {
             return;
         }
-        mNameTextView.setText(category.getChildItemList().get(0).getCategory());
+        mNameTextView.setText(category.getChildList().get(0).getCategory());
         int count = 0;
-        for (Subscription subscription : category.getChildItemList()) {
+        for (Subscription subscription : category.getChildList()) {
             count += subscription.getUnreadCount();
         }
         if (count <= 0) {

@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.feeder.model.Article;
+import com.google.common.base.Strings;
 
 import org.jsoup.Jsoup;
 
@@ -51,6 +52,9 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
     private String getOptimizedDesc(String originDesc) {
         // Shrink string to optimize render time
         String result = "";
+        if (Strings.isNullOrEmpty(originDesc)) {
+            return result;
+        }
         String parsedStr = Jsoup.parse(originDesc).text();
         int showLength = parsedStr.length() < 50 ? parsedStr.length() : 50;
         if (showLength > 0) {

@@ -6,8 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
-import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
+import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
 import com.feeder.android.mvp.SubscriptionViewObserver;
 import com.feeder.model.Subscription;
 
@@ -20,50 +19,48 @@ import me.zsr.feeder.R;
  * @author: Match
  * @date: 8/8/16
  */
-public class SubscriptionAdapter extends ExpandableRecyclerAdapter<CategoryViewHolder, SubscriptionViewHolder> {
+public class SubscriptionAdapter extends ExpandableRecyclerAdapter<Category, Subscription, CategoryViewHolder, SubscriptionViewHolder> {
     private Context mContext;
     private SubscriptionViewObserver mObserver;
 
-    public SubscriptionAdapter(Context context, @NonNull List<? extends ParentListItem> parentItemList,
+    public SubscriptionAdapter(Context context, @NonNull List<Category> parentItemList,
                                SubscriptionViewObserver observer) {
         super(parentItemList);
         mContext = context;
         mObserver = observer;
     }
 
-    // onCreate ...
+    @NonNull
     @Override
-    public CategoryViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
+    public CategoryViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
         View categoryView = LayoutInflater.from(mContext).inflate(R.layout.subscriptions_category, parentViewGroup, false);
         return new CategoryViewHolder(categoryView);
     }
 
+    @NonNull
     @Override
-    public SubscriptionViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
+    public SubscriptionViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
         View itemView = LayoutInflater.from(mContext).inflate(R.layout.subscriptions_item, childViewGroup, false);
         return new SubscriptionViewHolder(itemView);
     }
 
-    // onBind ...
     @Override
-    public void onBindParentViewHolder(CategoryViewHolder categoryViewHolder, int position, ParentListItem parentListItem) {
-        Category category = (Category) parentListItem;
-        categoryViewHolder.bind(category);
+    public void onBindParentViewHolder(@NonNull CategoryViewHolder parentViewHolder, int parentPosition, @NonNull Category parent) {
+        parentViewHolder.bind(parent);
     }
 
     @Override
-    public void onBindChildViewHolder(SubscriptionViewHolder subscriptionViewHolder, int position, Object childListItem) {
-        final Subscription subscription = (Subscription) childListItem;
-        subscriptionViewHolder.bind(subscription, new View.OnClickListener() {
+    public void onBindChildViewHolder(@NonNull SubscriptionViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull final Subscription child) {
+        childViewHolder.bind(child, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mObserver.onItemClick(v, subscription);
+                mObserver.onItemClick(v, child);
             }
         }, new View.OnLongClickListener() {
 
             @Override
             public boolean onLongClick(View v) {
-                return mObserver.onItemLongClick(v, subscription);
+                return mObserver.onItemLongClick(v, child);
             }
         });
     }

@@ -104,7 +104,9 @@ public class ArticleActivity extends BaseActivity {
         mTimeTextView.setText(DateUtil.formatTime(article.getPublished()));
         mSubscriptionNameTextView.setText(subscriptionName);
         if (Strings.isNullOrEmpty(article.getContent())) {
-            mContentTextView.setHtml(article.getDescription(), new HtmlHttpImageGetter(mContentTextView));
+            if (!Strings.isNullOrEmpty(article.getDescription())) {
+                mContentTextView.setHtml(article.getDescription(), new HtmlHttpImageGetter(mContentTextView));
+            }
         } else {
             mContentTextView.setHtml(article.getContent(), new HtmlHttpImageGetter(mContentTextView));
         }

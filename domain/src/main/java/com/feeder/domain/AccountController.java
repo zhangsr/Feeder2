@@ -32,7 +32,7 @@ public class AccountController extends BaseController {
     @Override
     public void requestData() {
         // TODO: 7/22/16 Test
-        ThreadManager.postDelay(new Runnable() {
+        ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
                 if (mAccountList.size() == 0) {
@@ -41,7 +41,7 @@ public class AccountController extends BaseController {
                     AccountController.this.notifyAll(ResponseState.NO_CHANGE);
                 }
             }
-        }, 5000);
+        });
     }
 
 }

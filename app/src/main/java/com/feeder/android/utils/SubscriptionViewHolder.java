@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
+import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.feeder.domain.VolleySingleton;
 import com.feeder.model.Subscription;
 

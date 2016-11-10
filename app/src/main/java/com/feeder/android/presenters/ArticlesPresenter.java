@@ -75,6 +75,8 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
             ArticleController.getInstance().markAllRead(data);
         }
 
+        // TODO: 11/10/16 if no content and desc, shake then stay, and upload source
+
         Intent intent = new Intent(mContext, ArticleActivity.class);
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.KEY_BUNDLE_ARTICLE_ID, data.getId());
