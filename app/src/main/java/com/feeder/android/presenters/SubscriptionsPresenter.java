@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.feeder.android.mvp.ISubscriptionsView;
 import com.feeder.android.mvp.MVPPresenter;
 import com.feeder.android.utils.Category;
@@ -19,6 +20,8 @@ import com.feeder.model.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.zsr.feeder.R;
 
 /**
  * @description:
@@ -48,12 +51,14 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     @Override
     public void onStart() {
         SubscriptionController.getInstance().registerObserver(this);
+        ArticleController.getInstance().registerObserver(this);
         SubscriptionController.getInstance().requestData();
     }
 
     @Override
     public void onStop() {
         SubscriptionController.getInstance().unRegisterObserver(this);
+        ArticleController.getInstance().unRegisterObserver(this);
     }
 
     @Override
@@ -83,5 +88,30 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
         bundle.putLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID, data.getId());
         intent.putExtras(bundle);
         mContext.startActivity(intent);
+    }
+
+    @Override
+    public boolean onItemLongClick(View view, final Subscription data) {
+        List<CharSequence> menuList = new ArrayList<>();
+        menuList.add(view.getResources().getString(R.string.mark_as_read));
+        menuList.add(view.getResources().getString(R.string.remove_subscription));
+        new MaterialDialog.Builder(mContext)
+                .title(data.getTitle())
+                .items(menuList.toArray(new CharSequence[menuList.size()]))
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog materialDialog, View view, int i,
+                                            CharSequence charSequence) {
+                        switch (i) {
+                            case 0:
+                                ArticleController.getInstance().markAllRead(data);
+                                break;
+                            case 1:
+                                SubscriptionController.getInstance().delete(data);
+                                break;
+                        }
+                    }
+                }).show();
+        return true;
     }
 }

@@ -65,11 +65,15 @@ public class ArticleController extends BaseController {
             public void run() {
                 mCurrentSubscriptionId = subscriptionId;
                 mArticleList.clear();
-                updateMemoryIfNeed(subscriptionId, DBManager.getArticleDao().queryBuilder().where(
-                        ArticleDao.Properties.SubscriptionId.eq(subscriptionId),
-                        ArticleDao.Properties.Trash.eq(false)).list(), false);
+                updateMemoryIfNeed(subscriptionId, queryBySubscriptionIdSync(subscriptionId), false);
             }
         });
+    }
+
+    public List<Article> queryBySubscriptionIdSync(long subscriptionId) {
+        return DBManager.getArticleDao().queryBuilder().where(
+                        ArticleDao.Properties.SubscriptionId.eq(subscriptionId),
+                        ArticleDao.Properties.Trash.eq(false)).list();
     }
 
     public void requestNetwork(final long subscriptionId) {
@@ -157,13 +161,26 @@ public class ArticleController extends BaseController {
             ArticleController.this.notifyAll(ResponseState.SUCCESS);
         }
     }
+
+    public void markAllRead(final Subscription subscription) {
+        ThreadManager.postInBackground(new Runnable() {
+            @Override
+            public void run() {
+                markAllRead(queryBySubscriptionIdSync(subscription.getId()));
+            }
+        });
+    }
     
-    public void markArticlesRead(Article... articles) {
+    public void markAllRead(Article... articles) {
         if (articles == null) {
             return;
         }
-        final List<Article> articleList = Arrays.asList(articles);
-        if (articleList.size() == 0) {
+        List<Article> articleList = Arrays.asList(articles);
+        markAllRead(articleList);
+    }
+
+    public void markAllRead(final List<Article> articleList) {
+        if (articleList == null || articleList.size() == 0) {
             return;
         }
         ThreadManager.postInBackground(new Runnable() {

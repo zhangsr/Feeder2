@@ -72,7 +72,7 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
     @Override
     public void onItemClick(View view, Article data) {
         if (!data.getRead()) {
-            ArticleController.getInstance().markArticlesRead(data);
+            ArticleController.getInstance().markAllRead(data);
         }
 
         Intent intent = new Intent(mContext, ArticleActivity.class);

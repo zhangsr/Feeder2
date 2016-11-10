@@ -4,8 +4,6 @@ import com.feeder.common.ThreadManager;
 import com.feeder.model.ArticleDao;
 import com.feeder.model.Subscription;
 
-import org.greenrobot.greendao.query.Query;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,5 +68,18 @@ public class SubscriptionController extends BaseController {
             subscription.setUnreadCount(unreadCount);
         }
         SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
+    }
+
+    public void delete(final Subscription subscription) {
+        ThreadManager.postInBackground(new Runnable() {
+            @Override
+            public void run() {
+                DBManager.getArticleDao().deleteInTx(ArticleController.getInstance()
+                        .queryBySubscriptionIdSync(subscription.getId()));
+                DBManager.getSubscriptionDao().delete(subscription);
+                mSubscriptionList.remove(subscription);
+                SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
+            }
+        });
     }
 }

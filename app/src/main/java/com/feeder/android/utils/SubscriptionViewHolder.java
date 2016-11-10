@@ -31,11 +31,13 @@ public class SubscriptionViewHolder extends ChildViewHolder {
         mCountTextView = (TextView) itemView.findViewById(R.id.count_txt);
     }
 
-    public void bind(Subscription subscription, final View.OnClickListener listener) {
+    public void bind(Subscription subscription, final View.OnClickListener clickListener,
+                     View.OnLongClickListener longClickListener) {
         if (subscription == null) {
             return;
         }
-        mItemView.setOnClickListener(listener);
+        mItemView.setOnClickListener(clickListener);
+        mItemView.setOnLongClickListener(longClickListener);
         mNameTextView.setText(subscription.getTitle());
         mIconImageView.setImageUrl(subscription.getIconUrl(), VolleySingleton.getInstance().getImageLoader());
         if (subscription.getUnreadCount() <= 0) {

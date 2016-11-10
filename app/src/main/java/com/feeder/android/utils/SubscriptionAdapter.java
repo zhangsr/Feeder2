@@ -59,6 +59,12 @@ public class SubscriptionAdapter extends ExpandableRecyclerAdapter<CategoryViewH
             public void onClick(View v) {
                 mObserver.onItemClick(v, subscription);
             }
+        }, new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                return mObserver.onItemLongClick(v, subscription);
+            }
         });
     }
 }
