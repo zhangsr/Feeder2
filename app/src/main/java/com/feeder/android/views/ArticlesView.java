@@ -51,6 +51,7 @@ public class ArticlesView extends IArticlesView {
 
     @Override
     public void notifyDataChanged() {
+        super.notifyDataChanged();
         mAdapter.notifyDataSetChanged();
     }
 }

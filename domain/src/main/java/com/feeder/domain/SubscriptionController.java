@@ -36,7 +36,6 @@ public class SubscriptionController extends BaseController {
                 mSubscriptionList.clear();
                 mSubscriptionList.addAll(DBManager.getSubscriptionDao().loadAll());
                 // TODO: 10/22/16 network sync
-                // TODO: 10/28/16 do in background
                 fillAndNotify();
             }
         });

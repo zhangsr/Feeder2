@@ -1,6 +1,7 @@
 package com.feeder.android.mvp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -14,6 +15,7 @@ import me.zsr.feeder.R;
  * @date: 7/18/16
  */
 public abstract class MVPView extends FrameLayout {
+    private static final String TAG = MVPView.class.getSimpleName();
     protected View mLoadingView;
 
     public MVPView(Context context) {
@@ -27,7 +29,9 @@ public abstract class MVPView extends FrameLayout {
 
     public abstract void showLoading();
     public abstract void hideLoading();
-    public abstract void notifyDataChanged();
+    public void notifyDataChanged() {
+        Log.d(TAG, "notifyDataChanged");
+    }
 
     public void showToast(String content) {
         Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();

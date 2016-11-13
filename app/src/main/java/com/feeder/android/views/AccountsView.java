@@ -47,6 +47,7 @@ public class AccountsView extends IAccountsView {
 
     @Override
     public void notifyDataChanged() {
+        super.notifyDataChanged();
         mAdapter.getItemCount();
         mAdapter.notifyDataSetChanged();
     }

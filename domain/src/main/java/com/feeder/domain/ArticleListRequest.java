@@ -73,6 +73,10 @@ public class ArticleListRequest extends Request<List<Article>> {
     public void deliverError(VolleyError error) {
         Log.d(TAG, "deliverError " + error);
 
+        if (error == null || error.networkResponse == null) {
+            return;
+        }
+
         final int status = error.networkResponse.statusCode;
         // Handle 30x
         if (HttpURLConnection.HTTP_MOVED_PERM == status

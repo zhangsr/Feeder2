@@ -72,6 +72,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
         switch (state) {
             case SUCCESS:
                 // TODO: 11/13/16 optimize : use animation
+                // TODO: 11/13/16 SubscriptionController to observe article maybe better
                 updateCategory();
                 mSubscriptionView.hideLoading();
                 mSubscriptionView.notifyDataChanged();

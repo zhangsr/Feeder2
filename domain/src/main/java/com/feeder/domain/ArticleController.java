@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ArticleController extends BaseController {
     private static final long ID_UNKNOWN = -1L;
-    private static final long ID_ALL = 0L;
+    public static final long ID_ALL = 0L;
     private static ArticleController sArticleController;
     private List<Article> mArticleList = new ArrayList<>();
     private long mCurrentSubscriptionId = ID_UNKNOWN;
@@ -135,16 +135,16 @@ public class ArticleController extends BaseController {
                     // TODO: 10/18/16 how about error ?
                     DBManager.getArticleDao().insertInTx(newArticleList);
                 }
-                updateMemoryIfNeed(subscriptionId, newArticleList, false);
+                updateMemoryIfNeed(subscriptionId, newArticleList, true);
             }
         });
     }
 
     private void updateMemoryIfNeed(long subscriptionId, List<Article> articleList, boolean force) {
-        if (subscriptionId != mCurrentSubscriptionId) {
-            return;
-        }
         if (!force) {
+            if (subscriptionId != mCurrentSubscriptionId) {
+                return;
+            }
             boolean changed = false;
             for (Article article : articleList) {
                 if (!mArticleList.contains(article)) {
