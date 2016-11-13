@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Feeder</string>
-
     <string name="remove_subscription">Remove Subscription</string>
     <string name="today">Today</string>
     <string name="yestoday">Yestoday</string>

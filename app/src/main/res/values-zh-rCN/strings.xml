@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Feeder</string>
-
     <string name="remove_subscription">取消订阅</string>
     <string name="today">今天</string>
     <string name="yestoday">昨天</string>
