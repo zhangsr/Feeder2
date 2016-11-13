@@ -4,7 +4,7 @@
               android:paddingLeft="16dp"
               android:paddingRight="16dp"
               android:gravity="center_vertical"
-              android:background="@color/main_grey_light"
+              android:background="@drawable/rect_selector"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 

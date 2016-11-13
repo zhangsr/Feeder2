@@ -1,5 +1,7 @@
 package com.feeder.model;
 
+import com.feeder.common.StringUtil;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
@@ -125,11 +127,11 @@ public class Article {
     @Override
     public boolean equals(Object o) {
         if (this == o) {
-            return trash;
+            return true;
         }
         if (o.getClass() == Article.class) {
             Article article = (Article) o;
-            return article.getTitle().equals(getTitle());
+            return StringUtil.equals(article.getTitle(), getTitle());
         }
         return false;
     }

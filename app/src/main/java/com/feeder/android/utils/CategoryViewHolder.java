@@ -1,6 +1,7 @@
 package com.feeder.android.utils;
 
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
@@ -15,12 +16,14 @@ import me.zsr.feeder.R;
  */
 public class CategoryViewHolder extends ParentViewHolder {
     private View mItemView;
+    private ImageButton mIconButton;
     private TextView mNameTextView;
     private TextView mCountTextView;
 
     public CategoryViewHolder(View itemView) {
         super(itemView);
         mItemView = itemView;
+        mIconButton = (ImageButton) itemView.findViewById(R.id.category_icon);
         mNameTextView = (TextView) itemView.findViewById(R.id.category_name);
         mCountTextView = (TextView) itemView.findViewById(R.id.count_txt);
     }
@@ -47,8 +50,10 @@ public class CategoryViewHolder extends ParentViewHolder {
     public void onExpansionToggled(boolean expanded) {
         super.onExpansionToggled(expanded);
         if (expanded) {
+            mIconButton.setImageDrawable(mItemView.getResources().getDrawable(R.drawable.ic_keyboard_arrow_right_white_24dp));
             mCountTextView.setVisibility(View.VISIBLE);
         } else {
+            mIconButton.setImageDrawable(mItemView.getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_white_24dp));
             mCountTextView.setVisibility(View.INVISIBLE);
         }
     }

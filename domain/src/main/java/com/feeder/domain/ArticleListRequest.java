@@ -45,11 +45,18 @@ public class ArticleListRequest extends Request<List<Article>> {
             responseStr = new String(response.data);
         }
         List<Article> articleList = FeedParser.parse(responseStr);
+        if (articleList == null || articleList.size() == 0) {
+            return Response.error(new VolleyError("Parse result an empty article list"));
+        }
+
         fillData(articleList);
         return Response.success(articleList, HttpHeaderParser.parseCacheHeaders(response));
     }
 
     private void fillData(List<Article> list) {
+        if (list == null) {
+            return;
+        }
         for (Article article : list) {
             article.setSubscriptionId(mSubscription.getId());
         }

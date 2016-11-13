@@ -12,6 +12,7 @@ import com.feeder.android.utils.Category;
 import com.feeder.android.utils.Constants;
 import com.feeder.android.mvp.SubscriptionViewObserver;
 import com.feeder.android.views.ArticleListActivity;
+import com.feeder.common.StringUtil;
 import com.feeder.domain.ArticleController;
 import com.feeder.domain.DataObserver;
 import com.feeder.domain.ResponseState;
@@ -70,8 +71,8 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     public void onDataResponse(ResponseState state) {
         switch (state) {
             case SUCCESS:
-                mCategoryList.clear();
-                mCategoryList.add(new Category(mSubscriptionList));
+                // TODO: 11/13/16 optimize : use animation
+                updateCategory();
                 mSubscriptionView.hideLoading();
                 mSubscriptionView.notifyDataChanged();
                 break;
@@ -113,5 +114,44 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
                     }
                 }).show();
         return true;
+    }
+
+    private void updateCategory() {
+        // construct temp category beyond new subscription list
+        List<Category> tempCategoryList = new ArrayList<>();
+        for (Subscription subscription : mSubscriptionList) {
+            boolean existCategory = false;
+            for (Category category : tempCategoryList) {
+                if (StringUtil.equals(category.getName(), subscription.getCategory())) {
+                    category.getChildList().add(subscription);
+                    existCategory = true;
+                    break;
+                }
+            }
+            if (!existCategory) {
+                List<Subscription> subscriptionList = new ArrayList<>();
+                subscriptionList.add(subscription);
+                Category category = new Category(subscriptionList);
+                tempCategoryList.add(category);
+            }
+        }
+
+        // remove delete
+        for (Category category : mCategoryList) {
+            if (tempCategoryList.indexOf(category) == -1) {
+                mCategoryList.remove(category);
+            }
+        }
+
+        for (Category category : tempCategoryList) {
+            if (mCategoryList.indexOf(category) == -1) {
+                // add new
+                mCategoryList.add(category);
+            } else {
+                // replace exit
+                int index = mCategoryList.indexOf(category);
+                mCategoryList.get(index).setChildList(category.getChildList());
+            }
+        }
     }
 }
