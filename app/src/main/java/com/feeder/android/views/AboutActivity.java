@@ -28,7 +28,7 @@ public class AboutActivity extends BaseActivity {
     private static final String URL_GITHUB = "https://github.com/zhangsr/Feeder2";
     private static final String URL_GOOGLE_PLUS = "https://plus.google.com/108838785221141135915";
     private static final String URL_BUG = "https://github.com/zhangsr/Feeder2/issues";
-    private static final String URL_STORE = "http://www.wandoujia.com/apps/me.zsr.feeder";
+    private static final String URL_STORE = "http://fir.im/feeder";
     private static final String URL_AARON_SWARTZ = "https://en.wikipedia.org/wiki/Aaron_Swartz";
     private static final String URL_SHARE = "http://fir.im/vdwa";
     @Bind(R.id.back_btn)
@@ -130,6 +130,7 @@ public class AboutActivity extends BaseActivity {
                 openUrl(URL_GITHUB);
                 break;
             case R.id.bug_layout:
+                // TODO: 11/13/16 use easier dialog
                 openUrl(URL_BUG);
                 break;
             case R.id.store_layout:
@@ -141,6 +142,7 @@ public class AboutActivity extends BaseActivity {
             case R.id.share_layout:
                 // TODO: 11/6/16
 //                showShareMenu();
+                openUrl(URL_STORE);
                 break;
         }
     }

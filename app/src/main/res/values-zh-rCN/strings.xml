@@ -60,6 +60,7 @@
     <string name="medium">中</string>
     <string name="copied">ID已复制</string>
     <string name="account_feedly_add">添加 Feedly 账号</string>
+    <string name="back_exit_hint">再点返回退出</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>

@@ -10,12 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.feeder.android.mvp.IAccountsView;
 import com.feeder.android.mvp.ISubscriptionsView;
 import com.feeder.android.mvp.MVPPresenter;
 import com.feeder.android.presenters.AccountsPresenter;
 import com.feeder.android.presenters.SubscriptionsPresenter;
+import com.feeder.common.ThreadManager;
 
 import me.zsr.feeder.R;
 
@@ -28,6 +30,7 @@ public class MainActivity extends BaseActivity {
     private MVPPresenter mAccountsPresenter;
     private MVPPresenter mSubscriptionsPresenter;
     private DrawerLayout mDrawerLayout;
+    private boolean mCanBackExit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,8 +125,18 @@ public class MainActivity extends BaseActivity {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            // TODO: 10/23/16 add confirm dialog to avoid accident exit
-            super.onBackPressed();
+            if (mCanBackExit) {
+                super.onBackPressed();
+            } else {
+                mCanBackExit = true;
+                Toast.makeText(this, R.string.back_exit_hint, Toast.LENGTH_SHORT).show();
+                ThreadManager.postDelay(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCanBackExit = false;
+                    }
+                }, 5000);
+            }
         }
     }
 }

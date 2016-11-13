@@ -60,6 +60,7 @@
     <string name="big">Big</string>
     <string name="medium">Medium</string>
     <string name="copied">ID Copied</string>
+    <string name="back_exit_hint">Back again to exit</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>
