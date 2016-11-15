@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def AVOS_APP_ID = properties.getProperty('avos.app.id')
+def AVOS_CLIENT_KEY = properties.getProperty('avos.client.key')
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
@@ -10,6 +15,9 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "2.0"
+
+        buildConfigField("String", "AVOS_APP_ID", "\"${AVOS_APP_ID}\"")
+        buildConfigField("String", "AVOS_CLIENT_KEY", "\"${AVOS_CLIENT_KEY}\"");
     }
     buildTypes {
         release {

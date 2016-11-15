@@ -32,7 +32,6 @@ public class App extends Application {
         if (BuildConfig.DEBUG) {
             AVAnalytics.setAnalyticsEnabled(false);
         }
-        AVOSCloud.initialize(this, "ms2lsbjilfbqjeb5fitysvm0lkt38nnw2bvwe60sy7j5g50t",
-                "84gf4pv73s99zme304ks1e5f5qwdpls1exgg5cx7c2rah0u4");
+        AVOSCloud.initialize(this, BuildConfig.AVOS_APP_ID, BuildConfig.AVOS_CLIENT_KEY);
     }
 }
