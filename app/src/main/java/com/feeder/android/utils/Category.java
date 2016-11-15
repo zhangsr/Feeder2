@@ -33,6 +33,11 @@ public class Category extends SimpleParent<Subscription> {
         return false;
     }
 
+    @Override
+    public boolean isInitiallyExpanded() {
+        return true;
+    }
+
     public String getName() {
         return mName;
     }

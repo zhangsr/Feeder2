@@ -6,5 +6,5 @@ package com.feeder.domain;
  * @date: 7/22/16
  */
 public interface DataObserver {
-    void onDataResponse(ResponseState state);
+    void onDataResponse(ResponseState state, DataType type);
 }

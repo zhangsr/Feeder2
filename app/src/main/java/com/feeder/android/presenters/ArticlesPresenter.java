@@ -12,6 +12,7 @@ import com.feeder.android.utils.Constants;
 import com.feeder.android.views.ArticleActivity;
 import com.feeder.domain.ArticleController;
 import com.feeder.domain.DataObserver;
+import com.feeder.domain.DataType;
 import com.feeder.domain.ResponseState;
 import com.feeder.model.Article;
 
@@ -57,7 +58,7 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
     }
 
     @Override
-    public void onDataResponse(ResponseState state) {
+    public void onDataResponse(ResponseState state, DataType dataType) {
         switch (state) {
             case SUCCESS:
                 mArticlesView.hideLoading();

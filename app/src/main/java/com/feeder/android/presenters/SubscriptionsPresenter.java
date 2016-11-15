@@ -15,6 +15,7 @@ import com.feeder.android.views.ArticleListActivity;
 import com.feeder.common.StringUtil;
 import com.feeder.domain.ArticleController;
 import com.feeder.domain.DataObserver;
+import com.feeder.domain.DataType;
 import com.feeder.domain.ResponseState;
 import com.feeder.domain.SubscriptionController;
 import com.feeder.model.Subscription;
@@ -52,8 +53,9 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     @Override
     public void onStart() {
         SubscriptionController.getInstance().registerObserver(this);
-        ArticleController.getInstance().registerObserver(this);
         SubscriptionController.getInstance().requestData();
+        ArticleController.getInstance().registerObserver(this);
+        ArticleController.getInstance().requestData();
     }
 
     @Override
@@ -68,14 +70,17 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     }
 
     @Override
-    public void onDataResponse(ResponseState state) {
+    public void onDataResponse(ResponseState state, DataType type) {
         switch (state) {
             case SUCCESS:
                 // TODO: 11/13/16 optimize : use animation
-                // TODO: 11/13/16 SubscriptionController to observe article maybe better
-                updateCategory();
-                mSubscriptionView.hideLoading();
-                mSubscriptionView.notifyDataChanged();
+                if (type == DataType.SUBSCRIPTION) {
+                    updateCategory();
+                    mSubscriptionView.hideLoading();
+                    mSubscriptionView.notifyDataChanged();
+                } else if (type == DataType.ARTICLE) {
+                    SubscriptionController.getInstance().updateArticleInfo();
+                }
                 break;
             case NO_CHANGE:
                 mSubscriptionView.hideLoading();

@@ -44,4 +44,9 @@ public class AccountController extends BaseController {
         });
     }
 
+    @Override
+    protected DataType getDataType() {
+        return DataType.ACCOUNT;
+    }
+
 }

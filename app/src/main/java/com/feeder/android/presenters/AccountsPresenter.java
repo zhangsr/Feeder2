@@ -4,6 +4,7 @@ import com.feeder.android.mvp.IAccountsView;
 import com.feeder.android.mvp.MVPPresenter;
 import com.feeder.domain.AccountController;
 import com.feeder.domain.DataObserver;
+import com.feeder.domain.DataType;
 import com.feeder.domain.ResponseState;
 
 /**
@@ -41,7 +42,7 @@ public class AccountsPresenter implements MVPPresenter, DataObserver {
     }
 
     @Override
-    public void onDataResponse(ResponseState state) {
+    public void onDataResponse(ResponseState state, DataType type) {
         switch (state) {
             case SUCCESS:
                 mAccountsView.hideLoading();

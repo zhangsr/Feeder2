@@ -44,6 +44,10 @@ public class CategoryViewHolder extends ParentViewHolder {
         } else {
             mCountTextView.setText(String.valueOf(count));
         }
+        if (category.isInitiallyExpanded()) {
+            mIconButton.setImageDrawable(mItemView.getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_white_24dp));
+            mCountTextView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

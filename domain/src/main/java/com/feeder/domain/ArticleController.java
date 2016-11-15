@@ -52,11 +52,17 @@ public class ArticleController extends BaseController {
             public void run() {
                 mCurrentSubscriptionId = ID_ALL;
                 mArticleList.clear();
+                // TODO: 11/15/16 too heavy ?
                 mArticleList.addAll(DBManager.getArticleDao().queryBuilder().where(
                         ArticleDao.Properties.Trash.eq(false)).list());
                 ArticleController.this.notifyAll(ResponseState.SUCCESS);
             }
         });
+    }
+
+    @Override
+    protected DataType getDataType() {
+        return DataType.ARTICLE;
     }
 
     public void requestData(final long subscriptionId) {

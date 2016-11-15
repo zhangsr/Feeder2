@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,6 +40,7 @@ import java.util.List;
 
 import me.zsr.feeder.R;
 
+// TODO: 11/15/16 move domain oper to domain module
 public class AddSubscriptionActivity extends BaseActivity {
     private SearchView mSearchView;
     private ListView mResultListView;

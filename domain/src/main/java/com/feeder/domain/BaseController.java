@@ -31,10 +31,13 @@ public abstract class BaseController {
             public void run() {
                 for (DataObserver observer : mObserverList) {
                     if (observer != null) {
-                        observer.onDataResponse(state);
+                        // TODO: 11/15/16 cache and delay response avoid too frequent
+                        observer.onDataResponse(state, getDataType());
                     }
                 }
             }
         });
     }
+
+    protected abstract DataType getDataType();
 }
