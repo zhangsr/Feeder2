@@ -40,8 +40,9 @@ public class ArticleListRequest extends Request<List<Article>> {
     protected Response<List<Article>> parseNetworkResponse(NetworkResponse response) {
         String responseStr;
         try {
-            responseStr = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            responseStr = new String(response.data, "UTF-8");
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
             responseStr = new String(response.data);
         }
         List<Article> articleList = FeedParser.parse(responseStr);
