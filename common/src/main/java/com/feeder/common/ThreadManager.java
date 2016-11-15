@@ -38,7 +38,6 @@ public class ThreadManager {
         mMainThreadHandler.postDelayed(runnable, delay);
     }
 
-    // TODO: 10/18/16 support multi thread
     public static void postInBackground(Runnable runnable) {
 //        mExecutorService.execute(runnable);
         mBackgroundHandler.post(runnable);
