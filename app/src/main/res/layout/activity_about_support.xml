@@ -144,6 +144,7 @@
         <LinearLayout
             android:id="@+id/join_layout"
             android:minHeight="48dp"
+            android:visibility="gone"
             android:gravity="center_vertical"
             android:background="@drawable/rect_selector"
             android:clickable="true"

@@ -32,7 +32,7 @@
     <string name="report_bugs">反馈</string>
     <string name="report_bugs_summary">提交 bug 或新功能建议</string>
     <string name="rate">评价</string>
-    <string name="rate_summary">如果你喜欢 Feeder 请在应用市场中留下你的好评。</string>
+    <string name="rate_summary">如果喜欢 Feeder 请在应用市场中留下你的好评</string>
     <string name="special_thanks_to">特别感谢</string>
     <string name="wechat_summary">ID: matchzsr</string>
     <string name="aaron_swartz">亚伦 斯沃茨</string>
@@ -51,9 +51,9 @@
     <string name="share_summary">如果你喜欢 Feeder 请把它分享给你的朋友</string>
     <string name="join">加入</string>
     <string name="join_summary">一起创造高效的 RSS 阅读器</string>
-    <string name="donate">捐赠</string>
-    <string name="donate_summary">激励 Feeder 开发者.</string>
-    <string name="app_share_desc">Rss 阅读器，开源，Material Design。</string>
+    <string name="donate">赞赏</string>
+    <string name="donate_summary">激励 Feeder 开发者</string>
+    <string name="app_share_desc">Rss 阅读器，开源，Material Design</string>
     <string name="settings">设置</string>
     <string name="reading_font_size">阅读字体大小</string>
     <string name="account_management">账号管理</string>

@@ -78,8 +78,9 @@ public class ArticleController extends BaseController {
 
     public List<Article> queryBySubscriptionIdSync(long subscriptionId) {
         return DBManager.getArticleDao().queryBuilder().where(
-                        ArticleDao.Properties.SubscriptionId.eq(subscriptionId),
-                        ArticleDao.Properties.Trash.eq(false)).list();
+                ArticleDao.Properties.SubscriptionId.eq(subscriptionId),
+                ArticleDao.Properties.Trash.eq(false))
+                .orderDesc(ArticleDao.Properties.Published).list();
     }
 
     public void requestNetwork(final long subscriptionId) {
