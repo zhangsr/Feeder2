@@ -28,8 +28,8 @@
     <string name="contact_on_wechat">通过微信联系</string>
     <string name="fork_on_github">参与 GitHub 项目</string>
     <string name="visit_website">访问网站</string>
-    <string name="support_development">支持开发者</string>
-    <string name="report_bugs">提交 bug</string>
+    <string name="support_development">支持</string>
+    <string name="report_bugs">反馈</string>
     <string name="report_bugs_summary">提交 bug 或新功能建议</string>
     <string name="rate">评价</string>
     <string name="rate_summary">如果你喜欢 Feeder 请在应用市场中留下你的好评。</string>
@@ -49,6 +49,10 @@
     <string name="share_cancel">分享取消</string>
     <string name="share">分享</string>
     <string name="share_summary">如果你喜欢 Feeder 请把它分享给你的朋友</string>
+    <string name="join">加入</string>
+    <string name="join_summary">一起创造高效的 RSS 阅读器</string>
+    <string name="donate">捐赠</string>
+    <string name="donate_summary">激励 Feeder 开发者.</string>
     <string name="app_share_desc">Rss 阅读器，开源，Material Design。</string>
     <string name="settings">设置</string>
     <string name="reading_font_size">阅读字体大小</string>
@@ -58,7 +62,8 @@
     <string name="small">小</string>
     <string name="big">大</string>
     <string name="medium">中</string>
-    <string name="copied">ID已复制</string>
+    <string name="copied">ID 已复制</string>
+    <string name="alipay_account_copied">支付宝账号 已复制</string>
     <string name="account_feedly_add">添加 Feedly 账号</string>
     <string name="back_exit_hint">再点返回退出</string>
     <string-array name="font_size">

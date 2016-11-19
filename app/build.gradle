@@ -6,13 +6,13 @@ def AVOS_APP_ID = properties.getProperty('avos.app.id')
 def AVOS_CLIENT_KEY = properties.getProperty('avos.client.key')
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "me.zsr.feeder"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 1
         versionName "2.0"
 
@@ -35,9 +35,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:recyclerview-v7:23.3.0'
-    compile 'com.android.support:cardview-v7:23.3.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.bignerdranch.android:expandablerecyclerview:3.0.0-RC1'
     compile project (':model')
     compile project (':common')

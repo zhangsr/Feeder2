@@ -25,12 +25,14 @@ import me.zsr.feeder.R;
 
 public class AboutActivity extends BaseActivity {
     private static final String ID_WECHAT = "matchzsr";
+    private static final String ID_ALIPAY = "275690559@qq.com";
     private static final String URL_GITHUB = "https://github.com/zhangsr/Feeder2";
     private static final String URL_GOOGLE_PLUS = "https://plus.google.com/108838785221141135915";
     private static final String URL_BUG = "https://github.com/zhangsr/Feeder2/issues";
     private static final String URL_STORE = "http://fir.im/feeder";
     private static final String URL_AARON_SWARTZ = "https://en.wikipedia.org/wiki/Aaron_Swartz";
     private static final String URL_SHARE = "http://fir.im/vdwa";
+    private static final String URL_XIAOMIQUAN = "https://wx.xiaomiquan.com/mweb/views/joingroup/join_group.html?group_id=8212452512&secret=tmasx9ekcpdi4m9zwmdf58n7xunnhwxa&extra=51383af8ccb9af0f839fe589538d74b7ff75d9348c7869c07bd31d50134aa972";
     @Bind(R.id.back_btn)
     ImageButton mBackButton;
     @Bind(R.id.title_txt)
@@ -57,6 +59,10 @@ public class AboutActivity extends BaseActivity {
     ImageView mWechatImageView;
     @Bind(R.id.share_img)
     ImageView mShareImageView;
+    @Bind(R.id.join_img)
+    ImageView mJoinImageView;
+    @Bind(R.id.donate_img)
+    ImageView mDonateImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,8 @@ public class AboutActivity extends BaseActivity {
         mStoreImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
         mWechatImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
         mShareImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mJoinImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        mDonateImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
     }
 
     @Override
@@ -108,6 +116,8 @@ public class AboutActivity extends BaseActivity {
             R.id.store_layout,
             R.id.aaron_swartz_layout,
             R.id.share_layout,
+            R.id.join_layout,
+            R.id.donate_layout,
     })
     public void layoutOnClick(View view) {
         switch (view.getId()) {
@@ -117,12 +127,13 @@ public class AboutActivity extends BaseActivity {
 //            case R.id.change_log_layout:
 //                showChangeLogDialog();
 //                break;
-            case R.id.wechat_layout:
+            case R.id.wechat_layout: {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("Wechat ID", ID_WECHAT);
                 clipboard.setPrimaryClip(clip);
                 Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show();
                 break;
+            }
             case R.id.google_plus_layout:
                 openUrl(URL_GOOGLE_PLUS);
                 break;
@@ -131,7 +142,7 @@ public class AboutActivity extends BaseActivity {
                 break;
             case R.id.bug_layout:
                 // TODO: 11/13/16 use easier dialog
-                openUrl(URL_BUG);
+                openUrl(URL_XIAOMIQUAN);
                 break;
             case R.id.store_layout:
                 openUrl(URL_STORE);
@@ -144,6 +155,16 @@ public class AboutActivity extends BaseActivity {
 //                showShareMenu();
                 openUrl(URL_STORE);
                 break;
+            case R.id.join_layout:
+                openUrl(URL_XIAOMIQUAN);
+                break;
+            case R.id.donate_layout: {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("AliPay ID", ID_ALIPAY);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(this, R.string.alipay_account_copied, Toast.LENGTH_SHORT).show();
+                break;
+            }
         }
     }
 

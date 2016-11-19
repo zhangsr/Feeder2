@@ -28,8 +28,8 @@
     <string name="contact_on_wechat">Contact on Wechat</string>
     <string name="fork_on_github">Fork on GitHub</string>
     <string name="visit_website">Visit website</string>
-    <string name="support_development">Support development</string>
-    <string name="report_bugs">Report bugs</string>
+    <string name="support_development">Support</string>
+    <string name="report_bugs">Feedback</string>
     <string name="report_bugs_summary">Report bugs or request new features.</string>
     <string name="rate">Rate</string>
     <string name="rate_summary">Leave a positive rating on store if you like Feeder.</string>
@@ -49,6 +49,10 @@
     <string name="share_cancel">Share Cancel</string>
     <string name="share">Share</string>
     <string name="share_summary">Share to friends if you like Feeder.</string>
+    <string name="join">Join</string>
+    <string name="join_summary">Create efficient RSS together.</string>
+    <string name="donate">Donate</string>
+    <string name="donate_summary">Inspire Feeder developer.</string>
     <string name="app_share_desc">Rss app with material design and open source.</string>
     <string name="settings">Settings</string>
     <string name="reading_font_size">Reading font size</string>
@@ -60,6 +64,7 @@
     <string name="big">Big</string>
     <string name="medium">Medium</string>
     <string name="copied">ID Copied</string>
+    <string name="alipay_account_copied">AliPay account Copied</string>
     <string name="back_exit_hint">Back again to exit</string>
     <string-array name="font_size">
         <item>@string/small</item>
