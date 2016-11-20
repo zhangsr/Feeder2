@@ -1,5 +1,6 @@
 package com.feeder.model;
 
+import com.feeder.common.NumberUtil;
 import com.feeder.common.StringUtil;
 
 import org.greenrobot.greendao.annotation.Entity;
@@ -131,7 +132,8 @@ public class Article {
         }
         if (o.getClass() == Article.class) {
             Article article = (Article) o;
-            return StringUtil.equals(article.getTitle(), getTitle());
+            return StringUtil.equals(article.getTitle(), getTitle())
+                    && NumberUtil.equals(article.getSubscriptionId(), subscriptionId);
         }
         return false;
     }
