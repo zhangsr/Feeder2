@@ -12,12 +12,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVAnalytics;
 import com.feeder.android.mvp.IAccountsView;
 import com.feeder.android.mvp.ISubscriptionsView;
 import com.feeder.android.mvp.MVPPresenter;
 import com.feeder.android.presenters.AccountsPresenter;
 import com.feeder.android.presenters.SubscriptionsPresenter;
+import com.feeder.android.utils.StatManager;
 import com.feeder.common.ThreadManager;
 
 import me.zsr.feeder.R;
@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity {
         mAccountsPresenter.onCreate();
         mSubscriptionsPresenter.onCreate();
 
-        AVAnalytics.trackAppOpened(getIntent());
+        StatManager.trackAppOpened(getIntent());
     }
 
     private void initDrawerPanel() {
