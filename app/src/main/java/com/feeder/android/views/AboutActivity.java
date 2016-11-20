@@ -69,6 +69,7 @@ public class AboutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
+        setSwipeBackEnable(true);
 
         // TODO: 11/26/15 why not work to call in BaseActivity ?
         initSystemBar();
@@ -254,5 +255,11 @@ public class AboutActivity extends BaseActivity {
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 }

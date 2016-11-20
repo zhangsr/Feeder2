@@ -1,6 +1,6 @@
 package com.feeder.android.presenters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +16,8 @@ import com.feeder.domain.DataType;
 import com.feeder.domain.ResponseState;
 import com.feeder.model.Article;
 
+import me.zsr.feeder.R;
+
 /**
  * @description:
  * @author: Match
@@ -23,12 +25,12 @@ import com.feeder.model.Article;
  */
 
 public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleViewObserver {
-    private Context mContext;
+    private Activity mActivity;
     private IArticlesView mArticlesView;
     private long mSubscriptionId;
 
-    public ArticlesPresenter(Context context, IArticlesView articlesView, long subscriptionId) {
-        mContext = context;
+    public ArticlesPresenter(Activity activity, IArticlesView articlesView, long subscriptionId) {
+        mActivity = activity;
         mArticlesView = articlesView;
         mSubscriptionId = subscriptionId;
         mArticlesView.setObserver(this);
@@ -78,10 +80,11 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
 
         // TODO: 11/10/16 if no content and desc, shake then stay, and upload source
 
-        Intent intent = new Intent(mContext, ArticleActivity.class);
+        Intent intent = new Intent(mActivity, ArticleActivity.class);
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.KEY_BUNDLE_ARTICLE_ID, data.getId());
         intent.putExtras(bundle);
-        mContext.startActivity(intent);
+        mActivity.startActivity(intent);
+        mActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 }

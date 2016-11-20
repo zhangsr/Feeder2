@@ -41,6 +41,7 @@ public class ArticleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
+        setSwipeBackEnable(true);
 
         initViews();
         Long articleId = getIntent().getExtras().getLong(Constants.KEY_BUNDLE_ARTICLE_ID);
@@ -110,5 +111,11 @@ public class ArticleActivity extends BaseActivity {
         } else {
             mContentTextView.setHtml(article.getContent(), new HtmlHttpImageGetter(mContentTextView));
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 }

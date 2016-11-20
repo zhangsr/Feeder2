@@ -63,6 +63,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
 
@@ -73,6 +74,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
     }

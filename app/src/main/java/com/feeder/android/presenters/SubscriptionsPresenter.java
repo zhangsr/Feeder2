@@ -1,6 +1,6 @@
 package com.feeder.android.presenters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -32,12 +32,12 @@ import me.zsr.feeder.R;
  */
 public class SubscriptionsPresenter implements MVPPresenter, DataObserver, SubscriptionViewObserver {
     private ISubscriptionsView mSubscriptionView;
-    private Context mContext;
+    private Activity mActivity;
     private List<Subscription> mSubscriptionList;
     private List<Category> mCategoryList = new ArrayList<>();
 
-    public SubscriptionsPresenter(Context context, ISubscriptionsView subscriptionsView) {
-        mContext = context;
+    public SubscriptionsPresenter(Activity activity, ISubscriptionsView subscriptionsView) {
+        mActivity = activity;
         mSubscriptionView = subscriptionsView;
         mSubscriptionView.setObserver(this);
     }
@@ -90,11 +90,12 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
 
     @Override
     public void onItemClick(View view, Subscription data) {
-        Intent intent = new Intent(mContext, ArticleListActivity.class);
+        Intent intent = new Intent(mActivity, ArticleListActivity.class);
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID, data.getId());
         intent.putExtras(bundle);
-        mContext.startActivity(intent);
+        mActivity.startActivity(intent);
+        mActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
     @Override
@@ -102,7 +103,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
         List<CharSequence> menuList = new ArrayList<>();
         menuList.add(view.getResources().getString(R.string.mark_as_read));
         menuList.add(view.getResources().getString(R.string.remove_subscription));
-        new MaterialDialog.Builder(mContext)
+        new MaterialDialog.Builder(mActivity)
                 .title(data.getTitle())
                 .items(menuList.toArray(new CharSequence[menuList.size()]))
                 .itemsCallback(new MaterialDialog.ListCallback() {

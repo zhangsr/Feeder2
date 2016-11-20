@@ -78,6 +78,7 @@ public class SettingsActivity extends BaseActivity {
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
 
+        setSwipeBackEnable(true);
         initEnvironment();
         initView();
         setListener();
@@ -229,5 +230,11 @@ public class SettingsActivity extends BaseActivity {
                 mFontSizeTextView.setText(R.string.big);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 }

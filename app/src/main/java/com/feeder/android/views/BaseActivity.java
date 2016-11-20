@@ -1,6 +1,5 @@
 package com.feeder.android.views;
 
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
@@ -8,6 +7,7 @@ import android.view.WindowManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import me.zsr.feeder.R;
 
 /**
@@ -15,11 +15,13 @@ import me.zsr.feeder.R;
  * @author: Match
  * @date: 7/18/16
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends SwipeBackActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setSwipeBackEnable(false);
     }
 
     protected void initSystemBar() {
