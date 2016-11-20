@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ public class MainActivity extends BaseActivity {
     private MVPPresenter mSubscriptionsPresenter;
     private DrawerLayout mDrawerLayout;
     private boolean mCanBackExit;
+    private MainToolbarController mToolbarController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,9 @@ public class MainActivity extends BaseActivity {
 
         initSystemBar();
         setContentView(R.layout.activity_main);
+
+        initToolbar();
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         initDrawerPanel();
         initDetailsPanel();
@@ -47,6 +52,12 @@ public class MainActivity extends BaseActivity {
         mSubscriptionsPresenter.onCreate();
 
         StatManager.trackAppOpened(getIntent());
+    }
+
+    private void initToolbar() {
+        mToolbarController = new MainToolbarController(this);
+        setSupportActionBar(mToolbarController.getToolbar());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initDrawerPanel() {
@@ -81,20 +92,6 @@ public class MainActivity extends BaseActivity {
 
     private void initDetailsPanel() {
         LinearLayout detailsPanel = (LinearLayout) findViewById(R.id.details_panel);
-        ImageButton addSubscriptionButton = (ImageButton) detailsPanel.findViewById(R.id.add_subscription_btn);
-        addSubscriptionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, AddSubscriptionActivity.class));
-            }
-        });
-        ImageButton openDrawerButton = (ImageButton) detailsPanel.findViewById(R.id.open_drawer_btn);
-        openDrawerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
         ISubscriptionsView subscriptionsView = new SubscriptionsView(this);
         LinearLayout.LayoutParams subscriptionsViewLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);
         detailsPanel.addView(subscriptionsView, subscriptionsViewLp);
@@ -130,6 +127,9 @@ public class MainActivity extends BaseActivity {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
+            if (mToolbarController.handleBackPressed()) {
+                return;
+            }
             if (mCanBackExit) {
                 super.onBackPressed();
             } else {
@@ -143,5 +143,20 @@ public class MainActivity extends BaseActivity {
                 }, 5000);
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        mToolbarController.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == android.R.id.home) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 }

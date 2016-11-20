@@ -17,14 +17,13 @@ import me.zsr.feeder.R;
  * @date: 10/25/16
  */
 
-public class ArticleListActivity extends BaseActivity {
+public class ArticleListActivity extends BaseSwipeActivity {
     private MVPPresenter mArticlePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-        setSwipeBackEnable(true);
 
         LinearLayout container = (LinearLayout) findViewById(R.id.container);
 

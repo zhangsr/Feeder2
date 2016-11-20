@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.zsr.feeder.R;
 
-public class SettingsActivity extends BaseActivity {
+public class SettingsActivity extends BaseSwipeActivity {
     public static final String KEY_FONT_SIZE = "font_size";
     public static final int FONT_SIZE_SMALL = 0;
     public static final int FONT_SIZE_MEDIUM = 1;
@@ -78,7 +78,6 @@ public class SettingsActivity extends BaseActivity {
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
 
-        setSwipeBackEnable(true);
         initEnvironment();
         initView();
         setListener();
@@ -89,7 +88,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void initView() {
-        initSystemBar();
+//        initSystemBar();
 
         mTitleTextView.setText(getTitle());
 

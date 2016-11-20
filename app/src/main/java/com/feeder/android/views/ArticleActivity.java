@@ -30,7 +30,7 @@ import me.zsr.feeder.R;
 
 // TODO: 10/31/16 optimize : make image match parent``
 // TODO: 10/30/16 to be modularity
-public class ArticleActivity extends BaseActivity {
+public class ArticleActivity extends BaseSwipeActivity {
     private HtmlTextView mContentTextView;
     private TextView mTitleTextView;
     private TextView mSubscriptionNameTextView;
@@ -41,7 +41,6 @@ public class ArticleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
-        setSwipeBackEnable(true);
 
         initViews();
         Long articleId = getIntent().getExtras().getLong(Constants.KEY_BUNDLE_ARTICLE_ID);

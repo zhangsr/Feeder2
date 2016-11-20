@@ -23,7 +23,7 @@ import butterknife.OnClick;
 import me.zsr.feeder.BuildConfig;
 import me.zsr.feeder.R;
 
-public class AboutActivity extends BaseActivity {
+public class AboutActivity extends BaseSwipeActivity {
     private static final String ID_WECHAT = "matchzsr";
     private static final String ID_ALIPAY = "275690559@qq.com";
     private static final String URL_GITHUB = "https://github.com/zhangsr/Feeder2";
@@ -69,10 +69,9 @@ public class AboutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
-        setSwipeBackEnable(true);
 
         // TODO: 11/26/15 why not work to call in BaseActivity ?
-        initSystemBar();
+//        initSystemBar();
 
         mTitleTextView.setText(getTitle());
         mVersionNameTextView.setText(BuildConfig.VERSION_NAME);

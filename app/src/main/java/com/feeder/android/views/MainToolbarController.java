@@ -1,22 +1,21 @@
 package com.feeder.android.views;
 
-import android.app.SearchManager;
-import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.widget.SearchView;
+import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.feeder.common.StringUtil;
 import com.feeder.common.ThreadManager;
-import com.feeder.domain.ArticleController;
 import com.feeder.domain.FeedlyUtils;
 import com.feeder.domain.SubscriptionController;
 import com.feeder.domain.VolleySingleton;
@@ -24,6 +23,7 @@ import com.feeder.model.FeedlyResult;
 import com.feeder.model.Subscription;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -40,63 +40,55 @@ import java.util.List;
 
 import me.zsr.feeder.R;
 
-// TODO: 11/15/16 move domain oper to domain module
-public class AddSubscriptionActivity extends BaseActivity {
-    private SearchView mSearchView;
-    private ListView mResultListView;
-    private View mAddSourcePanel;
-    private View mLoadingView;
-    private View mRootView;
+/**
+ * @description:
+ * @author: Match
+ * @date: 11/20/16
+ */
 
+// TODO: 11/15/16 move domain oper to domain module
+public class MainToolbarController {
+    private Activity mActivity;
+    private Toolbar mToolbar;
     private ArrayAdapter<String> mResultAdapter;
     private List<FeedlyResult> mResultList;
     private boolean mCanSearch = true;
+    private ListView mResultListView;
+    private View mDimLayer;
+    private MaterialSearchView mSearchView;
+    private String mCurrentSearchText;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_source);
-
-        initView();
-        setListener();
+    public MainToolbarController(Activity activity) {
+        mActivity = activity;
+        initToolbar();
     }
 
-    private void initView() {
-        initSystemBar();
-        mRootView = findViewById(R.id.root_view);
-        mAddSourcePanel = findViewById(R.id.add_source_panel);
-        mLoadingView = findViewById(R.id.loading_view);
-        mSearchView = (SearchView) findViewById(R.id.search_view);
-        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        mSearchView.setIconified(false);
-        // Set the query hint.
-        mSearchView.setQueryHint(getString(R.string.add_subscription_content));
-
-        mResultListView = (ListView) findViewById(R.id.result_lv);
+    public Toolbar getToolbar() {
+        return mToolbar;
     }
 
-    private void setListener() {
-        mRootView.setOnClickListener(new View.OnClickListener() {
+    private void initToolbar() {
+        mDimLayer = mActivity.findViewById(R.id.toolbar_dim_layer);
+        mToolbar = (Toolbar) mActivity.findViewById(R.id.toolbar);
+        mToolbar.setTitle("");
+        mToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+
+        mSearchView = (MaterialSearchView) mActivity.findViewById(R.id.search_view);
+        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
+            public boolean onQueryTextSubmit(String query) {
                 mSearchView.clearFocus();
                 return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
-                if (!TextUtils.isEmpty(s)) {
+            public boolean onQueryTextChange(String newText) {
+                mCurrentSearchText = newText;
+                if (!TextUtils.isEmpty(newText)) {
                     try {
                         if (mCanSearch) {
                             disableSearchForAWhile();
-                            searchFor(s);
+                            searchFor(newText);
                         }
                     } catch (URISyntaxException | MalformedURLException e) {
                         e.printStackTrace();
@@ -107,13 +99,26 @@ public class AddSubscriptionActivity extends BaseActivity {
                 return true;
             }
         });
+        mSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                mResultListView.setVisibility(View.GONE);
+                hideDimLayer();
+            }
+        });
+
+        mResultListView = (ListView) mActivity.findViewById(R.id.result_lv);
         mResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final FeedlyResult result = mResultList.get(position);
                 Subscription subscription = FeedlyUtils.result2Subscription(result);
                 SubscriptionController.getInstance().insert(subscription);
-                dismiss();
+                mSearchView.closeSearch();
             }
         });
     }
@@ -138,7 +143,7 @@ public class AddSubscriptionActivity extends BaseActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (!input.equals(mSearchView.getQuery().toString())) {
+                        if (!StringUtil.equals(input, mCurrentSearchText)) {
                             return;
                         }
 
@@ -155,7 +160,7 @@ public class AddSubscriptionActivity extends BaseActivity {
 
                             if (titleList.size() > 0) {
                                 mResultListView.setVisibility(View.VISIBLE);
-                                mResultAdapter = new ArrayAdapter<>(AddSubscriptionActivity.this,
+                                mResultAdapter = new ArrayAdapter<>(mActivity,
                                         R.layout.result_list_item, R.id.result_txt,
                                         titleList.toArray(new String[titleList.size()]));
                                 mResultListView.setAdapter(mResultAdapter);
@@ -179,36 +184,42 @@ public class AddSubscriptionActivity extends BaseActivity {
         VolleySingleton.getInstance().addToRequestQueue(request);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        dismiss();
-    }
-
-    public void dismiss() {
-        ActivityCompat.finishAfterTransition(this);
-        overridePendingTransition(0, 0);
-    }
-
-    private void showLoading() {
-        mLoadingView.setVisibility(View.VISIBLE);
-        mAddSourcePanel.setVisibility(View.GONE);
-        mRootView.setClickable(false);
-    }
-
-    private void hideLoading() {
-        mLoadingView.setVisibility(View.GONE);
-        mAddSourcePanel.setVisibility(View.VISIBLE);
-        mRootView.setClickable(true);
-    }
-
-    private void showError(final String msg) {
-        ThreadManager.post(new Runnable() {
+    public void onCreateOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_search);
+        mSearchView.setMenuItem(item);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
-            public void run() {
-                Toast.makeText(AddSubscriptionActivity.this, msg,
-                        Toast.LENGTH_SHORT).show();
+            public boolean onMenuItemClick(MenuItem item) {
+                mSearchView.showSearch();
+                showDimLayer();
+                return true;
             }
         });
+    }
+
+    private void showDimLayer() {
+        ObjectAnimator.ofFloat(mDimLayer, "alpha", 0f, 1f).start();
+        mDimLayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSearchView.isSearchOpen()) {
+                    mSearchView.closeSearch();
+                }
+            }
+        });
+    }
+
+    private void hideDimLayer() {
+        ObjectAnimator.ofFloat(mDimLayer, "alpha", 1f, 0f).start();
+        mDimLayer.setOnClickListener(null);
+        mDimLayer.setClickable(false);
+    }
+
+    public boolean handleBackPressed() {
+        if (mSearchView.isSearchOpen()) {
+            mSearchView.closeSearch();
+            return true;
+        }
+        return false;
     }
 }
