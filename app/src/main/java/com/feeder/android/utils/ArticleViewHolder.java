@@ -1,6 +1,7 @@
 package com.feeder.android.utils;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.TextView;
 
@@ -8,6 +9,9 @@ import com.feeder.model.Article;
 import com.google.common.base.Strings;
 
 import org.jsoup.Jsoup;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import me.zsr.feeder.R;
 
@@ -46,7 +50,33 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
             mTitleTextView.setTextColor(mItemView.getResources().getColor(R.color.main_grey_dark));
         }
         mDescTextView.setText(getOptimizedDesc(article.getDescription()));
-        mTimeTextView.setText(DateUtil.formatTime(article.getPublished()));
+        mTimeTextView.setText(formatTime(article.getPublished()));
+    }
+
+    private String formatTime(Long time) {
+        String result = "";
+        Date date = new Date(time);
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        calendar.add(Calendar.DATE, -1);
+        Date yestoday = calendar.getTime();
+        calendar.add(Calendar.DATE, -1);
+        Date beforeYestoday = calendar.getTime();
+        if (DateUtil.isSameDay(date, today)) {
+            result += DateFormat.format("HH:mm", date);
+        } else if (DateUtil.isSameDay(date, yestoday)) {
+            result += mItemView.getResources().getString(R.string.yestoday);
+            result += DateFormat.format(" HH:mm", date);
+        } else if (DateUtil.isSameDay(date, beforeYestoday)) {
+            result += mItemView.getResources().getString(R.string.before_yestoday);
+            result += DateFormat.format(" HH:mm", date);
+        } else if (DateUtil.isSameYear(date, today)) {
+            result += DateFormat.format("MM月dd日", date);
+        } else {
+            result += DateFormat.format("yyyy年MM月dd日", date);
+        }
+
+        return result;
     }
 
     private String getOptimizedDesc(String originDesc) {
