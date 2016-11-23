@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.feeder.common.StringUtil;
 import com.feeder.model.Article;
 import com.feeder.model.Subscription;
 
@@ -40,7 +41,7 @@ public class ArticleListRequest extends Request<List<Article>> {
     protected Response<List<Article>> parseNetworkResponse(NetworkResponse response) {
         String responseStr;
         try {
-            responseStr = new String(response.data, "UTF-8");
+            responseStr = new String(response.data, StringUtil.guessEncoding(response.data));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             responseStr = new String(response.data);
