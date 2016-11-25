@@ -169,24 +169,24 @@ public class ArticleController extends BaseController {
         }
     }
 
-    public void markAllRead(final Subscription subscription) {
+    public void markAllRead(final boolean read, final Subscription subscription) {
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
-                markAllRead(queryBySubscriptionIdSync(subscription.getId()));
+                markAllRead(read, queryBySubscriptionIdSync(subscription.getId()));
             }
         });
     }
     
-    public void markAllRead(Article... articles) {
+    public void markAllRead(boolean read, Article... articles) {
         if (articles == null) {
             return;
         }
         List<Article> articleList = Arrays.asList(articles);
-        markAllRead(articleList);
+        markAllRead(read, articleList);
     }
 
-    public void markAllRead(final List<Article> articleList) {
+    public void markAllRead(final boolean read, final List<Article> articleList) {
         if (articleList == null || articleList.size() == 0) {
             return;
         }
@@ -194,7 +194,7 @@ public class ArticleController extends BaseController {
             @Override
             public void run() {
                 for (Article article : articleList) {
-                    article.setRead(true);
+                    article.setRead(read);
                 }
                 DBManager.getArticleDao().updateInTx(articleList);
                 updateMemoryIfNeed(articleList.get(0).getSubscriptionId(), mArticleList, true);

@@ -112,7 +112,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
                                             CharSequence charSequence) {
                         switch (i) {
                             case 0:
-                                ArticleController.getInstance().markAllRead(data);
+                                ArticleController.getInstance().markAllRead(true, data);
                                 break;
                             case 1:
                                 SubscriptionController.getInstance().delete(data);

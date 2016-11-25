@@ -12,4 +12,5 @@ import com.feeder.model.Article;
 
 public interface ArticleViewObserver {
     void onItemClick(View view, Article data);
+    boolean onItemLongClick(View view, Article data);
 }

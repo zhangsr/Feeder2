@@ -36,11 +36,12 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
         mTimeTextView = (TextView) itemView.findViewById(R.id.article_time);
     }
 
-    public void bind(Article article, View.OnClickListener listener) {
+    public void bind(Article article, View.OnClickListener listener, View.OnLongClickListener longClickListener) {
         if (article == null) {
             return;
         }
         mItemView.setOnClickListener(listener);
+        mItemView.setOnLongClickListener(longClickListener);
         mTitleTextView.setText(article.getTitle());
         if (article.getRead()) {
             mTitleTextView.setAlpha(0.54f);
