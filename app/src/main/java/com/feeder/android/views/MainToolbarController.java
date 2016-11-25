@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +49,7 @@ import me.zsr.feeder.R;
 
 // TODO: 11/15/16 move domain oper to domain module
 public class MainToolbarController {
+    private static final String TAG = MainToolbarController.class.getSimpleName();
     private Activity mActivity;
     private Toolbar mToolbar;
     private ArrayAdapter<String> mResultAdapter;
@@ -83,6 +85,7 @@ public class MainToolbarController {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                Log.e(TAG, "onTextChange=" + newText);
                 mCurrentSearchText = newText;
                 if (!TextUtils.isEmpty(newText)) {
                     try {
@@ -143,6 +146,7 @@ public class MainToolbarController {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Log.e(TAG, "onResponse=" + requestUrl);
                         if (!StringUtil.equals(input, mCurrentSearchText)) {
                             return;
                         }
@@ -181,6 +185,7 @@ public class MainToolbarController {
                 }
         );
         request.setTag(this);
+        Log.e(TAG, "request=" + requestUrl);
         VolleySingleton.getInstance().addToRequestQueue(request);
     }
 

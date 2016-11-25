@@ -34,7 +34,10 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent" />
 
-            <include layout="@layout/activity_settings_share" />
+            <include
+                layout="@layout/activity_settings_share"
+                android:visibility="gone"
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
