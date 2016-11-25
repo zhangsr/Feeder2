@@ -14,7 +14,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 11
-        versionName "2.0.1"
+        versionName "2.0.2"
 
         buildConfigField("String", "AVOS_APP_ID", "\"${AVOS_APP_ID}\"")
         buildConfigField("String", "AVOS_CLIENT_KEY", "\"${AVOS_CLIENT_KEY}\"");

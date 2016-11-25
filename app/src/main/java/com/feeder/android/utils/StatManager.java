@@ -20,12 +20,13 @@ public class StatManager {
         if (BuildConfig.DEBUG) {
             AVAnalytics.setAnalyticsEnabled(false);
             AVAnalytics.enableCrashReport(context, false);
+        } else {
             AVOSCloud.initialize(context, BuildConfig.AVOS_APP_ID, BuildConfig.AVOS_CLIENT_KEY);
         }
     }
 
     public static void trackAppOpened(Intent intent) {
-        if (BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             AVAnalytics.trackAppOpened(intent);
         }
     }
