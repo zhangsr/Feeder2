@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context="com.feeder.android.views.AboutActivity">
+    tools:context="com.feeder.android.view.AboutActivity">
 
     <include layout="@layout/activity_title_bar" />
 

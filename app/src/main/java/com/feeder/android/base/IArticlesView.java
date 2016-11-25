@@ -1,4 +1,4 @@
-package com.feeder.android.mvp;
+package com.feeder.android.base;
 
 import android.content.Context;
 

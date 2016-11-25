@@ -1,4 +1,4 @@
-package com.feeder.android.views;
+package com.feeder.android.view;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 

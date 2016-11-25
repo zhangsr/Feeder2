@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.feeder.android.views.MainActivity"
+            android:name="com.feeder.android.view.main.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -25,25 +25,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.feeder.android.views.SettingsActivity"
+            android:name="com.feeder.android.view.SettingsActivity"
             android:label="@string/settings">
         </activity>
         <activity
-            android:name="com.feeder.android.views.AboutActivity"
+            android:name="com.feeder.android.view.AboutActivity"
             android:label="@string/about">
         </activity>
         <activity
-            android:name="com.feeder.android.views.AuthInoreaderActivity"
+            android:name="com.feeder.android.view.AuthInoreaderActivity"
             android:screenOrientation="portrait"
             android:label="AuthInoreader">
         </activity>
         <activity
-            android:name="com.feeder.android.views.ArticleActivity"
+            android:name="com.feeder.android.view.article.ArticleActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.feeder.android.views.ArticleListActivity"
+            android:name="com.feeder.android.view.articlelist.ArticleListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
         </activity>

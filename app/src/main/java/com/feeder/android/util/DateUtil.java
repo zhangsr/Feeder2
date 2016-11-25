@@ -1,4 +1,4 @@
-package com.feeder.android.utils;
+package com.feeder.android.util;
 
 import android.content.Context;
 import android.text.format.DateFormat;

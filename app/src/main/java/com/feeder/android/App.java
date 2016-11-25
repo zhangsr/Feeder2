@@ -3,7 +3,7 @@ package com.feeder.android;
 import android.app.Application;
 import android.util.Log;
 
-import com.feeder.android.utils.StatManager;
+import com.feeder.android.util.StatManager;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.DBManager;

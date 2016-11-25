@@ -1,4 +1,4 @@
-package com.feeder.android.views;
+package com.feeder.android.view;
 
 import android.os.Build;
 import android.os.Bundle;

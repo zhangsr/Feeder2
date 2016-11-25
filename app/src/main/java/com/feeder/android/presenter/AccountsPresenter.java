@@ -1,7 +1,7 @@
-package com.feeder.android.presenters;
+package com.feeder.android.presenter;
 
-import com.feeder.android.mvp.IAccountsView;
-import com.feeder.android.mvp.MVPPresenter;
+import com.feeder.android.base.IAccountsView;
+import com.feeder.android.base.MVPPresenter;
 import com.feeder.domain.AccountController;
 import com.feeder.domain.DataObserver;
 import com.feeder.domain.DataType;

@@ -1,11 +1,13 @@
-package com.feeder.android.views;
+package com.feeder.android.view.article;
 
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.widget.TextView;
 
-import com.feeder.android.utils.Constants;
-import com.feeder.android.utils.DateUtil;
+import com.feeder.android.util.Constants;
+import com.feeder.android.util.DateUtil;
+import com.feeder.android.view.BaseSwipeActivity;
+import com.feeder.android.view.SettingsActivity;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.DBManager;

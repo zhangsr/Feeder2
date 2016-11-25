@@ -1,8 +1,8 @@
-package com.feeder.android.mvp;
+package com.feeder.android.base;
 
 import android.content.Context;
 
-import com.feeder.android.utils.Category;
+import com.feeder.android.view.main.Category;
 
 import java.util.List;
 

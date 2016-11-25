@@ -1,4 +1,4 @@
-package com.feeder.android.presenters;
+package com.feeder.android.presenter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.feeder.android.mvp.ISubscriptionsView;
-import com.feeder.android.mvp.MVPPresenter;
-import com.feeder.android.utils.Category;
-import com.feeder.android.utils.Constants;
-import com.feeder.android.mvp.SubscriptionViewObserver;
-import com.feeder.android.views.ArticleListActivity;
+import com.feeder.android.base.ISubscriptionsView;
+import com.feeder.android.base.MVPPresenter;
+import com.feeder.android.view.main.Category;
+import com.feeder.android.util.Constants;
+import com.feeder.android.base.SubscriptionViewObserver;
+import com.feeder.android.view.articlelist.ArticleListActivity;
 import com.feeder.common.StringUtil;
 import com.feeder.domain.ArticleController;
 import com.feeder.domain.DataObserver;
