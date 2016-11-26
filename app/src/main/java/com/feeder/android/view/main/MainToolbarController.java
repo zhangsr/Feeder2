@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.ListView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.feeder.common.LogUtil;
 import com.feeder.common.StringUtil;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.FeedlyUtils;
@@ -85,7 +85,6 @@ public class MainToolbarController {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.e(TAG, "onTextChange=" + newText);
                 mCurrentSearchText = newText;
                 if (!TextUtils.isEmpty(newText)) {
                     try {
@@ -146,7 +145,7 @@ public class MainToolbarController {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e(TAG, "onResponse=" + requestUrl);
+                        LogUtil.d("onResponse=" + requestUrl);
                         if (!StringUtil.equals(input, mCurrentSearchText)) {
                             return;
                         }
@@ -185,7 +184,7 @@ public class MainToolbarController {
                 }
         );
         request.setTag(this);
-        Log.e(TAG, "request=" + requestUrl);
+        LogUtil.d("request=" + requestUrl);
         VolleySingleton.getInstance().addToRequestQueue(request);
     }
 

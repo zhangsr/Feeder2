@@ -1,4 +1,4 @@
-package com.feeder.android.util;
+package com.feeder.common;
 
 import android.util.Log;
 
@@ -9,20 +9,28 @@ import android.util.Log;
  */
 public class LogUtil {
     private static String DEFAULT_TAG = "Feeder";
-    private static boolean mLogAll = true;
+    private static boolean sLogAll = false;
     private static final boolean LOGD_DEBUG = true;
     private static final boolean LOGI_DEBUG = true;
     private static final boolean LOGW_DEBUG = true;
     private static final boolean LOGE_DEBUG = true;
     private static final int STACK_INDEX = 2;
 
+    public static void enable(boolean enable) {
+        sLogAll = enable;
+    }
+
+    public static void d(String msg) {
+        d(DEFAULT_TAG, msg);
+    }
+
     /**
      * Used for persistent log
      * @param msg
      */
-    public static void d(String msg) {
-        if (LOGD_DEBUG && mLogAll) {
-            Log.d(DEFAULT_TAG, getInformation(msg));
+    public static void d(String tag, String msg) {
+        if (LOGD_DEBUG && sLogAll) {
+            Log.d(tag, getInformation(msg));
         }
     }
 
@@ -31,7 +39,7 @@ public class LogUtil {
      * @param msg
      */
     public static void i(String msg) {
-        if (LOGI_DEBUG && mLogAll) {
+        if (LOGI_DEBUG && sLogAll) {
             Log.i(DEFAULT_TAG, getInformation(msg));
         }
     }
@@ -41,7 +49,7 @@ public class LogUtil {
      * @param msg
      */
     public static void w(String msg) {
-        if (LOGW_DEBUG && mLogAll) {
+        if (LOGW_DEBUG && sLogAll) {
             Log.e(DEFAULT_TAG, getInformation(msg));
         }
     }
@@ -51,7 +59,7 @@ public class LogUtil {
      * @param msg
      */
     public static void e(String msg) {
-        if (LOGE_DEBUG && mLogAll) {
+        if (LOGE_DEBUG && sLogAll) {
             Log.e(DEFAULT_TAG, getInformation(msg));
         }
     }
@@ -60,9 +68,5 @@ public class LogUtil {
         Exception exception = new Exception();
         return exception.getStackTrace()[STACK_INDEX].getFileName() + "|"
                 + exception.getStackTrace()[STACK_INDEX].getLineNumber() + "|" + msg;
-    }
-
-    public static void setLog(boolean enable) {
-        mLogAll = enable;
     }
 }

@@ -2,6 +2,7 @@ package com.feeder.domain;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.feeder.common.LogUtil;
 import com.feeder.common.ThreadManager;
 import com.feeder.model.Article;
 import com.feeder.model.ArticleDao;
@@ -109,6 +110,7 @@ public class ArticleController extends BaseController {
                 new Response.Listener<List<Article>>() {
                     @Override
                     public void onResponse(List<Article> response) {
+                        LogUtil.d("onResponse : " + subscription.getTitle());
                         insertToDB(subscription.getId(), response);
                     }
                 },
@@ -120,6 +122,7 @@ public class ArticleController extends BaseController {
                 }
         );
         VolleySingleton.getInstance().addToRequestQueue(request);
+        LogUtil.d("request : " + subscription.getTitle());
     }
 
 
