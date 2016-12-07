@@ -130,7 +130,7 @@ public class Article {
         if (this == o) {
             return true;
         }
-        if (o.getClass() == Article.class) {
+        if (o instanceof Article) {
             Article article = (Article) o;
             return StringUtil.equals(article.getTitle(), getTitle())
                     && NumberUtil.equals(article.getSubscriptionId(), subscriptionId);

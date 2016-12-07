@@ -35,6 +35,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
 
     @Override
     public void onBindViewHolder(ArticleViewHolder holder, final int position) {
+        if (mArticleList == null || position >= mArticleList.size()) {
+            // TODO: 12/7/16 upload error state
+            return;
+        }
         holder.bind(mArticleList.get(position), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
