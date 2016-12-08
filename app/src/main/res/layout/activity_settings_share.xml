@@ -171,6 +171,7 @@
         <LinearLayout
             android:id="@+id/google_plus_layout"
             android:minHeight="48dp"
+            android:visibility="gone"
             android:gravity="center_vertical"
             android:background="@drawable/rect_selector"
             android:clickable="true"
@@ -207,6 +208,7 @@
         <LinearLayout
             android:id="@+id/pocket_layout"
             android:minHeight="48dp"
+            android:visibility="gone"
             android:gravity="center_vertical"
             android:background="@drawable/rect_selector"
             android:clickable="true"

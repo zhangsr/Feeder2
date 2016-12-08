@@ -43,6 +43,7 @@ dependencies {
     compile project (':model')
     compile project (':common')
     compile project (':domain')
+    compile project (':share')
     // Loading Animation
     compile 'com.wang.avi:library:1.0.5'
     compile 'com.nineoldandroids:library:2.4.0'

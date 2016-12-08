@@ -36,7 +36,6 @@
 
             <include
                 layout="@layout/activity_settings_share"
-                android:visibility="gone"
                 />
         </LinearLayout>
     </ScrollView>
