@@ -54,7 +54,7 @@ public class ShareHelper {
         Wechat.ShareParams sp = new Wechat.ShareParams();
         sp.setShareType(Platform.SHARE_WEBPAGE);
         sp.setTitle(article.getTitle());
-        sp.setText(article.getDescription());
+        sp.setText(HtmlUtil.getOptimizedDesc(article.getDescription()));
         sp.setUrl(article.getLink());
         // TODO: 12/7/16 how to get source
 //        FeedSource feedSource = mFeedItem.getFeedSource();
@@ -75,7 +75,7 @@ public class ShareHelper {
         WechatMoments.ShareParams sp = new WechatMoments.ShareParams();
         sp.setShareType(Wechat.SHARE_WEBPAGE);
         sp.setTitle(article.getTitle());
-        sp.setText(article.getDescription());
+        sp.setText(HtmlUtil.getOptimizedDesc(article.getDescription()));
         sp.setUrl(article.getLink());
 //        FeedSource feedSource = mFeedItem.getFeedSource();
 //        if (feedSource != null
@@ -103,7 +103,7 @@ public class ShareHelper {
     public void shareToInstapaper(Article article) {
         Instapaper.ShareParams sp = new Instapaper.ShareParams();
         sp.setTitle(article.getTitle());
-        sp.setText(article.getDescription());
+        sp.setText(HtmlUtil.getOptimizedDesc(article.getDescription()));
         sp.setUrl(article.getLink());
 
         Platform platform = ShareSDK.getPlatform(Instapaper.NAME);

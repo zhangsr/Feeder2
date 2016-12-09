@@ -6,10 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.feeder.android.util.DateUtil;
+import com.feeder.android.util.HtmlUtil;
 import com.feeder.model.Article;
-import com.google.common.base.Strings;
-
-import org.jsoup.Jsoup;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -51,7 +49,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
             mTitleTextView.setAlpha(0.87f);
             mTitleTextView.setTextColor(mItemView.getResources().getColor(R.color.main_grey_dark));
         }
-        mDescTextView.setText(getOptimizedDesc(article.getDescription()));
+        mDescTextView.setText(HtmlUtil.getOptimizedDesc(article.getDescription()));
         mTimeTextView.setText(formatTime(article.getPublished()));
     }
 
@@ -78,20 +76,6 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
             result += DateFormat.format("yyyy年MM月dd日", date);
         }
 
-        return result;
-    }
-
-    private String getOptimizedDesc(String originDesc) {
-        // Shrink string to optimize render time
-        String result = "";
-        if (Strings.isNullOrEmpty(originDesc)) {
-            return result;
-        }
-        String parsedStr = Jsoup.parse(originDesc).text();
-        int showLength = parsedStr.length() < 50 ? parsedStr.length() : 50;
-        if (showLength > 0) {
-            result = parsedStr.substring(0, showLength - 1);
-        }
         return result;
     }
 }
