@@ -8,5 +8,6 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
  * @date: 11/20/16
  */
 
-public class BaseSwipeActivity extends SwipeBackActivity {
+public class BaseSwipeActivity extends BaseActivity {
+    // TODO: 12/11/16 to many bugs on SwipeBackActivity
 }

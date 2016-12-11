@@ -70,9 +70,6 @@ public class AboutActivity extends BaseSwipeActivity {
         setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
 
-        // TODO: 11/26/15 why not work to call in BaseActivity ?
-//        initSystemBar();
-
         mTitleTextView.setText(getTitle());
         mVersionNameTextView.setText(BuildConfig.VERSION_NAME);
         mInfoImageView.setColorFilter(getResources().getColor(R.color.main_grey_normal));
