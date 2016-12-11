@@ -88,7 +88,6 @@ public class SettingsActivity extends BaseSwipeActivity {
     }
 
     private void initView() {
-//        initSystemBar();
 
         mTitleTextView.setText(getTitle());
 

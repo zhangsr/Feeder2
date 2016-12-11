@@ -1,0 +1,4171 @@
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/EditPageLand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/EditPageLand.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/EditPageLand.java	(revision )
+@@ -0,0 +1,272 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic.land;
++
++import java.io.File;
++
++import android.graphics.Bitmap;
++import android.text.TextUtils;
++import android.text.TextWatcher;
++import android.util.TypedValue;
++import android.view.Gravity;
++import android.view.View;
++import android.view.View.OnClickListener;
++import android.view.ViewGroup.LayoutParams;
++import android.widget.EditText;
++import android.widget.LinearLayout;
++import android.widget.RelativeLayout;
++import android.widget.ScrollView;
++import android.widget.TextView;
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++import cn.sharesdk.onekeyshare.themes.classic.EditPage;
++import cn.sharesdk.onekeyshare.themes.classic.XView;
++
++import com.mob.tools.gui.AsyncImageView;
++import com.mob.tools.utils.BitmapHelper;
++import com.mob.tools.utils.R;
++
++/** 横屏的编辑页 */
++public class EditPageLand extends EditPage implements OnClickListener, TextWatcher, Runnable {
++	private static final int DESIGN_SCREEN_WIDTH= 720;
++	private static final int DESIGN_BOTTOM_HEIGHT = 75;
++	private static final int DESIGN_LEFT_PADDING = 40;
++	private static final int DESIGN_TITLE_HEIGHT_L = 70;
++	private static final int DESIGN_THUMB_HEIGHT_L = 280;
++	private static final int DESIGN_REMOVE_THUMB_HEIGHT_L = 60;
++
++	public EditPageLand(OnekeyShareThemeImpl impl) {
++		super(impl);
++	}
++
++	public void onCreate() {
++		super.onCreate();
++
++		int screenHeight = R.getScreenHeight(activity);
++		float ratio = ((float) screenHeight) / DESIGN_SCREEN_WIDTH;
++
++		maxBodyHeight = 0;
++
++		llPage = new LinearLayout(activity);
++		llPage.setOrientation(LinearLayout.VERTICAL);
++		activity.setContentView(llPage);
++
++		rlTitle = new RelativeLayout(activity);
++		rlTitle.setBackgroundColor(0xffe6e9ec);
++		int titleHeight = (int) (DESIGN_TITLE_HEIGHT_L * ratio);
++
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, titleHeight);
++		llPage.addView(rlTitle, lp);
++		initTitle(rlTitle, ratio);
++
++		RelativeLayout rlBody = new RelativeLayout(activity);
++		rlBody.setBackgroundColor(0xffffffff);
++		lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
++		llPage.addView(rlBody, lp);
++		initBody(rlBody, ratio);
++
++		LinearLayout llShadow = new LinearLayout(activity);
++		llShadow.setOrientation(LinearLayout.VERTICAL);
++		rlBody.addView(llShadow, new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
++		initShadow(llShadow, ratio);
++
++		llBottom = new LinearLayout(activity);
++		llBottom.setOrientation(LinearLayout.VERTICAL);
++		lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
++		llPage.addView(llBottom, lp);
++		initBottom(llBottom, ratio);
++	}
++
++	private void initTitle(RelativeLayout rlTitle, float ratio) {
++		tvCancel = new TextView(activity);
++		tvCancel.setTextColor(0xff3b3b3b);
++		tvCancel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
++		tvCancel.setGravity(Gravity.CENTER);
++		int resId = R.getStringRes(activity, "ssdk_oks_cancel");
++		if (resId > 0) {
++			tvCancel.setText(resId);
++		}
++		int padding = (int) (DESIGN_LEFT_PADDING * ratio);
++		tvCancel.setPadding(padding, 0, padding, 0);
++		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		rlTitle.addView(tvCancel, lp);
++		tvCancel.setOnClickListener(this);
++
++		TextView tvTitle = new TextView(activity);
++		tvTitle.setTextColor(0xff3b3b3b);
++		tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
++		tvTitle.setGravity(Gravity.CENTER);
++		resId = R.getStringRes(activity, "ssdk_oks_multi_share");
++		if (resId > 0) {
++			tvTitle.setText(resId);
++		}
++		lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
++		rlTitle.addView(tvTitle, lp);
++
++		tvShare = new TextView(activity);
++		tvShare.setTextColor(0xffff6d11);
++		tvShare.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
++		tvShare.setGravity(Gravity.CENTER);
++		resId = R.getStringRes(activity, "ssdk_oks_share");
++		if (resId > 0) {
++			tvShare.setText(resId);
++		}
++		tvShare.setPadding(padding, 0, padding, 0);
++		lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
++		rlTitle.addView(tvShare, lp);
++		tvShare.setOnClickListener(this);
++	}
++
++	private void initBody(RelativeLayout rlBody, float ratio) {
++		svContent = new ScrollView(activity);
++		rlBody.addView(svContent, new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
++
++		LinearLayout llContent = new LinearLayout(activity);
++		llContent.setOrientation(LinearLayout.HORIZONTAL);
++		svContent.addView(llContent, new ScrollView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
++
++		etContent = new EditText(activity);
++		int padding = (int) (DESIGN_LEFT_PADDING * ratio);
++		etContent.setPadding(padding, padding, padding, padding);
++		etContent.setBackgroundDrawable(null);
++		etContent.setTextColor(0xff3b3b3b);
++		etContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21);
++		etContent.setText(sp.getText());
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT);
++		lp.weight = 1;
++		llContent.addView(etContent, lp);
++		etContent.addTextChangedListener(this);
++
++		rlThumb = new RelativeLayout(activity);
++		rlThumb.setBackgroundColor(0xff313131);
++		int	thumbWidth = (int) (DESIGN_THUMB_HEIGHT_L * ratio);
++		int	xWidth = (int) (DESIGN_REMOVE_THUMB_HEIGHT_L * ratio);
++		lp = new LinearLayout.LayoutParams(thumbWidth, thumbWidth);
++		lp.rightMargin = lp.bottomMargin = lp.topMargin = padding;
++		llContent.addView(rlThumb, lp);
++
++		aivThumb = new AsyncImageView(activity) {
++			public void onImageGot(String url, Bitmap bm) {
++				thumb = bm;
++				super.onImageGot(url, bm);
++			}
++		};
++		aivThumb.setScaleToCropCenter(true);
++		RelativeLayout.LayoutParams rllp = new RelativeLayout.LayoutParams(thumbWidth, thumbWidth);
++		rlThumb.addView(aivThumb, rllp);
++		aivThumb.setOnClickListener(this);
++		initThumb(aivThumb);
++
++		xvRemove = new XView(activity);
++		xvRemove.setRatio(ratio);
++		rllp = new RelativeLayout.LayoutParams(xWidth, xWidth);
++		rllp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
++		rllp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
++		rlThumb.addView(xvRemove, rllp);
++		xvRemove.setOnClickListener(this);
++	}
++
++	private void initBottom(LinearLayout llBottom, float ratio) {
++		LinearLayout llAt = new LinearLayout(activity);
++		llAt.setPadding(0, 0, 0, 5);
++		llAt.setBackgroundColor(0xffffffff);
++		int bottomHeight = (int) (DESIGN_BOTTOM_HEIGHT * ratio);
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, bottomHeight);
++		llBottom.addView(llAt, lp);
++
++		tvAt = new TextView(activity);
++		tvAt.setTextColor(0xff3b3b3b);
++		tvAt.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21);
++		tvAt.setGravity(Gravity.BOTTOM);
++		tvAt.setText("@");
++		int padding = (int) (DESIGN_LEFT_PADDING * ratio);
++		tvAt.setPadding(padding, 0, padding, 0);
++		lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		llAt.addView(tvAt, lp);
++		tvAt.setOnClickListener(this);
++		if (isShowAtUserLayout(platform.getName())) {
++			tvAt.setVisibility(View.VISIBLE);
++		} else {
++			tvAt.setVisibility(View.INVISIBLE);
++		}
++
++		tvTextCouter = new TextView(activity);
++		tvTextCouter.setTextColor(0xff3b3b3b);
++		tvTextCouter.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
++		tvTextCouter.setGravity(Gravity.BOTTOM | Gravity.RIGHT);
++		onTextChanged(etContent.getText(), 0, 0, 0);
++		tvTextCouter.setPadding(padding, 0, padding, 0);
++		lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		lp.weight = 1;
++		llAt.addView(tvTextCouter, lp);
++
++		View v = new View(activity);
++		v.setBackgroundColor(0xffcccccc);
++		int px_1 = ratio > 1 ? ((int) ratio) : 1;
++		lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, px_1);
++		llBottom.addView(v, lp);
++	}
++
++	private void initShadow(LinearLayout llShadow, float ratio) {
++		int px_1 = ratio > 1 ? ((int) ratio) : 1;
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, px_1);
++
++		View v = new View(activity);
++		v.setBackgroundColor(0x29000000);
++		llShadow.addView(v, lp);
++
++		v = new View(activity);
++		v.setBackgroundColor(0x14000000);
++		llShadow.addView(v, lp);
++
++		v = new View(activity);
++		v.setBackgroundColor(0x07000000);
++		llShadow.addView(v, lp);
++	}
++
++	private void initThumb(AsyncImageView aivThumb) {
++		String imageUrl = sp.getImageUrl();
++		String imagePath = sp.getImagePath();
++		String[] imageArray = sp.getImageArray();
++
++		Bitmap pic = null;
++		rlThumb.setVisibility(View.VISIBLE);
++		if(!TextUtils.isEmpty(imagePath) && new File(imagePath).exists()) {
++			try {
++				pic = BitmapHelper.getBitmap(imagePath);
++			} catch (Throwable e) {
++				e.printStackTrace();
++			}
++		}
++
++		if (pic != null) {
++			thumb = pic;
++			aivThumb.setBitmap(pic);
++		} else if (imageArray != null && imageArray.length > 0) {
++			if (!TextUtils.isEmpty(imageArray[0]) && new File(imageArray[0]).exists()) {
++				try {
++					pic = BitmapHelper.getBitmap(imagePath);
++				} catch (Throwable e) {
++					e.printStackTrace();
++				}
++			}
++		}
++
++		if (pic != null) {
++			thumb = pic;
++			aivThumb.setBitmap(pic);
++		} else if (pic == null && !TextUtils.isEmpty(imageUrl)) {
++			aivThumb.execute(imageUrl, 0);
++		} else {
++			rlThumb.setVisibility(View.GONE);
++		}
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/OnekeyShare.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/OnekeyShare.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/OnekeyShare.java	(revision )
+@@ -0,0 +1,259 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare;
++
++import static com.mob.tools.utils.BitmapHelper.captureView;
++
++import java.util.ArrayList;
++import java.util.HashMap;
++
++import android.content.Context;
++import android.graphics.Bitmap;
++import android.text.TextUtils;
++import android.view.View;
++import android.view.View.OnClickListener;
++import cn.sharesdk.framework.Platform;
++import cn.sharesdk.framework.PlatformActionListener;
++import cn.sharesdk.framework.ShareSDK;
++import com.mob.tools.utils.R;
++
++/**
++* 快捷分享的入口
++* <p>
++* 通过不同的setter设置参数，然后调用{@link #show(Context)}方法启动快捷分享
++*/
++public class OnekeyShare {
++	private HashMap<String, Object> params;
++
++	public OnekeyShare() {
++		params = new HashMap<String, Object>();
++		params.put("customers", new ArrayList<CustomerLogo>());
++		params.put("hiddenPlatforms", new HashMap<String, String>());
++	}
++
++	/** address是接收人地址，仅在信息和邮件使用，否则可以不提供 */
++	public void setAddress(String address) {
++		params.put("address", address);
++	}
++
++	/**
++	 * title标题，在印象笔记、邮箱、信息、微信（包括好友、朋友圈和收藏）、
++	 * 易信（包括好友、朋友圈）、人人网和QQ空间使用，否则可以不提供
++	 */
++	public void setTitle(String title) {
++		params.put("title", title);
++	}
++
++	/** titleUrl是标题的网络链接，仅在人人网和QQ空间使用，否则可以不提供 */
++	public void setTitleUrl(String titleUrl) {
++		params.put("titleUrl", titleUrl);
++	}
++
++	/** text是分享文本，所有平台都需要这个字段 */
++	public void setText(String text) {
++		params.put("text", text);
++	}
++
++	/** 获取text字段的值 */
++	public String getText() {
++		return params.containsKey("text") ? String.valueOf(params.get("text")) : null;
++	}
++
++	/** imagePath是本地的图片路径，除Linked-In外的所有平台都支持这个字段 */
++	public void setImagePath(String imagePath) {
++		if(!TextUtils.isEmpty(imagePath))
++			params.put("imagePath", imagePath);
++	}
++
++	/** imageUrl是图片的网络路径，新浪微博、人人网、QQ空间和Linked-In支持此字段 */
++	public void setImageUrl(String imageUrl) {
++		if (!TextUtils.isEmpty(imageUrl))
++			params.put("imageUrl", imageUrl);
++	}
++
++	/** url在微信（包括好友、朋友圈收藏）和易信（包括好友和朋友圈）中使用，否则可以不提供 */
++	public void setUrl(String url) {
++		params.put("url", url);
++	}
++
++	/** filePath是待分享应用程序的本地路劲，仅在微信（易信）好友和Dropbox中使用，否则可以不提供 */
++	public void setFilePath(String filePath) {
++		params.put("filePath", filePath);
++	}
++
++	/** comment是我对这条分享的评论，仅在人人网和QQ空间使用，否则可以不提供 */
++	public void setComment(String comment) {
++		params.put("comment", comment);
++	}
++
++	/** site是分享此内容的网站名称，仅在QQ空间使用，否则可以不提供 */
++	public void setSite(String site) {
++		params.put("site", site);
++	}
++
++	/** siteUrl是分享此内容的网站地址，仅在QQ空间使用，否则可以不提供 */
++	public void setSiteUrl(String siteUrl) {
++		params.put("siteUrl", siteUrl);
++	}
++
++	/** foursquare分享时的地方名 */
++	public void setVenueName(String venueName) {
++		params.put("venueName", venueName);
++	}
++
++	/** foursquare分享时的地方描述 */
++	public void setVenueDescription(String venueDescription) {
++		params.put("venueDescription", venueDescription);
++	}
++
++	/** 分享地纬度，新浪微博、腾讯微博和foursquare支持此字段 */
++	public void setLatitude(float latitude) {
++		params.put("latitude", latitude);
++	}
++
++	/** 分享地经度，新浪微博、腾讯微博和foursquare支持此字段 */
++	public void setLongitude(float longitude) {
++		params.put("longitude", longitude);
++	}
++
++	/** 是否直接分享 */
++	public void setSilent(boolean silent) {
++		params.put("silent", silent);
++	}
++
++	/** 设置编辑页的初始化选中平台 */
++	public void setPlatform(String platform) {
++		params.put("platform", platform);
++	}
++
++	/** 设置KakaoTalk的应用下载地址 */
++	public void setInstallUrl(String installurl) {
++		params.put("installurl", installurl);
++	}
++
++	/** 设置KakaoTalk的应用打开地址 */
++	public void setExecuteUrl(String executeurl) {
++		params.put("executeurl", executeurl);
++	}
++
++	/** 设置微信分享的音乐的地址 */
++	public void setMusicUrl(String musicUrl) {
++		params.put("musicUrl", musicUrl);
++	}
++
++	/** 设置自定义的外部回调 */
++	public void setCallback(PlatformActionListener callback) {
++		params.put("callback", callback);
++	}
++
++	/** 返回操作回调 */
++	public PlatformActionListener getCallback() {
++		return R.forceCast(params.get("callback"));
++	}
++
++	/** 设置用于分享过程中，根据不同平台自定义分享内容的回调 */
++	public void setShareContentCustomizeCallback(ShareContentCustomizeCallback callback) {
++		params.put("customizeCallback", callback);
++	}
++
++	/** 自定义不同平台分享不同内容的回调 */
++	public ShareContentCustomizeCallback getShareContentCustomizeCallback() {
++		return R.forceCast(params.get("customizeCallback"));
++	}
++
++	/** 设置自己图标和点击事件，可以重复调用添加多次 */
++	public void setCustomerLogo(Bitmap logo, String label, OnClickListener ocl) {
++		CustomerLogo cl = new CustomerLogo();
++		cl.logo = logo;
++		cl.label = label;
++		cl.listener = ocl;
++		ArrayList<CustomerLogo> customers = R.forceCast(params.get("customers"));
++		customers.add(cl);
++	}
++
++	/** 设置一个总开关，用于在分享前若需要授权，则禁用sso功能 */
++	public void disableSSOWhenAuthorize() {
++		params.put("disableSSO", true);
++	}
++
++	/** 设置视频网络地址 */
++	public void setVideoUrl(String url) {
++		params.put("url", url);
++		params.put("shareType", Platform.SHARE_VIDEO);
++	}
++
++	/** 设置编辑页面的显示模式为Dialog模式 */
++	@Deprecated
++	public void setDialogMode() {
++		params.put("dialogMode", true);
++	}
++
++	/** 添加一个隐藏的platform */
++	public void addHiddenPlatform(String platform) {
++		HashMap<String, String> hiddenPlatforms = R.forceCast(params.get("hiddenPlatforms"));
++		hiddenPlatforms.put(platform, platform);
++	}
++
++	/** 设置一个将被截图分享的View , surfaceView是截不了图片的*/
++	public void setViewToShare(View viewToShare) {
++		try {
++			Bitmap bm = captureView(viewToShare, viewToShare.getWidth(), viewToShare.getHeight());
++			params.put("viewToShare", bm);
++		} catch (Throwable e) {
++			e.printStackTrace();
++		}
++	}
++
++	/** 腾讯微博分享多张图片 */
++	public void setImageArray(String[] imageArray) {
++		params.put("imageArray", imageArray);
++	}
++
++	/** 设置在执行分享到QQ或QZone的同时，分享相同的内容腾讯微博 */
++	public void setShareToTencentWeiboWhenPerformingQQOrQZoneSharing() {
++		params.put("isShareTencentWeibo", true);
++	}
++
++	/** 设置分享界面的样式，目前只有一种，不需要设置 */
++	public void setTheme(OnekeyShareTheme theme) {
++		params.put("theme", theme.getValue());
++	}
++
++	@SuppressWarnings("unchecked")
++	public void show(Context context) {
++		HashMap<String, Object> shareParamsMap = new HashMap<String, Object>();
++		shareParamsMap.putAll(params);
++
++		ShareSDK.initSDK(context.getApplicationContext());
++
++		// 打开分享菜单的统计
++		ShareSDK.logDemoEvent(1, null);
++
++		int iTheme = 0;
++		try {
++			iTheme = R.parseInt(String.valueOf(shareParamsMap.remove("theme")));
++		} catch (Throwable t) {}
++		OnekeyShareTheme theme = OnekeyShareTheme.fromValue(iTheme);
++		OnekeyShareThemeImpl themeImpl = theme.getImpl();
++
++		themeImpl.setShareParamsMap(shareParamsMap);
++		themeImpl.setDialogMode(shareParamsMap.containsKey("dialogMode") ? ((Boolean) shareParamsMap.remove("dialogMode")) : false);
++		themeImpl.setSilent(shareParamsMap.containsKey("silent") ? ((Boolean) shareParamsMap.remove("silent")) : false);
++		themeImpl.setCustomerLogos((ArrayList<CustomerLogo>) shareParamsMap.remove("customers"));
++		themeImpl.setHiddenPlatforms((HashMap<String, String>) shareParamsMap.remove("hiddenPlatforms"));
++		themeImpl.setPlatformActionListener((PlatformActionListener) shareParamsMap.remove("callback"));
++		themeImpl.setShareContentCustomizeCallback((ShareContentCustomizeCallback) shareParamsMap.remove("customizeCallback"));
++		if (shareParamsMap.containsKey("disableSSO") ? ((Boolean) shareParamsMap.remove("disableSSO")) : false) {
++			themeImpl.disableSSO();
++		}
++
++		themeImpl.show(context.getApplicationContext());
++	}
++
++}
+Index: share/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/AndroidManifest.xml	(revision )
++++ share/src/main/AndroidManifest.xml	(revision )
+@@ -0,0 +1,39 @@
++<manifest package="me.zsr.share"
++          xmlns:android="http://schemas.android.com/apk/res/android">
++
++    <uses-permission android:name="android.permission.GET_TASKS" />
++    <uses-permission android:name="android.permission.INTERNET" />
++    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
++    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
++    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
++    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
++    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
++    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
++    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
++    <!-- 蓝牙分享所需的权限 -->
++    <uses-permission android:name="android.permission.BLUETOOTH" />
++    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
++
++    <application android:allowBackup="true"
++                 android:label="@string/app_name"
++                 android:supportsRtl="true"
++    >
++        <activity
++            android:name="com.mob.tools.MobUIShell"
++            android:theme="@android:style/Theme.Translucent.NoTitleBar"
++            android:configChanges="keyboardHidden|orientation|screenSize"
++            android:screenOrientation="portrait"
++            android:windowSoftInputMode="stateHidden|adjustResize" >
++        </activity>
++
++        <!--微信分享回调 -->
++        <activity
++            android:name=".WXEntryActivity"
++            android:theme="@android:style/Theme.Translucent.NoTitleBar"
++            android:configChanges="keyboardHidden|orientation|screenSize"
++            android:exported="true"
++            android:screenOrientation="portrait" />
++
++    </application>
++
++</manifest>
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/IndicatorView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/IndicatorView.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/IndicatorView.java	(revision )
+@@ -0,0 +1,67 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import android.content.Context;
++import android.graphics.Canvas;
++import android.graphics.Paint;
++import android.view.View;
++
++/** 九宫格滑动时，下面显示的圆圈 */
++public class IndicatorView extends View {
++	private static final int DESIGN_INDICATOR_RADIUS = 6;
++	private static final int DESIGN_INDICATOR_DISTANCE = 14;
++	private static final int DESIGN_BOTTOM_HEIGHT = 52;
++	/** 九格宫有多少页数 */
++	private int count;
++	/** 当前显示的是九格宫中的第几页 */
++	private int current;
++
++	public IndicatorView(Context context) {
++		super(context);
++	}
++
++	public void setScreenCount(int count) {
++		this.count = count;
++	}
++
++	public void onScreenChange(int currentScreen, int lastScreen) {
++		if (currentScreen != current) {
++			current = currentScreen;
++			postInvalidate();
++		}
++	}
++
++	protected void onDraw(Canvas canvas) {
++		if (count <= 1) {
++			this.setVisibility(View.GONE);
++			return;
++		}
++		float height = getHeight();
++		float radius = height * DESIGN_INDICATOR_RADIUS / DESIGN_BOTTOM_HEIGHT;
++		float distance = height * DESIGN_INDICATOR_DISTANCE / DESIGN_BOTTOM_HEIGHT;
++		float windowWidth = radius * 2 * count + distance * (count - 1);
++		float left = (getWidth() - windowWidth) / 2;
++		float cy = height / 2;
++
++		canvas.drawColor(0xffffffff);
++		Paint paint = new Paint();
++		paint.setAntiAlias(true);
++		for (int i = 0; i < count; i++) {
++			if (i == current) {
++				paint.setColor(0xff5d71a0);
++			} else {
++				paint.setColor(0xffafb1b7);
++			}
++			float cx = left + (radius * 2 + distance) * i;
++			canvas.drawCircle(cx, cy, radius, paint);
++		}
++	}
++
++}
+Index: share/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/res/values/strings.xml	(revision )
++++ share/src/main/res/values/strings.xml	(revision )
+@@ -0,0 +1,3 @@
++<resources>
++    <string name="app_name">share</string>
++</resources>
+Index: share/src/main/java/cn/sharesdk/onekeyshare/OnekeyShareThemeImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/OnekeyShareThemeImpl.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/OnekeyShareThemeImpl.java	(revision )
+@@ -0,0 +1,416 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare;
++
++import java.io.File;
++import java.io.FileOutputStream;
++import java.util.ArrayList;
++import java.util.HashMap;
++
++import android.content.Context;
++import android.content.Intent;
++import android.content.pm.ResolveInfo;
++import android.graphics.Bitmap;
++import android.graphics.Bitmap.CompressFormat;
++import android.os.Handler.Callback;
++import android.os.Message;
++import android.text.TextUtils;
++import android.widget.Toast;
++import cn.sharesdk.framework.CustomPlatform;
++import cn.sharesdk.framework.Platform;
++import cn.sharesdk.framework.Platform.ShareParams;
++import cn.sharesdk.framework.PlatformActionListener;
++import cn.sharesdk.framework.ShareSDK;
++
++import com.mob.tools.utils.R;
++import com.mob.tools.utils.UIHandler;
++
++/** 快捷分享的主题样式的实现父类 */
++public abstract class OnekeyShareThemeImpl implements PlatformActionListener, Callback {
++	protected boolean dialogMode;
++	protected HashMap<String, Object> shareParamsMap;
++	protected boolean silent;
++	protected ArrayList<CustomerLogo> customerLogos;
++	protected HashMap<String, String> hiddenPlatforms;
++	protected PlatformActionListener callback;
++	protected ShareContentCustomizeCallback customizeCallback;
++	protected boolean disableSSO;
++	protected Context context;
++
++	public OnekeyShareThemeImpl() {
++		callback = this;
++	}
++
++	public final void setDialogMode(boolean dialogMode) {
++		this.dialogMode = dialogMode;
++	}
++
++	public final void setShareParamsMap(HashMap<String, Object> shareParamsMap) {
++		this.shareParamsMap = shareParamsMap;
++	}
++
++	public final void setSilent(boolean silent) {
++		this.silent = silent;
++	}
++
++	public final void setCustomerLogos(ArrayList<CustomerLogo> customerLogos) {
++		this.customerLogos = customerLogos;
++	}
++
++	public final void setHiddenPlatforms(HashMap<String, String> hiddenPlatforms) {
++		this.hiddenPlatforms = hiddenPlatforms;
++	}
++
++	public final void setPlatformActionListener(PlatformActionListener callback) {
++		this.callback = callback == null ? this : callback;
++	}
++
++	public final void setShareContentCustomizeCallback(ShareContentCustomizeCallback customizeCallback) {
++		this.customizeCallback = customizeCallback;
++	}
++
++	public final void disableSSO() {
++		disableSSO = true;
++	}
++
++	public final void show(Context context) {
++		this.context = context;
++
++		// 显示方式是由platform和silent两个字段控制的
++		// 如果platform设置了，则无须显示九宫格，否则都会显示；
++		// 如果silent为true，表示不进入编辑页面，否则会进入。
++		if (shareParamsMap.containsKey("platform")) {
++			String name = String.valueOf(shareParamsMap.get("platform"));
++			Platform platform = ShareSDK.getPlatform(name);
++			boolean isCustomPlatform = platform instanceof CustomPlatform;
++			boolean isUseClientToShare = isUseClientToShare(platform);
++			if (silent || isCustomPlatform || isUseClientToShare) {
++				shareSilently(platform);
++			} else {
++				prepareForEditPage(platform);
++			}
++		} else {
++			showPlatformPage(context);
++		}
++	}
++
++	/** 判断指定平台是否只能使用客户端分享 */
++	final boolean isUseClientToShare(Platform platform) {
++		String name = platform.getName();
++		if ("Wechat".equals(name) || "WechatMoments".equals(name)
++				|| "WechatFavorite".equals(name) || "ShortMessage".equals(name)
++				|| "Email".equals(name) || "Qzone".equals(name)
++				|| "QQ".equals(name) || "Pinterest".equals(name)
++				|| "Instagram".equals(name) || "Yixin".equals(name)
++				|| "YixinMoments".equals(name) || "QZone".equals(name)
++				|| "Mingdao".equals(name) || "Line".equals(name)
++				|| "KakaoStory".equals(name) || "KakaoTalk".equals(name)
++				|| "Bluetooth".equals(name) || "WhatsApp".equals(name)
++				|| "BaiduTieba".equals(name) || "Laiwang".equals(name)
++				|| "LaiwangMoments".equals(name) || "Alipay".equals(name)
++				|| "AlipayMoments".equals(name)|| "FacebookMessenger".equals(name)
++				|| "GooglePlus".equals(name)
++				) {
++			return true;
++		} else if ("Evernote".equals(name)) {
++			if ("true".equals(platform.getDevinfo("ShareByAppClient"))) {
++				return true;
++			}
++		} else if ("SinaWeibo".equals(name)) {
++			if ("true".equals(platform.getDevinfo("ShareByAppClient"))) {
++
++				Intent test = new Intent(Intent.ACTION_SEND);
++				test.setPackage("com.sina.weibo");
++				test.setType("image/*");
++				ResolveInfo ri = platform.getContext().getPackageManager().resolveActivity(test, 0);
++				if(ri == null) {
++					test = new Intent(Intent.ACTION_SEND);
++					test.setPackage("com.sina.weibog3");
++					test.setType("image/*");
++					ri = platform.getContext().getPackageManager().resolveActivity(test, 0);
++				}
++				return (ri != null);
++			}
++		}
++
++		return false;
++	}
++
++	final void shareSilently(Platform platform) {
++		if (formateShareData(platform)) {
++			ShareParams sp = shareDataToShareParams(platform);
++			if (sp != null) {
++				toast("ssdk_oks_sharing");
++				if (customizeCallback != null) {
++					customizeCallback.onShare(platform, sp);
++				}
++				if (disableSSO) {
++					platform.SSOSetting(disableSSO);
++				}
++				platform.setPlatformActionListener(callback);
++				platform.share(sp);
++			}
++		}
++	}
++
++	private void prepareForEditPage(Platform platform) {
++		if (formateShareData(platform)) {
++			ShareParams sp = shareDataToShareParams(platform);
++			if (sp != null) {
++				// 编辑分享内容的统计
++				ShareSDK.logDemoEvent(3, null);
++				if (customizeCallback != null) {
++					customizeCallback.onShare(platform, sp);
++				}
++				showEditPage(context, platform, sp);
++			}
++		}
++	}
++
++	final boolean formateShareData(Platform plat) {
++		String name = plat.getName();
++
++		boolean isAlipay = "Alipay".equals(name) || "AlipayMoments".equals(name);
++		if (isAlipay && !plat.isClientValid()) {
++			toast("ssdk_alipay_client_inavailable");
++			return false;
++		}
++
++		boolean isKakaoTalk = "KakaoTalk".equals(name);
++		if (isKakaoTalk && !plat.isClientValid()) {
++			toast("ssdk_kakaotalk_client_inavailable");
++			return false;
++		}
++
++		boolean isKakaoStory = "KakaoStory".equals(name);
++		if (isKakaoStory && !plat.isClientValid()) {
++			toast("ssdk_kakaostory_client_inavailable");
++			return false;
++		}
++
++		boolean isLine = "Line".equals(name);
++		if (isLine && !plat.isClientValid()) {
++			toast("ssdk_line_client_inavailable");
++			return false;
++		}
++
++		boolean isWhatsApp = "WhatsApp".equals(name);
++		if (isWhatsApp && !plat.isClientValid()) {
++			toast("ssdk_whatsapp_client_inavailable");
++			return false;
++		}
++
++		boolean isPinterest = "Pinterest".equals(name);
++		if (isPinterest && !plat.isClientValid()) {
++			toast("ssdk_pinterest_client_inavailable");
++			return false;
++		}
++
++		if ("Instagram".equals(name) && !plat.isClientValid()) {
++			toast("ssdk_instagram_client_inavailable");
++			return false;
++		}
++
++		if ("QZone".equals(name) && !plat.isClientValid()) {
++			toast("ssdk_qq_client_inavailable");
++			return false;
++		}
++
++		boolean isLaiwang = "Laiwang".equals(name);
++		boolean isLaiwangMoments = "LaiwangMoments".equals(name);
++		if(isLaiwang || isLaiwangMoments){
++			if (!plat.isClientValid()) {
++				toast("ssdk_laiwang_client_inavailable");
++				return false;
++			}
++		}
++
++		boolean isYixin = "YixinMoments".equals(name) || "Yixin".equals(name);
++		if (isYixin && !plat.isClientValid()) {
++			toast("ssdk_yixin_client_inavailable");
++			return false;
++		}
++
++		boolean isWechat = "WechatFavorite".equals(name) || "Wechat".equals(name) || "WechatMoments".equals(name);
++		if (isWechat && !plat.isClientValid()) {
++			toast("ssdk_wechat_client_inavailable");
++			return false;
++		}
++
++		if ("FacebookMessenger".equals(name) && !plat.isClientValid()) {
++			toast("ssdk_facebookmessenger_client_inavailable");
++			return false;
++		}
++
++		if (!shareParamsMap.containsKey("shareType")) {
++			int shareType = Platform.SHARE_TEXT;
++			String imagePath = String.valueOf(shareParamsMap.get("imagePath"));
++			if (imagePath != null && (new File(imagePath)).exists()) {
++				shareType = Platform.SHARE_IMAGE;
++				if (imagePath.endsWith(".gif") && isWechat) {
++					shareType = Platform.SHARE_EMOJI;
++				} else if (shareParamsMap.containsKey("url") && !TextUtils.isEmpty(shareParamsMap.get("url").toString())) {
++					shareType = Platform.SHARE_WEBPAGE;
++					if (shareParamsMap.containsKey("musicUrl") && !TextUtils.isEmpty(shareParamsMap.get("musicUrl").toString()) && isWechat) {
++						shareType = Platform.SHARE_MUSIC;
++					}
++				}
++			} else {
++				Bitmap viewToShare = R.forceCast(shareParamsMap.get("viewToShare"));
++				if (viewToShare != null && !viewToShare.isRecycled()) {
++					shareType = Platform.SHARE_IMAGE;
++					if (shareParamsMap.containsKey("url") && !TextUtils.isEmpty(shareParamsMap.get("url").toString())) {
++						shareType = Platform.SHARE_WEBPAGE;
++						if (shareParamsMap.containsKey("musicUrl") && !TextUtils.isEmpty(shareParamsMap.get("musicUrl").toString()) && isWechat) {
++							shareType = Platform.SHARE_MUSIC;
++						}
++					}
++				} else {
++					Object imageUrl = shareParamsMap.get("imageUrl");
++					if (imageUrl != null && !TextUtils.isEmpty(String.valueOf(imageUrl))) {
++						shareType = Platform.SHARE_IMAGE;
++						if (String.valueOf(imageUrl).endsWith(".gif") && isWechat) {
++							shareType = Platform.SHARE_EMOJI;
++						} else if (shareParamsMap.containsKey("url") && !TextUtils.isEmpty(shareParamsMap.get("url").toString())) {
++							shareType = Platform.SHARE_WEBPAGE;
++							if (shareParamsMap.containsKey("musicUrl") && !TextUtils.isEmpty(shareParamsMap.get("musicUrl").toString()) && isWechat) {
++								shareType = Platform.SHARE_MUSIC;
++							}
++						}
++					}
++				}
++			}
++			shareParamsMap.put("shareType", shareType);
++		}
++
++		return true;
++	}
++
++	final ShareParams shareDataToShareParams(Platform plat) {
++		if (plat == null || shareParamsMap == null) {
++			toast("ssdk_oks_share_failed");
++			return null;
++		}
++
++		try {
++			String imagePath = R.forceCast(shareParamsMap.get("imagePath"));
++			Bitmap viewToShare = R.forceCast(shareParamsMap.get("viewToShare"));
++			if (TextUtils.isEmpty(imagePath) && viewToShare != null && !viewToShare.isRecycled()) {
++				String path = R.getCachePath(plat.getContext(), "screenshot");
++				File ss = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
++				FileOutputStream fos = new FileOutputStream(ss);
++				viewToShare.compress(CompressFormat.JPEG, 100, fos);
++				fos.flush();
++				fos.close();
++				shareParamsMap.put("imagePath", ss.getAbsolutePath());
++			}
++		} catch (Throwable t) {
++			t.printStackTrace();
++			toast("ssdk_oks_share_failed");
++			return null;
++		}
++
++		return new ShareParams(shareParamsMap);
++	}
++
++	private void toast(final String resOrName) {
++		UIHandler.sendEmptyMessage(0, new Callback() {
++			public boolean handleMessage(Message msg) {
++				int resId = R.getStringRes(context, resOrName);
++				if (resId > 0) {
++					Toast.makeText(context, resId, Toast.LENGTH_SHORT).show();
++				} else {
++					Toast.makeText(context, resOrName, Toast.LENGTH_SHORT).show();
++				}
++				return false;
++			}
++		});
++	}
++
++	protected abstract void showPlatformPage(Context context);
++
++	protected abstract void showEditPage(Context context, Platform platform, ShareParams sp);
++
++	public final void onComplete(Platform platform, int action,
++			HashMap<String, Object> res) {
++		Message msg = new Message();
++		msg.arg1 = 1;
++		msg.arg2 = action;
++		msg.obj = platform;
++		UIHandler.sendMessage(msg, this);
++	}
++
++	public final void onError(Platform platform, int action, Throwable t) {
++		t.printStackTrace();
++
++		Message msg = new Message();
++		msg.arg1 = 2;
++		msg.arg2 = action;
++		msg.obj = t;
++		UIHandler.sendMessage(msg, this);
++
++		// 分享失败的统计
++		ShareSDK.logDemoEvent(4, platform);
++	}
++
++	public final void onCancel(Platform platform, int action) {
++		Message msg = new Message();
++		msg.arg1 = 3;
++		msg.arg2 = action;
++		msg.obj = platform;
++		UIHandler.sendMessage(msg, this);
++
++		// 分享失败的统计
++		ShareSDK.logDemoEvent(5, platform);
++	}
++
++	public final boolean handleMessage(Message msg) {
++		switch (msg.arg1) {
++			case 1: {
++				// 成功
++				int resId = R.getStringRes(context, "ssdk_oks_share_completed");
++				if (resId > 0) {
++					toast(context.getString(resId));
++				}
++			} break;
++			case 2: {
++				// 失败
++				String expName = msg.obj.getClass().getSimpleName();
++				if ("WechatClientNotExistException".equals(expName)
++						|| "WechatTimelineNotSupportedException".equals(expName)
++						|| "WechatFavoriteNotSupportedException".equals(expName)) {
++					toast("ssdk_wechat_client_inavailable");
++				} else if ("GooglePlusClientNotExistException".equals(expName)) {
++					toast("ssdk_google_plus_client_inavailable");
++				} else if ("QQClientNotExistException".equals(expName)) {
++					toast("ssdk_qq_client_inavailable");
++				} else if ("YixinClientNotExistException".equals(expName)
++						|| "YixinTimelineNotSupportedException".equals(expName)) {
++					toast("ssdk_yixin_client_inavailable");
++				} else if ("KakaoTalkClientNotExistException".equals(expName)) {
++					toast("ssdk_kakaotalk_client_inavailable");
++				} else if ("KakaoStoryClientNotExistException".equals(expName)) {
++					toast("ssdk_kakaostory_client_inavailable");
++				} else if("WhatsAppClientNotExistException".equals(expName)){
++					toast("ssdk_whatsapp_client_inavailable");
++				} else if("FacebookMessengerClientNotExistException".equals(expName)){
++					toast("ssdk_facebookmessenger_client_inavailable");
++				} else {
++					toast("ssdk_oks_share_failed");
++				}
++			} break;
++			case 3: {
++				// 取消
++				toast("ssdk_oks_share_canceled");
++			} break;
++		}
++		return false;
++	}
++
++}
+Index: share/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/build.gradle	(revision )
++++ share/build.gradle	(revision )
+@@ -0,0 +1,31 @@
++apply plugin: 'com.android.library'
++
++android {
++    compileSdkVersion 24
++    buildToolsVersion "23.0.3"
++
++    defaultConfig {
++        minSdkVersion 15
++        targetSdkVersion 24
++        versionCode 1
++        versionName "1.0"
++
++        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
++
++    }
++    buildTypes {
++        release {
++            minifyEnabled false
++            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
++        }
++    }
++}
++
++dependencies {
++    compile fileTree(dir: 'libs', include: ['*.jar'])
++    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
++        exclude group: 'com.android.support', module: 'support-annotations'
++    })
++    compile 'com.android.support:appcompat-v7:24.2.1'
++    testCompile 'junit:junit:4.12'
++}
+Index: share/src/main/res/values-en/ssdk_oks_strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/res/values-en/ssdk_oks_strings.xml	(revision )
++++ share/src/main/res/values-en/ssdk_oks_strings.xml	(revision )
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <string name="ssdk_oks_share">Share</string>
++    <string name="ssdk_oks_sharing">Sharing operation is working in the background…</string>
++    <string name="ssdk_oks_share_failed">Operation failed</string>
++    <string name="ssdk_oks_share_completed">Operation succeeded</string>
++    <string name="ssdk_oks_share_canceled">Operation canceled</string>
++    <string name="ssdk_oks_cancel">Cancel</string>
++    <string name="ssdk_oks_multi_share">Photo Sharing</string>
++    <string name="ssdk_oks_confirm">Confirm</string>
++    <string name="ssdk_oks_contacts">Contacts</string>
++    <string name="ssdk_oks_pull_to_refresh">Pull down to refresh</string>
++	<string name="ssdk_oks_release_to_refresh">Release to refresh</string>
++	<string name="ssdk_oks_refreshing">Refreshing…</string>
++</resources>
+Index: share/src/main/res/values-en/ssdk_strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/res/values-en/ssdk_strings.xml	(revision )
++++ share/src/main/res/values-en/ssdk_strings.xml	(revision )
+@@ -0,0 +1,78 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <string name="ssdk_weibo_oauth_regiseter">Authorization</string>
++    <string name="ssdk_website">http://www.mob.com</string>
++    <string name="ssdk_weibo_upload_content">分享图片</string>
++    <string name="ssdk_wechat_client_inavailable">Wechat client not exists or the version is too low</string>
++    <string name="ssdk_google_plus_client_inavailable">Google+ client not exists or the version is too low</string>
++    <string name="ssdk_qq_client_inavailable">Mobile QQ client not exists or the version is too low</string>
++    <string name="ssdk_pinterest_client_inavailable">Pinterest client not exists or the version is too low</string>
++    <string name="ssdk_instagram_client_inavailable">Instagram client not exists or the version is too low</string>
++    <string name="ssdk_yixin_client_inavailable">Yixin client not exists or the version is too low</string>
++    <string name="ssdk_line_client_inavailable">Line client not exists or the version is too low</string>
++    <string name="ssdk_kakaotalk_client_inavailable">KakaoTalk client not exists or the version is too low</string>
++    <string name="ssdk_kakaostory_client_inavailable">KakaoStory client not exists or the version is too low</string>
++    <string name="ssdk_whatsapp_client_inavailable">WhatsApp client not exists or the version is too low</string>
++    <string name="ssdk_laiwang_client_inavailable">Laiwangs client not exists or the version is too low</string>
++    <string name="ssdk_alipay_client_inavailable">Alipay client not exists or the version is too low</string>
++    <string name="ssdk_facebookmessenger_client_inavailable">Facebookmessenger client not exists or the version is too low</string>
++    
++	<string name="ssdk_sinaweibo">Sina Weibo</string>
++	<string name="ssdk_tencentweibo">Tencent Weibo</string>
++	<string name="ssdk_qzone">QZone</string>
++	<string name="ssdk_wechat">WeChat</string>
++	<string name="ssdk_wechatmoments">WeChat Moments</string>
++	<string name="ssdk_wechatfavorite">WeChat Favorites</string>
++	<string name="ssdk_facebook">Facebook</string>
++	<string name="ssdk_twitter">Twitter</string>
++	<string name="ssdk_renren">Renren</string>
++	<string name="ssdk_kaixin">Kaixin</string>
++	<string name="ssdk_email">Email</string>
++	<string name="ssdk_shortmessage">Short Message</string>
++	<string name="ssdk_sohumicroblog">Sohu Microblog</string>
++	<string name="ssdk_neteasemicroblog">Netease Microblog</string>
++	<string name="ssdk_douban">Douban</string>
++	<string name="ssdk_youdao">Youdao</string>
++	<string name="ssdk_evernote">Evernote</string>
++	<string name="ssdk_linkedin">Linked in</string>
++	<string name="ssdk_googleplus">Google+</string>
++	<string name="ssdk_foursquare">FourSquare</string>
++	<string name="ssdk_qq">QQ</string>
++	<string name="ssdk_sohusuishenkan">Sohu Suishenkan</string>
++	<string name="ssdk_pinterest">Pinterest</string>
++	<string name="ssdk_flickr">Flickr</string>
++	<string name="ssdk_tumblr">Tumblr</string>
++	<string name="ssdk_dropbox">Dropbox</string>
++	<string name="ssdk_vkontakte">VK</string>
++	<string name="ssdk_instagram">Instagram</string>
++	<string name="ssdk_yixin">Yixin</string>
++	<string name="ssdk_yixinmoments">Yixin Moments</string>
++	<string name="ssdk_mingdao">Mingdao</string>
++	<string name="ssdk_kakaotalk">KakaoTalk</string>
++	<string name="ssdk_kakaostory">KakaoStory</string>
++	<string name="ssdk_line">Line</string>
++	<string name="ssdk_bluetooth">Bluetooth</string>
++	<string name="ssdk_whatsapp">WhatsApp</string>
++    <string name="ssdk_pocket">Pocket</string>
++    <string name="ssdk_instapaper">Instapaper</string>
++	<string name="ssdk_instapaper_email">Email</string>
++	<string name="ssdk_instapaper_pwd">Password</string>
++	<string name="ssdk_instapaper_login">Sign In</string>
++    <string name="ssdk_instapaper_logining">Sign In…</string>
++	<string name="ssdk_instapager_email_or_password_incorrect">Email or Password incorrect</string>
++    <string name="ssdk_facebookmessenger">Facebook Messenger</string>
++    <string name="ssdk_laiwang">Laiwang</string>
++    <string name="ssdk_laiwangmoments">Laiwang Moments</string>
++    <string name="ssdk_alipay">Alipay</string>
++    <string name="ssdk_alipaymoments">Alipay Moments</string>
++    <string name="ssdk_plurk">Plurk</string>
++
++	<string name="ssdk_share_to_qzone">Share To QZone</string>
++	<string name="ssdk_share_to_qq">Share To QQ</string>
++	<string name="ssdk_share_to_googleplus">Share To Google+</string>
++	<string name="ssdk_share_to_facebook">Share To Facebook</string>
++	<string name="ssdk_mingdao_share_content">Share webpage</string>
++	<string name="ssdk_share_to_mingdao">Share To Mingdao</string>
++	<string name="ssdk_share_to_qzone_default">Shared from %s</string>
++	<string name="ssdk_use_login_button">use login button instead</string>
++</resources>
+\ No newline at end of file
+Index: share/src/main/res/values/ssdk_oks_strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/res/values/ssdk_oks_strings.xml	(revision )
++++ share/src/main/res/values/ssdk_oks_strings.xml	(revision )
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <string name="ssdk_oks_share">分享</string>
++    <string name="ssdk_oks_sharing">分享操作正在后台进行…</string>
++    <string name="ssdk_oks_share_failed">分享失败</string>
++    <string name="ssdk_oks_share_completed">分享成功</string>
++    <string name="ssdk_oks_share_canceled">分享已取消</string>
++    <string name="ssdk_oks_cancel">取消</string>
++    <string name="ssdk_oks_multi_share">图文分享</string>
++    <string name="ssdk_oks_confirm">确定</string>
++    <string name="ssdk_oks_contacts">联系人</string>
++    <string name="ssdk_oks_pull_to_refresh">下拉刷新</string>
++	<string name="ssdk_oks_release_to_refresh">松开刷新</string>
++	<string name="ssdk_oks_refreshing">刷新中…</string>
++</resources>
+Index: share/src/main/java/cn/sharesdk/onekeyshare/OnekeyShareTheme.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/OnekeyShareTheme.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/OnekeyShareTheme.java	(revision )
+@@ -0,0 +1,43 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare;
++
++import cn.sharesdk.onekeyshare.themes.classic.ClassicTheme;
++
++/** 快捷分享的主题样式  */
++public enum OnekeyShareTheme {
++	/** 九格宫的主题样式 ,对应的实现类ClassicTheme */
++	CLASSIC(0, new ClassicTheme());
++
++	private final int value;
++	private final OnekeyShareThemeImpl impl;
++
++	private OnekeyShareTheme(int value, OnekeyShareThemeImpl impl) {
++		this.value = value;
++		this.impl = impl;
++	}
++
++	public int getValue() {
++		return value;
++	}
++
++	public OnekeyShareThemeImpl getImpl() {
++		return impl;
++	}
++
++	public static OnekeyShareTheme fromValue(int value) {
++		for (OnekeyShareTheme theme : OnekeyShareTheme.values()) {
++			if (theme.value == value) {
++				return theme;
++			}
++		}
++		return CLASSIC;
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/FriendListPage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/FriendListPage.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/FriendListPage.java	(revision )
+@@ -0,0 +1,200 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import java.util.ArrayList;
++import java.util.HashMap;
++
++import android.graphics.drawable.ColorDrawable;
++import android.util.TypedValue;
++import android.view.Gravity;
++import android.view.View;
++import android.view.View.OnClickListener;
++import android.view.ViewGroup.LayoutParams;
++import android.widget.AdapterView;
++import android.widget.AdapterView.OnItemClickListener;
++import android.widget.FrameLayout;
++import android.widget.LinearLayout;
++import android.widget.RelativeLayout;
++import android.widget.TextView;
++import cn.sharesdk.framework.Platform;
++import cn.sharesdk.onekeyshare.OnekeySharePage;
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++import cn.sharesdk.onekeyshare.themes.classic.FriendAdapter.Following;
++
++import com.mob.tools.gui.PullToRequestView;
++import com.mob.tools.utils.R;
++
++/** 编辑界面，@好友时，弹出的好友列表 */
++public abstract class FriendListPage extends OnekeySharePage implements OnClickListener, OnItemClickListener {
++	private static final int DESIGN_LEFT_PADDING = 40;
++
++	private Platform platform;
++	private LinearLayout llPage;
++	private RelativeLayout rlTitle;
++	private TextView tvCancel;
++	private TextView tvConfirm;
++	private FriendAdapter adapter;
++	private int lastPosition = -1;
++	/** 展示好友列表时，已选择要‘@’的好友个数 */
++	private int checkNum = 0;
++
++	public FriendListPage(OnekeyShareThemeImpl impl) {
++		super(impl);
++	}
++
++	public void setPlatform(Platform platform) {
++		this.platform = platform;
++	}
++
++	public void onCreate() {
++		activity.getWindow().setBackgroundDrawable(new ColorDrawable(0xfff3f3f3));
++
++		llPage = new LinearLayout(activity);
++		llPage.setOrientation(LinearLayout.VERTICAL);
++		activity.setContentView(llPage);
++
++		rlTitle = new RelativeLayout(activity);
++		float ratio = getRatio();
++		int titleHeight = (int) (getDesignTitleHeight() * ratio);
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
++				LayoutParams.MATCH_PARENT, titleHeight);
++		llPage.addView(rlTitle, lp);
++		initTitle(rlTitle, ratio);
++
++		View line = new View(activity);
++		LinearLayout.LayoutParams lpline = new LinearLayout.LayoutParams(
++				LayoutParams.MATCH_PARENT, (int) (ratio < 1 ? 1 : ratio));
++		line.setBackgroundColor(0xffdad9d9);
++		llPage.addView(line, lpline);
++
++		FrameLayout flPage = new FrameLayout(getContext());
++		LinearLayout.LayoutParams lpFl = new LinearLayout.LayoutParams(
++				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
++		lpFl.weight = 1;
++		flPage.setLayoutParams(lpFl);
++		llPage.addView(flPage);
++
++		// 关注（或朋友）列表
++		PullToRequestView followList = new PullToRequestView(getContext());
++		FrameLayout.LayoutParams lpLv = new FrameLayout.LayoutParams(
++				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
++		followList.setLayoutParams(lpLv);
++		flPage.addView(followList);
++
++		adapter = new FriendAdapter(this, followList);
++		adapter.setPlatform(platform);
++		adapter.setRatio(ratio);
++		adapter.setOnItemClickListener(this);
++		followList.setAdapter(adapter);
++
++		// 请求数据
++		followList.performPullingDown(true);
++	}
++
++	protected abstract float getRatio();
++
++	protected abstract int getDesignTitleHeight();
++
++	private void initTitle(RelativeLayout rlTitle, float ratio) {
++		tvCancel = new TextView(activity);
++		tvCancel.setTextColor(0xff3b3b3b);
++		tvCancel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
++		tvCancel.setGravity(Gravity.CENTER);
++		int resId = R.getStringRes(activity, "ssdk_oks_cancel");
++		if (resId > 0) {
++			tvCancel.setText(resId);
++		}
++		int padding = (int) (DESIGN_LEFT_PADDING * ratio);
++		tvCancel.setPadding(padding, 0, padding, 0);
++		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		rlTitle.addView(tvCancel, lp);
++		tvCancel.setOnClickListener(this);
++
++		TextView tvTitle = new TextView(activity);
++		tvTitle.setTextColor(0xff3b3b3b);
++		tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
++		tvTitle.setGravity(Gravity.CENTER);
++		resId = R.getStringRes(activity, "ssdk_oks_contacts");
++		if (resId > 0) {
++			tvTitle.setText(resId);
++		}
++		lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
++		rlTitle.addView(tvTitle, lp);
++
++		tvConfirm = new TextView(activity);
++		tvConfirm.setTextColor(0xffff6d11);
++		tvConfirm.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
++		tvConfirm.setGravity(Gravity.CENTER);
++		resId = R.getStringRes(activity, "ssdk_oks_confirm");
++		if (resId > 0) {
++			tvConfirm.setText(resId);
++		}
++		tvConfirm.setPadding(padding, 0, padding, 0);
++		lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
++		rlTitle.addView(tvConfirm, lp);
++		tvConfirm.setOnClickListener(this);
++	}
++
++	public void onClick(View v) {
++		if (v.equals(tvCancel)) {
++			finish();
++		} else {
++			ArrayList<String> selected = new ArrayList<String>();
++			for (int i = 0, size = adapter.getCount(); i < size; i++) {
++				if (adapter.getItem(i).checked) {
++					selected.add(adapter.getItem(i).atName);
++				}
++			}
++
++			HashMap<String, Object> res = new HashMap<String, Object>();
++			res.put("selected", selected);
++			res.put("platform", platform);
++			setResult(res);
++			finish();
++		}
++	}
++
++	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
++		if ("FacebookMessenger".equals(platform.getName())) {
++			if(lastPosition >= 0) {
++				Following lastFollwing = adapter.getItem(lastPosition);
++				lastFollwing.checked = false;
++			}
++			lastPosition = position;
++		}
++		Following following = adapter.getItem(position);
++		following.checked = !following.checked;
++
++		if(following.checked) {
++			checkNum++;
++		} else {
++			checkNum--;
++		}
++
++		updateConfirmView();
++		adapter.notifyDataSetChanged();
++	}
++
++	private void updateConfirmView() {
++		int resId = R.getStringRes(activity, "ssdk_oks_confirm");
++		String confirm = "Confirm";
++		if(resId > 0) {
++			confirm = getContext().getResources().getString(resId);
++		}
++		if(checkNum == 0) {
++			tvConfirm.setText(confirm);
++		} else if(checkNum > 0) {
++			tvConfirm.setText(confirm + "(" + checkNum + ")");
++		}
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/ClassicTheme.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/ClassicTheme.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/ClassicTheme.java	(revision )
+@@ -0,0 +1,50 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import android.content.Context;
++import android.content.res.Configuration;
++import cn.sharesdk.framework.Platform;
++import cn.sharesdk.framework.Platform.ShareParams;
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++import cn.sharesdk.onekeyshare.themes.classic.land.EditPageLand;
++import cn.sharesdk.onekeyshare.themes.classic.land.PlatformPageLand;
++import cn.sharesdk.onekeyshare.themes.classic.port.EditPagePort;
++import cn.sharesdk.onekeyshare.themes.classic.port.PlatformPagePort;
++
++/** 九宫格经典主题样式的实现类*/
++public class ClassicTheme extends OnekeyShareThemeImpl {
++
++	/** 展示平台列表*/
++	protected void showPlatformPage(Context context) {
++		PlatformPage page;
++		int orientation = context.getResources().getConfiguration().orientation;
++		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
++			page = new PlatformPagePort(this);
++		} else {
++			page = new PlatformPageLand(this);
++		}
++		page.show(context, null);
++	}
++
++	/** 展示编辑界面*/
++	protected void showEditPage(Context context, Platform platform, ShareParams sp) {
++		EditPage page;
++		int orientation = context.getResources().getConfiguration().orientation;
++		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
++			page = new EditPagePort(this);
++		} else {
++			page = new EditPageLand(this);
++		}
++		page.setPlatform(platform);
++		page.setShareParams(sp);
++		page.show(context, null);
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/EditPage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/EditPage.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/EditPage.java	(revision )
+@@ -0,0 +1,238 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import java.util.ArrayList;
++import java.util.HashMap;
++
++import android.app.Activity;
++import android.content.res.Configuration;
++import android.graphics.Bitmap;
++import android.graphics.drawable.ColorDrawable;
++import android.text.Editable;
++import android.text.TextUtils;
++import android.text.TextWatcher;
++import android.view.View;
++import android.view.View.OnClickListener;
++import android.view.ViewGroup.LayoutParams;
++import android.view.WindowManager;
++import android.widget.EditText;
++import android.widget.LinearLayout;
++import android.widget.RelativeLayout;
++import android.widget.ScrollView;
++import android.widget.TextView;
++import android.widget.Toast;
++import cn.sharesdk.framework.Platform;
++import cn.sharesdk.framework.Platform.ShareParams;
++import cn.sharesdk.framework.ShareSDK;
++import cn.sharesdk.onekeyshare.OnekeySharePage;
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++import cn.sharesdk.onekeyshare.themes.classic.land.FriendListPageLand;
++import cn.sharesdk.onekeyshare.themes.classic.port.FriendListPagePort;
++
++import com.mob.tools.gui.AsyncImageView;
++import com.mob.tools.utils.DeviceHelper;
++import com.mob.tools.utils.R;
++
++public class EditPage extends OnekeySharePage implements OnClickListener, TextWatcher, Runnable {
++	private OnekeyShareThemeImpl impl;
++	protected Platform platform;
++	protected ShareParams sp;
++
++	protected LinearLayout llPage;
++	protected RelativeLayout rlTitle;
++	protected ScrollView svContent;
++	protected EditText etContent;
++	protected TextView tvCancel;
++	protected TextView tvShare;
++	protected RelativeLayout rlThumb;
++	/** 异步加载图片的控件 */
++	protected AsyncImageView aivThumb;
++	protected XView xvRemove;
++	protected LinearLayout llBottom;
++	protected TextView tvAt;
++	protected TextView tvTextCouter;
++
++	protected Bitmap thumb;
++	protected int maxBodyHeight;
++
++	public EditPage(OnekeyShareThemeImpl impl) {
++		super(impl);
++		this.impl = impl;
++	}
++
++	public void setPlatform(Platform platform) {
++		this.platform = platform;
++	}
++
++	public void setShareParams(ShareParams sp) {
++		this.sp = sp;
++	}
++
++	public void setActivity(Activity activity) {
++		super.setActivity(activity);
++		if (isDialogMode()) {
++			System.err.println("Theme classic does not support dialog mode!");
++//			activity.setTheme(android.R.style.Theme_Dialog);
++//			activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
++//			if (Build.VERSION.SDK_INT >= 11) {
++//				try {
++//					ReflectHelper.invokeInstanceMethod(activity, "setFinishOnTouchOutside", false);
++//				} catch (Throwable e) {}
++//			}
++		}
++
++		activity.getWindow().setSoftInputMode(
++				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE |
++				WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
++	}
++
++	public void onCreate() {
++		activity.getWindow().setBackgroundDrawable(new ColorDrawable(0xfff3f3f3));
++	}
++
++	/** 取消分享时，执行的方法 */
++	private void cancelAndFinish() {
++		// 分享失败的统计
++		ShareSDK.logDemoEvent(5, platform);
++		finish();
++	}
++
++	/** 执行分享时的方法 */
++	private void shareAndFinish() {
++		int resId = R.getStringRes(activity, "ssdk_oks_sharing");
++		if (resId > 0) {
++			Toast.makeText(activity, resId, Toast.LENGTH_SHORT).show();
++		}
++
++		if (isDisableSSO()) {
++			platform.SSOSetting(true);
++		}
++		platform.setPlatformActionListener(getCallback());
++		platform.share(sp);
++
++		finish();
++	}
++
++	/** 编辑界面，显示的图片 */
++	private void showThumb(Bitmap pic) {
++		PicViewerPage page = new PicViewerPage(impl);
++		page.setImageBitmap(pic);
++		page.show(activity, null);
++	}
++
++	private void removeThumb() {
++		sp.setImageArray(null);
++		sp.setImageData(null);
++		sp.setImagePath(null);
++		sp.setImageUrl(null);
++	}
++
++	/** @ 好友时，展示的好友列表 */
++	private void showFriendList() {
++		FriendListPage page;
++		int orientation = activity.getResources().getConfiguration().orientation;
++		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
++			page = new FriendListPagePort(impl);
++		} else {
++			page = new FriendListPageLand(impl);
++		}
++		page.setPlatform(platform);
++		page.showForResult(platform.getContext(), null, this);
++	}
++
++	public void onResult(HashMap<String, Object> data) {
++		String atText = getJoinSelectedUser(data);
++		if(!TextUtils.isEmpty(atText)) {
++			etContent.append(atText);
++		}
++	}
++
++	private String getJoinSelectedUser(HashMap<String, Object> data) {
++		if (data != null && data.containsKey("selected")) {
++			@SuppressWarnings("unchecked")
++			ArrayList<String> selected = (ArrayList<String>) data.get("selected");
++			String platform = ((Platform)data.get("platform")).getName();
++			if("FacebookMessenger".equals(platform)) {
++				return null;
++			}
++			StringBuilder sb = new StringBuilder();
++			for (String sel : selected) {
++				sb.append('@').append(sel).append(' ');
++			}
++			return sb.toString();
++		}
++		return null;
++	}
++
++	protected boolean isShowAtUserLayout(String platformName) {
++		return "SinaWeibo".equals(platformName)
++				|| "TencentWeibo".equals(platformName)
++				|| "Facebook".equals(platformName)
++				|| "Twitter".equals(platformName);
++	}
++
++	public void onClick(View v) {
++		if (v.equals(tvCancel)) {
++			cancelAndFinish();
++		} else if (v.equals(tvShare)) {
++			sp.setText(etContent.getText().toString().trim());
++			shareAndFinish();
++		} else if (v.equals(aivThumb)) {
++			showThumb(thumb);
++		} else if (v.equals(xvRemove)) {
++			maxBodyHeight = 0;
++			rlThumb.setVisibility(View.GONE);
++			llPage.measure(0, 0);
++			onTextChanged(etContent.getText(), 0, 0, 0);
++			removeThumb();
++		} else if (v.equals(tvAt)) {
++			showFriendList();
++		}
++	}
++
++	public void onTextChanged(CharSequence s, int start, int before, int count) {
++		tvTextCouter.setText(String.valueOf(s.length()));
++
++		if (maxBodyHeight == 0) {
++			maxBodyHeight = llPage.getHeight() - rlTitle.getHeight() - llBottom.getHeight();
++		}
++
++		if (maxBodyHeight > 0) {
++			svContent.post(this);
++		}
++	}
++
++	/** 动态适配编辑界面的高度 */
++	public void run() {
++		int height = svContent.getChildAt(0).getHeight();
++		RelativeLayout.LayoutParams lp = R.forceCast(svContent.getLayoutParams());
++		if (height > maxBodyHeight && lp.height != maxBodyHeight) {
++			lp.height = maxBodyHeight;
++			svContent.setLayoutParams(lp);
++		} else if (height < maxBodyHeight && lp.height == maxBodyHeight) {
++			lp.height = LayoutParams.WRAP_CONTENT;
++			svContent.setLayoutParams(lp);
++		}
++	}
++
++	public void afterTextChanged(Editable s) {
++
++	}
++
++	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
++
++	}
++
++	public void onPause() {
++		DeviceHelper.getInstance(activity).hideSoftInput(getContentView());
++		super.onPause();
++	}
++
++}
+Index: share/src/main/res/values/ssdk_oks_color_drawables.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/res/values/ssdk_oks_color_drawables.xml	(revision )
++++ share/src/main/res/values/ssdk_oks_color_drawables.xml	(revision )
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <drawable name="ssdk_oks_classic_platfrom_cell_back_nor">#ffffffff</drawable>
++    <drawable name="ssdk_oks_classic_platfrom_cell_back_sel">#ffeeeeee</drawable>
++</resources>
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/RotateImageView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/RotateImageView.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/RotateImageView.java	(revision )
+@@ -0,0 +1,33 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import android.content.Context;
++import android.graphics.Canvas;
++import android.widget.ImageView;
++
++/** 在At好友页面中，下拉刷新列表头部的旋转箭头 */
++public class RotateImageView extends ImageView {
++	private float rotation;
++
++	public RotateImageView(Context context) {
++		super(context);
++	}
++
++	public void setRotation(float rotation) {
++		this.rotation = rotation;
++		invalidate();
++	}
++
++	protected void onDraw(Canvas canvas) {
++		canvas.rotate(rotation, getWidth() / 2, getHeight() / 2);
++		super.onDraw(canvas);
++	}
++
++}
+Index: share/src/test/java/me/zsr/share/ExampleUnitTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/test/java/me/zsr/share/ExampleUnitTest.java	(revision )
++++ share/src/test/java/me/zsr/share/ExampleUnitTest.java	(revision )
+@@ -0,0 +1,17 @@
++package me.zsr.share;
++
++import org.junit.Test;
++
++import static org.junit.Assert.*;
++
++/**
++ * Example local unit test, which will execute on the development machine (host).
++ *
++ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
++ */
++public class ExampleUnitTest {
++    @Test
++    public void addition_isCorrect() throws Exception {
++        assertEquals(4, 2 + 2);
++    }
++}
+\ No newline at end of file
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/FriendListItem.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/FriendListItem.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/FriendListItem.java	(revision )
+@@ -0,0 +1,97 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import android.content.Context;
++import android.graphics.Bitmap;
++import android.graphics.BitmapFactory;
++import android.util.TypedValue;
++import android.view.Gravity;
++import android.widget.ImageView;
++import android.widget.LinearLayout;
++import android.widget.TextView;
++import cn.sharesdk.onekeyshare.themes.classic.FriendAdapter.Following;
++
++import com.mob.tools.gui.AsyncImageView;
++import com.mob.tools.gui.BitmapProcessor;
++import com.mob.tools.utils.R;
++
++/** 好友列表的item */
++public class FriendListItem extends LinearLayout {
++	private static final int DESIGN_AVATAR_WIDTH = 64;
++	private static final int DESIGN_AVATAR_PADDING = 24;
++	private static final int DESIGN_ITEM_HEIGHT = 96;
++	private static final int DESIGN_ITEM_PADDING = 20;
++
++	private ImageView ivCheck;
++	private AsyncImageView aivIcon;
++	private TextView tvName;
++	/** 好友列表中，被选中的checkbox图标 */
++	private Bitmap bmChd;
++	/** 好友列表中，没选中的checkbox图标 */
++	private Bitmap bmUnch;
++
++	public FriendListItem(Context context, float ratio) {
++		super(context);
++		int itemPadding = (int) (ratio * DESIGN_ITEM_PADDING);
++		setPadding(itemPadding, 0, itemPadding, 0);
++		setMinimumHeight((int) (ratio * DESIGN_ITEM_HEIGHT));
++		setBackgroundColor(0xffffffff);
++
++		ivCheck = new ImageView(context);
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
++				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
++		lp.gravity = Gravity.CENTER_VERTICAL;
++		addView(ivCheck, lp);
++
++		aivIcon = new AsyncImageView(context);
++		int avatarWidth = (int) (ratio * DESIGN_AVATAR_WIDTH);
++		lp = new LinearLayout.LayoutParams(avatarWidth, avatarWidth);
++		lp.gravity = Gravity.CENTER_VERTICAL;
++		int avatarMargin = (int) (ratio * DESIGN_AVATAR_PADDING);
++		lp.setMargins(avatarMargin, 0, avatarMargin, 0);
++		addView(aivIcon, lp);
++
++		tvName = new TextView(context);
++		tvName.setTextColor(0xff000000);
++		tvName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
++		tvName.setSingleLine();
++		lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
++		lp.gravity = Gravity.CENTER_VERTICAL;
++		lp.weight = 1;
++		addView(tvName, lp);
++
++		int resId = R.getBitmapRes(context, "ssdk_oks_classic_check_checked");
++		if (resId > 0) {
++			bmChd = BitmapFactory.decodeResource(context.getResources(), resId);
++		}
++		resId = R.getBitmapRes(getContext(), "ssdk_oks_classic_check_default");
++		if (resId > 0) {
++			bmUnch = BitmapFactory.decodeResource(context.getResources(), resId);
++		}
++	}
++
++	public void update(Following following, boolean fling) {
++		tvName.setText(following.screenName);
++		ivCheck.setImageBitmap(following.checked ? bmChd : bmUnch);
++		if (aivIcon != null) {
++			if (fling) {
++				Bitmap bm = BitmapProcessor.getBitmapFromCache(following.icon);
++				if (bm != null && !bm.isRecycled()) {
++					aivIcon.setImageBitmap(bm);
++				} else {
++					aivIcon.execute(null, 0);
++				}
++			} else {
++				aivIcon.execute(following.icon, 0);
++			}
++		}
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/XView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/XView.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/XView.java	(revision )
+@@ -0,0 +1,46 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import android.content.Context;
++import android.graphics.Canvas;
++import android.graphics.Paint;
++import android.view.View;
++
++/** 编辑页面中删除图片“X”按钮 */
++public class XView extends View {
++	private float ratio;
++
++	public XView(Context context) {
++		super(context);
++	}
++
++	public void setRatio(float ratio) {
++		this.ratio = ratio;
++	}
++
++	protected void onDraw(Canvas canvas) {
++		int width = getWidth() / 2;
++		int height = getHeight() / 2;
++
++		Paint paint = new Paint();
++		paint.setAntiAlias(true);
++		paint.setColor(0xffa0a0a0);
++		canvas.drawRect(width, 0, getWidth(), height, paint);
++
++		paint = new Paint();
++		paint.setAntiAlias(true);
++		paint.setStrokeWidth(3f * ratio);
++		paint.setColor(0xffffffff);
++		float left = 8f * ratio;
++		canvas.drawLine(width + left, left, getWidth() - left, width - left, paint);
++		canvas.drawLine(width + left, width - left, getWidth() - left, left, paint);
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/FriendListPageLand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/FriendListPageLand.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/FriendListPageLand.java	(revision )
+@@ -0,0 +1,34 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic.land;
++
++import com.mob.tools.utils.R;
++
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++import cn.sharesdk.onekeyshare.themes.classic.FriendListPage;
++
++/** 横屏的好友列表 */
++public class FriendListPageLand extends FriendListPage {
++	private static final int DESIGN_SCREEN_WIDTH = 1280;
++	private static final int DESIGN_TITLE_HEIGHT = 70;
++
++	public FriendListPageLand(OnekeyShareThemeImpl impl) {
++		super(impl);
++	}
++
++	protected float getRatio() {
++		float screenWidth = R.getScreenWidth(activity);
++		return screenWidth / DESIGN_SCREEN_WIDTH;
++	}
++
++	protected int getDesignTitleHeight() {
++		return DESIGN_TITLE_HEIGHT;
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/OnekeySharePage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/OnekeySharePage.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/OnekeySharePage.java	(revision )
+@@ -0,0 +1,77 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare;
++
++import java.util.ArrayList;
++import java.util.HashMap;
++
++import cn.sharesdk.framework.Platform;
++import cn.sharesdk.framework.Platform.ShareParams;
++import cn.sharesdk.framework.PlatformActionListener;
++
++import com.mob.tools.FakeActivity;
++
++/** 快捷分享的基类 */
++public class OnekeySharePage extends FakeActivity {
++	private OnekeyShareThemeImpl impl;
++
++	public OnekeySharePage(OnekeyShareThemeImpl impl) {
++		this.impl = impl;
++	}
++
++	/** 分享界面是否弹窗模式 */
++	protected final boolean isDialogMode() {
++		return impl.dialogMode;
++	}
++
++	protected final HashMap<String, Object> getShareParamsMap() {
++		return impl.shareParamsMap;
++	}
++
++	/** 静默分享开关（没有界面，直接分享 ）*/
++	protected final boolean isSilent() {
++		return impl.silent;
++	}
++
++	protected final ArrayList<CustomerLogo> getCustomerLogos() {
++		return impl.customerLogos;
++	}
++
++	protected final HashMap<String, String> getHiddenPlatforms() {
++		return impl.hiddenPlatforms;
++	}
++
++	protected final PlatformActionListener getCallback() {
++		return impl.callback;
++	}
++
++	protected final ShareContentCustomizeCallback getCustomizeCallback() {
++		return impl.customizeCallback;
++	}
++
++	protected final boolean isDisableSSO() {
++		return impl.disableSSO;
++	}
++
++	protected final void shareSilently(Platform platform) {
++		impl.shareSilently(platform);
++	}
++
++	protected final ShareParams formateShareData(Platform platform) {
++		if (impl.formateShareData(platform)) {
++			return impl.shareDataToShareParams(platform);
++		}
++		return null;
++	}
++
++	protected final boolean isUseClientToShare(Platform platform) {
++		return impl.isUseClientToShare(platform);
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PlatformPageAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PlatformPageAdapter.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PlatformPageAdapter.java	(revision )
+@@ -0,0 +1,219 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import java.util.ArrayList;
++
++import android.content.Context;
++import android.util.TypedValue;
++import android.view.Gravity;
++import android.view.View;
++import android.view.ViewGroup;
++import android.view.View.OnClickListener;
++import android.view.ViewGroup.LayoutParams;
++import android.widget.ImageView;
++import android.widget.LinearLayout;
++import android.widget.TextView;
++import android.widget.ImageView.ScaleType;
++import cn.sharesdk.framework.Platform;
++import cn.sharesdk.onekeyshare.CustomerLogo;
++
++import com.mob.tools.gui.ViewPagerAdapter;
++import com.mob.tools.utils.R;
++
++/** 九宫格的适配器抽象类 */
++public abstract class PlatformPageAdapter extends ViewPagerAdapter implements OnClickListener {
++	/** 1秒内多次点击九格宫内的图标无效 */
++	protected static final int MIN_CLICK_INTERVAL = 1000;
++	public static final int DESIGN_BOTTOM_HEIGHT = 52;
++
++	/** 九格宫内图标排列的二维数组，一维对应平台，二维对应页数 */
++	protected Object[][] cells;
++	private PlatformPage page;
++	private IndicatorView vInd;
++
++	protected int bottomHeight;
++	protected int panelHeight;
++	protected int cellHeight;
++	protected int lineSize;
++	protected int sepLineWidth;
++	protected int paddingTop;
++	protected int logoHeight;
++
++	private long lastClickTime;
++
++	public PlatformPageAdapter(PlatformPage page, ArrayList<Object> cells) {
++		this.page = page;
++		if (cells != null && !cells.isEmpty()) {
++			calculateSize(page.getContext(), cells);
++			collectCells(cells);
++		}
++	}
++
++	/** 计算九宫格的格数，行数，格高，行高，图标大小 */
++	protected abstract void calculateSize(Context context, ArrayList<Object> plats);
++
++	/** 计算九宫格的格数，行数 */
++	protected abstract void collectCells(ArrayList<Object> plats);
++
++	public int getBottomHeight() {
++		return bottomHeight;
++	}
++
++	public int getPanelHeight() {
++		return panelHeight;
++	}
++
++	public int getCount() {
++		return cells == null? 0: cells.length;
++	}
++
++	public void setIndicator(IndicatorView view) {
++		vInd = view;
++	}
++
++	public void onScreenChange(int currentScreen, int lastScreen) {
++		if (vInd != null) {
++			vInd.setScreenCount(getCount());
++			vInd.onScreenChange(currentScreen, lastScreen);
++		}
++	}
++
++	public View getView(int index, View convertView, ViewGroup parent) {
++		if (convertView == null) {
++			convertView = createPanel(parent.getContext());
++		}
++
++		LinearLayout llPanel = R.forceCast(convertView);
++		LinearLayout[] llCells = R.forceCast(llPanel.getTag());
++		refreshPanel(llCells, cells[index]);
++		return convertView;
++	}
++
++	private View createPanel(Context context) {
++		LinearLayout llPanel = new LinearLayout(context);
++		llPanel.setOrientation(LinearLayout.VERTICAL);
++		llPanel.setBackgroundColor(0xfff2f2f2);
++
++		int lineCount = panelHeight / cellHeight;
++		LinearLayout[] llCells = new LinearLayout[lineCount * lineSize];
++		llPanel.setTag(llCells);
++		int cellBack = R.getBitmapRes(context, "ssdk_oks_classic_platform_cell_back");
++		LinearLayout.LayoutParams lp;
++		for (int i = 0; i < lineCount; i++) {
++			LinearLayout llLine = new LinearLayout(context);
++			lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, cellHeight);
++			llPanel.addView(llLine, lp);
++
++			for (int j = 0; j < lineSize; j++) {
++				llCells[i * lineSize + j] = new LinearLayout(context);
++				llCells[i * lineSize + j].setBackgroundResource(cellBack);
++				llCells[i * lineSize + j].setOrientation(LinearLayout.VERTICAL);
++				lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, cellHeight);
++				lp.weight = 1;
++				llLine.addView(llCells[i * lineSize + j], lp);
++
++				if (j < lineSize - 1) {
++					View vSep = new View(context);
++					lp = new LinearLayout.LayoutParams(sepLineWidth, LayoutParams.MATCH_PARENT);
++					llLine.addView(vSep, lp);
++				}
++			}
++
++			View vSep = new View(context);
++			lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, sepLineWidth);
++			llPanel.addView(vSep, lp);
++		}
++
++		for (LinearLayout llCell : llCells) {
++			ImageView ivLogo = new ImageView(context);
++			ivLogo.setScaleType(ScaleType.CENTER_INSIDE);
++			lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, logoHeight);
++			lp.topMargin = paddingTop;
++			llCell.addView(ivLogo, lp);
++
++			TextView tvName = new TextView(context);
++			tvName.setTextColor(0xff646464);
++			tvName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
++			tvName.setGravity(Gravity.CENTER);
++			lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
++			lp.weight = 1;
++			llCell.addView(tvName, lp);
++		}
++
++		return llPanel;
++	}
++
++	private void refreshPanel(LinearLayout[] llCells, Object[] logos) {
++		int cellBack = R.getBitmapRes(page.getContext(), "ssdk_oks_classic_platform_cell_back");
++		int disableBack = R.getBitmapRes(page.getContext(), "ssdk_oks_classic_platfrom_cell_back_nor");
++		for (int i = 0; i < logos.length; i++) {
++			ImageView ivLogo = R.forceCast(llCells[i].getChildAt(0));
++			TextView tvName = R.forceCast(llCells[i].getChildAt(1));
++			if (logos[i] == null) {
++				ivLogo.setVisibility(View.INVISIBLE);
++				tvName.setVisibility(View.INVISIBLE);
++				llCells[i].setBackgroundResource(disableBack);
++				llCells[i].setOnClickListener(null);
++			} else {
++				ivLogo.setVisibility(View.VISIBLE);
++				tvName.setVisibility(View.VISIBLE);
++				llCells[i].setBackgroundResource(cellBack);
++				llCells[i].setOnClickListener(this);
++				llCells[i].setTag(logos[i]);
++
++				if (logos[i] instanceof CustomerLogo) {
++					CustomerLogo logo = R.forceCast(logos[i]);
++					if (logo.logo != null) {
++						ivLogo.setImageBitmap(logo.logo);
++					} else {
++						ivLogo.setImageBitmap(null);
++					}
++					if (logo.label != null) {
++						tvName.setText(logo.label);
++					} else {
++						tvName.setText("");
++					}
++				} else {
++					Platform plat = R.forceCast(logos[i]);
++					String name = plat.getName().toLowerCase();
++					int resId = R.getBitmapRes(ivLogo.getContext(),"ssdk_oks_classic_" + name);
++					if (resId > 0) {
++						ivLogo.setImageResource(resId);
++					} else {
++						ivLogo.setImageBitmap(null);
++					}
++					resId = R.getStringRes(tvName.getContext(), "ssdk_" + name);
++					if (resId > 0) {
++						tvName.setText(resId);
++					} else {
++						tvName.setText("");
++					}
++				}
++			}
++		}
++	}
++
++	public void onClick(View v) {
++		long time = System.currentTimeMillis();
++		if (time - lastClickTime < MIN_CLICK_INTERVAL) {
++			return;
++		}
++		lastClickTime = time;
++
++		if (v.getTag() instanceof CustomerLogo) {
++			CustomerLogo logo = R.forceCast(v.getTag());
++			page.performCustomLogoClick(v, logo);
++		} else {
++			Platform plat = R.forceCast(v.getTag());
++			page.showEditPage(plat);
++		}
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PlatformPage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PlatformPage.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PlatformPage.java	(revision )
+@@ -0,0 +1,202 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import java.util.ArrayList;
++import java.util.HashMap;
++
++import android.graphics.drawable.ColorDrawable;
++import android.view.View;
++import android.view.View.OnClickListener;
++import android.view.ViewGroup.LayoutParams;
++import android.view.animation.Animation;
++import android.view.animation.TranslateAnimation;
++import android.widget.LinearLayout;
++import android.widget.TextView;
++import cn.sharesdk.framework.CustomPlatform;
++import cn.sharesdk.framework.Platform;
++import cn.sharesdk.framework.Platform.ShareParams;
++import cn.sharesdk.framework.ShareSDK;
++import cn.sharesdk.onekeyshare.CustomerLogo;
++import cn.sharesdk.onekeyshare.OnekeySharePage;
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++
++import com.mob.tools.gui.MobViewPager;
++import com.mob.tools.utils.R;
++
++/** 九宫格的抽象类 */
++public abstract class PlatformPage extends OnekeySharePage {
++	private ClassicTheme impl;
++	/** 点击九格宫，展示编辑界面，要执行的子线程 */
++	private Runnable beforeFinish;
++	/** 九宫格显示时的动画 */
++	private Animation animShow;
++	/** 九宫格隐藏时的动画 */
++	private Animation animHide;
++	private LinearLayout llPanel;
++	private boolean finished;
++
++	public PlatformPage(OnekeyShareThemeImpl impl) {
++		super(impl);
++		this.impl = R.forceCast(impl);
++	}
++
++	public void onCreate() {
++		activity.getWindow().setBackgroundDrawable(new ColorDrawable(0x4c000000));
++		initAnims();
++
++		LinearLayout llPage = new LinearLayout(activity);
++		llPage.setOrientation(LinearLayout.VERTICAL);
++		activity.setContentView(llPage);
++
++		TextView vTop = new TextView(activity);
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
++				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
++		lp.weight = 1;
++		vTop.setOnClickListener(new OnClickListener() {
++			public void onClick(View v) {
++				finish();
++			}
++		});
++		llPage.addView(vTop, lp);
++
++		llPanel = new LinearLayout(activity);
++		llPanel.setOrientation(LinearLayout.VERTICAL);
++		lp = new LinearLayout.LayoutParams(
++				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
++		llPanel.setAnimation(animShow);
++		llPage.addView(llPanel, lp);
++
++		MobViewPager mvp = new MobViewPager(activity);
++		ArrayList<Object> cells = collectCells();
++		PlatformPageAdapter adapter = newAdapter(cells);
++		lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, adapter.getPanelHeight());
++		llPanel.addView(mvp, lp);
++
++		IndicatorView vInd = new IndicatorView(activity);
++		lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, adapter.getBottomHeight());
++		llPanel.addView(vInd, lp);
++
++		vInd.setScreenCount(adapter.getCount());
++		vInd.onScreenChange(0, 0);
++		adapter.setIndicator(vInd);
++		mvp.setAdapter(adapter);
++	}
++
++	protected abstract PlatformPageAdapter newAdapter(ArrayList<Object> cells);
++
++	protected ArrayList<Object> collectCells() {
++		ArrayList<Object> cells = new ArrayList<Object>();
++
++		Platform[] platforms = ShareSDK.getPlatformList();
++		if (platforms == null) {
++			platforms = new Platform[0];
++		}
++		HashMap<String, String> hides = getHiddenPlatforms();
++		if (hides == null) {
++			hides = new HashMap<String, String>();
++		}
++		for (Platform p : platforms) {
++			if (!hides.containsKey(p.getName())) {
++				cells.add(p);
++			}
++		}
++
++		ArrayList<CustomerLogo> customers = getCustomerLogos();
++		if (customers != null && customers.size() > 0) {
++			cells.addAll(customers);
++		}
++
++		return cells;
++	}
++
++	public final void showEditPage(final Platform platform) {
++		beforeFinish = new Runnable() {
++			public void run() {
++				boolean isSilent = isSilent();
++				boolean isCustomPlatform = platform instanceof CustomPlatform;
++				boolean isUseClientToShare = isUseClientToShare(platform);
++				if (isSilent || isCustomPlatform || isUseClientToShare) {
++					shareSilently(platform);
++				} else {
++					ShareParams sp = formateShareData(platform);
++					if (sp != null) {
++						// 编辑分享内容的统计
++						ShareSDK.logDemoEvent(3, null);
++						if (getCustomizeCallback() != null) {
++							getCustomizeCallback().onShare(platform, sp);
++						}
++						impl.showEditPage(activity, platform, sp);
++					}
++				}
++			}
++		};
++		finish();
++	}
++
++	public final void performCustomLogoClick(final View v, final CustomerLogo logo) {
++		beforeFinish = new Runnable() {
++			public void run() {
++				logo.listener.onClick(v);
++			}
++		};
++		finish();
++	}
++
++	private void initAnims() {
++		animShow = new TranslateAnimation(
++				Animation.RELATIVE_TO_SELF, 0,
++				Animation.RELATIVE_TO_SELF, 0,
++				Animation.RELATIVE_TO_SELF, 1,
++				Animation.RELATIVE_TO_SELF, 0);
++		animShow.setDuration(300);
++
++		animHide = new TranslateAnimation(
++				Animation.RELATIVE_TO_SELF, 0,
++				Animation.RELATIVE_TO_SELF, 0,
++				Animation.RELATIVE_TO_SELF, 0,
++				Animation.RELATIVE_TO_SELF, 1);
++		animHide.setDuration(300);
++	}
++
++	public boolean onFinish() {
++		if (finished) {
++			finished = false;
++			return false;
++		}
++
++		animHide.setAnimationListener(new Animation.AnimationListener() {
++			public void onAnimationStart(Animation animation) {
++
++			}
++
++			public void onAnimationRepeat(Animation animation) {
++
++			}
++
++			public void onAnimationEnd(Animation animation) {
++				if (beforeFinish == null) {
++					// 取消分享菜单的统计
++					ShareSDK.logDemoEvent(2, null);
++				} else {
++					beforeFinish.run();
++					beforeFinish = null;
++				}
++
++				finished = true;
++				finish();
++			}
++		});
++		llPanel.clearAnimation();
++		llPanel.setAnimation(animHide);
++		llPanel.setVisibility(View.GONE);
++		return true;
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PRTHeader.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PRTHeader.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PRTHeader.java	(revision )
+@@ -0,0 +1,116 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import static com.mob.tools.utils.R.getStringRes;
++import android.content.Context;
++import android.graphics.drawable.Drawable;
++import android.util.TypedValue;
++import android.view.Gravity;
++import android.view.View;
++import android.widget.LinearLayout;
++import android.widget.ProgressBar;
++import android.widget.TextView;
++
++import com.mob.tools.utils.R;
++
++/** 下拉刷新的头部控件  */
++public class PRTHeader extends LinearLayout {
++	private static final int DESIGN_SCREEN_WIDTH = 720;
++	private static final int DESIGN_AVATAR_WIDTH = 64;
++	private static final int DESIGN_AVATAR_PADDING = 24;
++
++	private TextView tvHeader;
++	private RotateImageView ivArrow;
++	private ProgressBar pbRefreshing;
++
++	public PRTHeader(Context context) {
++		super(context);
++		int[] size = R.getScreenSize(context);
++		float screenWidth = size[0] < size[1] ? size[0] : size[1];
++		float ratio = screenWidth / DESIGN_SCREEN_WIDTH;
++
++		setOrientation(VERTICAL);
++
++		LinearLayout llInner = new LinearLayout(context);
++		LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
++		lp.gravity = Gravity.CENTER_HORIZONTAL;
++		addView(llInner, lp);
++
++		ivArrow = new RotateImageView(context);
++		int resId = R.getBitmapRes(context, "ssdk_oks_ptr_ptr");
++		if (resId > 0) {
++			ivArrow.setImageResource(resId);
++		}
++		int avatarWidth = (int) (ratio * DESIGN_AVATAR_WIDTH);
++		lp = new LayoutParams(avatarWidth, avatarWidth);
++		lp.gravity = Gravity.CENTER_VERTICAL;
++		int avataPadding = (int) (ratio * DESIGN_AVATAR_PADDING);
++		lp.topMargin = lp.bottomMargin = avataPadding;
++		llInner.addView(ivArrow, lp);
++
++		pbRefreshing = new ProgressBar(context);
++		resId = R.getBitmapRes(context, "ssdk_oks_classic_progressbar");
++		Drawable pbdrawable = context.getResources().getDrawable(resId);
++		pbRefreshing.setIndeterminateDrawable(pbdrawable);
++		llInner.addView(pbRefreshing, lp);
++		pbRefreshing.setVisibility(View.GONE);
++
++		tvHeader = new TextView(getContext());
++		tvHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
++		tvHeader.setPadding(avataPadding, 0, avataPadding, 0);
++		tvHeader.setTextColor(0xff09bb07);
++		lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
++		lp.gravity = Gravity.CENTER_VERTICAL;
++		llInner.addView(tvHeader, lp);
++	}
++
++	public void onPullDown(int percent) {
++		if (percent > 100) {
++			int degree = (percent - 100) * 180 / 20;
++			if (degree > 180) {
++				degree = 180;
++			}
++			if (degree < 0) {
++				degree = 0;
++			}
++			ivArrow.setRotation(degree);
++		} else {
++			ivArrow.setRotation(0);
++		}
++
++		if (percent < 100) {
++			int resId = getStringRes(getContext(), "ssdk_oks_pull_to_refresh");
++			if (resId > 0) {
++				tvHeader.setText(resId);
++			}
++		} else {
++			int resId = getStringRes(getContext(), "ssdk_oks_release_to_refresh");
++			if (resId > 0) {
++				tvHeader.setText(resId);
++			}
++		}
++	}
++
++	public void onRequest() {
++		ivArrow.setVisibility(View.GONE);
++		pbRefreshing.setVisibility(View.VISIBLE);
++		int resId = getStringRes(getContext(), "ssdk_oks_refreshing");
++		if (resId > 0) {
++			tvHeader.setText(resId);
++		}
++	}
++
++	public void reverse() {
++		pbRefreshing.setVisibility(View.GONE);
++		ivArrow.setRotation(180);
++		ivArrow.setVisibility(View.VISIBLE);
++	}
++
++}
+Index: share/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/.gitignore	(revision )
++++ share/.gitignore	(revision )
+@@ -0,0 +1,1 @@
++/build
+Index: share/src/main/res/drawable/ssdk_oks_classic_progressbar.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/res/drawable/ssdk_oks_classic_progressbar.xml	(revision )
++++ share/src/main/res/drawable/ssdk_oks_classic_progressbar.xml	(revision )
+@@ -0,0 +1,21 @@
++<?xml version="1.0" encoding="utf-8"?>
++<rotate xmlns:android="http://schemas.android.com/apk/res/android"
++	    android:fromDegrees="0"
++	    android:pivotX="50%"
++	    android:pivotY="50%"
++	    android:toDegrees="360" >
++	    <shape
++	        android:innerRadiusRatio="3"
++	        android:shape="ring"
++	        android:thicknessRatio="8"
++	        android:useLevel="false" >
++	        <gradient
++	            android:centerColor="#12ff0e"
++	            android:centerX="0.50"
++	            android:centerY="0.50"
++	            android:endColor="#09bb07"
++	        	android:startColor="#ffffff"
++	            android:type="sweep"
++	            android:useLevel="false" />
++	    </shape>
++</rotate>
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/FriendAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/FriendAdapter.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/FriendAdapter.java	(revision )
+@@ -0,0 +1,290 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import java.util.ArrayList;
++import java.util.HashMap;
++
++import android.graphics.drawable.ColorDrawable;
++import android.os.Handler.Callback;
++import android.os.Message;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.AdapterView.OnItemClickListener;
++import android.widget.LinearLayout;
++import cn.sharesdk.framework.Platform;
++import cn.sharesdk.framework.PlatformActionListener;
++
++import com.mob.tools.gui.PullToRequestListAdapter;
++import com.mob.tools.gui.PullToRequestView;
++import com.mob.tools.utils.UIHandler;
++
++/** 好友列表的适配器 */
++public class FriendAdapter extends PullToRequestListAdapter implements PlatformActionListener {
++	private FriendListPage activity;
++	private boolean hasNext;
++	private Platform platform;
++	/** 请求好友列表时，每页15个 */
++	private final int pageCount = 15;
++	/** 当前的好友列表是第几页 */
++	private int curPage;
++	/** 好友列表数据 */
++	private ArrayList<Following> follows;
++	/** 判断当前的好友列表数据与请求的新数据是否有重复 */
++	private HashMap<String, Boolean> map;
++	/** 好友列表的头部View */
++	private PRTHeader llHeader;
++	/** 根据设计，按照比例来布局，以此来适配所有手机 */
++	private float ratio;
++
++	public FriendAdapter(FriendListPage activity, PullToRequestView view) {
++		super(view);
++		this.activity = activity;
++
++		curPage = -1;
++		hasNext = true;
++		map = new HashMap<String, Boolean>();
++		follows = new ArrayList<Following>();
++
++		getListView().setDivider(new ColorDrawable(0xffeaeaea));
++	}
++
++	public void setRatio(float ratio) {
++		this.ratio = ratio;
++		getListView().setDividerHeight((int) (ratio < 1 ? 1 : ratio));
++	}
++
++	public void setOnItemClickListener(OnItemClickListener listener) {
++		getListView().setOnItemClickListener(listener);
++	}
++
++	public void setPlatform(Platform platform) {
++		this.platform = platform;
++		platform.setPlatformActionListener(this);
++	}
++
++	private void next() {
++		if (hasNext) {
++			platform.listFriend(pageCount, curPage + 1, null);
++		}
++	}
++
++	public void onComplete(Platform plat, int action, HashMap<String, Object> res) {
++		final FollowersResult followersResult = parseFollowers(platform.getName(), res, map);
++		if (followersResult == null) {
++			UIHandler.sendEmptyMessage(0, new Callback() {
++				public boolean handleMessage(Message msg) {
++					notifyDataSetChanged();
++					return false;
++				}
++			});
++			return;
++		}
++
++		hasNext = followersResult.hasNextPage;
++		if (followersResult.list != null && followersResult.list.size() > 0) {
++			curPage++;
++			Message msg = new Message();
++			msg.what = 1;
++			msg.obj = followersResult.list;
++			UIHandler.sendMessage(msg, new Callback() {
++				public boolean handleMessage(Message msg) {
++					if (curPage <= 0) {
++						follows.clear();
++					}
++					follows.addAll(followersResult.list);
++					notifyDataSetChanged();
++					return false;
++				}
++			});
++		}
++	}
++
++	private FollowersResult parseFollowers(String platform, HashMap<String, Object> res, HashMap<String, Boolean> uidMap) {
++		if (res == null || res.size() <= 0) {
++			return null;
++		}
++
++		boolean hasNext = false;
++		ArrayList<Following> data = new ArrayList<Following>();
++		if ("SinaWeibo".equals(platform)) {
++			// users[id, name, description]
++			@SuppressWarnings("unchecked")
++			ArrayList<HashMap<String, Object>> users = (ArrayList<HashMap<String,Object>>) res.get("users");
++			for (HashMap<String, Object> user : users) {
++				String uid = String.valueOf(user.get("id"));
++				if (!uidMap.containsKey(uid)) {
++					Following following = new Following();
++					following.uid = uid;
++					following.screenName = String.valueOf(user.get("name"));
++					following.description = String.valueOf(user.get("description"));
++					following.icon = String.valueOf(user.get("profile_image_url"));
++					following.atName = following.screenName;
++					uidMap.put(following.uid, true);
++					data.add(following);
++				}
++			}
++			hasNext = (Integer) res.get("total_number") > uidMap.size();
++		} else if ("TencentWeibo".equals(platform)) {
++			hasNext = ((Integer)res.get("hasnext") == 0);
++			// info[nick, name, tweet[text]]
++			@SuppressWarnings("unchecked")
++			ArrayList<HashMap<String, Object>> infos = (ArrayList<HashMap<String,Object>>) res.get("info");
++			for (HashMap<String, Object> info : infos) {
++				String uid = String.valueOf(info.get("name"));
++				if (!uidMap.containsKey(uid)) {
++					Following following = new Following();
++					following.screenName = String.valueOf(info.get("nick"));
++					following.uid = uid;
++					following.atName = uid;
++					@SuppressWarnings("unchecked")
++					ArrayList<HashMap<String, Object>> tweets = (ArrayList<HashMap<String,Object>>) info.get("tweet");
++					for (HashMap<String, Object> tweet : tweets) {
++						following.description = String.valueOf(tweet.get("text"));
++						break;
++					}
++					following.icon = String.valueOf(info.get("head")) + "/100";
++					uidMap.put(following.uid, true);
++					data.add(following);
++				}
++			}
++		} else if ("Facebook".equals(platform)) {
++			// data[id, name]
++			@SuppressWarnings("unchecked")
++			ArrayList<HashMap<String, Object>> datas = (ArrayList<HashMap<String,Object>>) res.get("data");
++			for (HashMap<String, Object> d : datas) {
++				String uid = String.valueOf(d.get("id"));
++				if (!uidMap.containsKey(uid)) {
++					Following following = new Following();
++					following.uid = uid;
++					following.atName = "["+uid+"]";
++					following.screenName = String.valueOf(d.get("name"));
++					@SuppressWarnings("unchecked")
++					HashMap<String, Object> picture = (HashMap<String, Object>) d.get("picture");
++					if (picture != null) {
++						@SuppressWarnings("unchecked")
++						HashMap<String, Object> pData = (HashMap<String, Object>) picture.get("data");
++						following.icon = String.valueOf(pData.get("url"));
++					}
++					uidMap.put(following.uid, true);
++					data.add(following);
++				}
++			}
++			@SuppressWarnings("unchecked")
++			HashMap<String, Object> paging = (HashMap<String, Object>) res.get("paging");
++			hasNext = paging.containsKey("next");
++		} else if ("Twitter".equals(platform)) {
++			// users[screen_name, name, description]
++			@SuppressWarnings("unchecked")
++			ArrayList<HashMap<String, Object>> users = (ArrayList<HashMap<String,Object>>) res.get("users");
++			for (HashMap<String, Object> user : users) {
++				String uid = String.valueOf(user.get("screen_name"));
++				if (!uidMap.containsKey(uid)) {
++					Following following = new Following();
++					following.uid = uid;
++					following.atName = uid;
++					following.screenName = String.valueOf(user.get("name"));
++					following.description = String.valueOf(user.get("description"));
++					following.icon = String.valueOf(user.get("profile_image_url"));
++					uidMap.put(following.uid, true);
++					data.add(following);
++				}
++			}
++		}
++
++		FollowersResult ret = new FollowersResult();
++		ret.list = data;
++		ret.hasNextPage = hasNext;
++		return ret;
++	}
++
++	public void onError(Platform plat, int action, Throwable t) {
++		t.printStackTrace();
++	}
++
++	public void onCancel(Platform plat, int action) {
++		UIHandler.sendEmptyMessage(0, new Callback() {
++			public boolean handleMessage(Message msg) {
++				activity.finish();
++				return false;
++			}
++		});
++	}
++
++	public Following getItem(int position) {
++		return follows.get(position);
++	}
++
++	public long getItemId(int position) {
++		return position;
++	}
++
++	public int getCount() {
++		return follows == null ? 0 : follows.size();
++	}
++
++	public View getHeaderView() {
++		if (llHeader == null) {
++			llHeader = new PRTHeader(getContext());
++		}
++		return llHeader;
++	}
++
++	public void onPullDown(int percent) {
++		llHeader.onPullDown(percent);
++	}
++
++	public void onRefresh() {
++		llHeader.onRequest();
++		curPage = -1;
++		hasNext = true;
++		map.clear();
++		next();
++	}
++
++	public void onReversed() {
++		llHeader.reverse();
++	}
++
++	public View getView(int position, View convertView, ViewGroup parent) {
++		if (convertView == null) {
++			FriendListItem llItem = new FriendListItem(parent.getContext(), ratio);
++			convertView = llItem;
++		}
++		FriendListItem llItem = (FriendListItem) convertView;
++		llItem.update(getItem(position), isFling());
++
++		if (position == getCount() - 1) {
++			next();
++		}
++		return convertView;
++	}
++
++	public static class Following {
++		public boolean checked;
++		public String screenName;
++		public String description;
++		public String uid;
++		public String icon;
++		//@Name 用于微博等提示或关联某个人
++		public String atName;
++	}
++
++	private static class FollowersResult {
++		public ArrayList<Following> list;
++		public boolean hasNextPage = false;
++	}
++
++	public View getFooterView() {
++		LinearLayout footerView = new LinearLayout(getContext());
++		footerView.setMinimumHeight(10);
++		return footerView;
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/PlatformPageLand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/PlatformPageLand.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/PlatformPageLand.java	(revision )
+@@ -0,0 +1,34 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic.land;
++
++import java.util.ArrayList;
++
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++import cn.sharesdk.onekeyshare.themes.classic.PlatformPage;
++import cn.sharesdk.onekeyshare.themes.classic.PlatformPageAdapter;
++
++/** 横屏的九宫格页面 */
++public class PlatformPageLand extends PlatformPage {
++
++	public PlatformPageLand(OnekeyShareThemeImpl impl) {
++		super(impl);
++	}
++
++	public void onCreate() {
++		requestLandscapeOrientation();
++		super.onCreate();
++	}
++
++	protected PlatformPageAdapter newAdapter(ArrayList<Object> cells) {
++		return new PlatformPageAdapterLand(this, cells);
++	}
++
++}
++
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/EditPagePort.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/EditPagePort.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/EditPagePort.java	(revision )
+@@ -0,0 +1,269 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic.port;
++
++import java.io.File;
++
++import android.graphics.Bitmap;
++import android.text.TextUtils;
++import android.util.TypedValue;
++import android.view.Gravity;
++import android.view.View;
++import android.view.ViewGroup.LayoutParams;
++import android.widget.EditText;
++import android.widget.LinearLayout;
++import android.widget.RelativeLayout;
++import android.widget.ScrollView;
++import android.widget.TextView;
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++import cn.sharesdk.onekeyshare.themes.classic.EditPage;
++import cn.sharesdk.onekeyshare.themes.classic.XView;
++
++import com.mob.tools.gui.AsyncImageView;
++import com.mob.tools.utils.BitmapHelper;
++import com.mob.tools.utils.R;
++
++/** 竖屏的编辑页 */
++public class EditPagePort extends EditPage  {
++	private static final int DESIGN_SCREEN_HEIGHT= 1280;
++	private static final int DESIGN_TITLE_HEIGHT = 96;
++	private static final int DESIGN_BOTTOM_HEIGHT = 75;
++	private static final int DESIGN_LEFT_PADDING = 40;
++	private static final int DESIGN_THUMB_HEIGHT = 300;
++	private static final int DESIGN_REMOVE_THUMB_HEIGHT = 70;
++
++	public EditPagePort(OnekeyShareThemeImpl impl) {
++		super(impl);
++	}
++
++	public void onCreate() {
++		super.onCreate();
++
++		int screenHeight = R.getScreenHeight(activity);
++		float ratio = ((float) screenHeight) / DESIGN_SCREEN_HEIGHT;
++
++		maxBodyHeight = 0;
++
++		llPage = new LinearLayout(activity);
++		llPage.setOrientation(LinearLayout.VERTICAL);
++		activity.setContentView(llPage);
++
++		rlTitle = new RelativeLayout(activity);
++		rlTitle.setBackgroundColor(0xffe6e9ec);
++		int titleHeight = (int) (DESIGN_TITLE_HEIGHT * ratio);
++
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, titleHeight);
++		llPage.addView(rlTitle, lp);
++		initTitle(rlTitle, ratio);
++
++		RelativeLayout rlBody = new RelativeLayout(activity);
++		rlBody.setBackgroundColor(0xffffffff);
++		lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
++		llPage.addView(rlBody, lp);
++		initBody(rlBody, ratio);
++
++		LinearLayout llShadow = new LinearLayout(activity);
++		llShadow.setOrientation(LinearLayout.VERTICAL);
++		rlBody.addView(llShadow, new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
++		initShadow(llShadow, ratio);
++
++		llBottom = new LinearLayout(activity);
++		llBottom.setOrientation(LinearLayout.VERTICAL);
++		lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
++		llPage.addView(llBottom, lp);
++		initBottom(llBottom, ratio);
++	}
++
++	private void initTitle(RelativeLayout rlTitle, float ratio) {
++		tvCancel = new TextView(activity);
++		tvCancel.setTextColor(0xff3b3b3b);
++		tvCancel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
++		tvCancel.setGravity(Gravity.CENTER);
++		int resId = R.getStringRes(activity, "ssdk_oks_cancel");
++		if (resId > 0) {
++			tvCancel.setText(resId);
++		}
++		int padding = (int) (DESIGN_LEFT_PADDING * ratio);
++		tvCancel.setPadding(padding, 0, padding, 0);
++		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		rlTitle.addView(tvCancel, lp);
++		tvCancel.setOnClickListener(this);
++
++		TextView tvTitle = new TextView(activity);
++		tvTitle.setTextColor(0xff3b3b3b);
++		tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
++		tvTitle.setGravity(Gravity.CENTER);
++		resId = R.getStringRes(activity, "ssdk_oks_multi_share");
++		if (resId > 0) {
++			tvTitle.setText(resId);
++		}
++		lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
++		rlTitle.addView(tvTitle, lp);
++
++		tvShare = new TextView(activity);
++		tvShare.setTextColor(0xffff6d11);
++		tvShare.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
++		tvShare.setGravity(Gravity.CENTER);
++		resId = R.getStringRes(activity, "ssdk_oks_share");
++		if (resId > 0) {
++			tvShare.setText(resId);
++		}
++		tvShare.setPadding(padding, 0, padding, 0);
++		lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
++		rlTitle.addView(tvShare, lp);
++		tvShare.setOnClickListener(this);
++	}
++
++	private void initBody(RelativeLayout rlBody, float ratio) {
++		svContent = new ScrollView(activity);
++		rlBody.addView(svContent, new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
++
++		LinearLayout llContent = new LinearLayout(activity);
++		llContent.setOrientation(LinearLayout.VERTICAL);
++		svContent.addView(llContent, new ScrollView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
++
++		etContent = new EditText(activity);
++		int padding = (int) (DESIGN_LEFT_PADDING * ratio);
++		etContent.setPadding(padding, padding, padding, padding);
++		etContent.setBackgroundDrawable(null);
++		etContent.setTextColor(0xff3b3b3b);
++		etContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21);
++		etContent.setText(sp.getText());
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
++		llContent.addView(etContent, lp);
++		etContent.addTextChangedListener(this);
++
++		rlThumb = new RelativeLayout(activity);
++		rlThumb.setBackgroundColor(0xff313131);
++		int	thumbWidth = (int) (DESIGN_THUMB_HEIGHT * ratio);
++		int	xWidth = (int) (DESIGN_REMOVE_THUMB_HEIGHT * ratio);
++		lp = new LinearLayout.LayoutParams(thumbWidth, thumbWidth);
++		lp.leftMargin = lp.rightMargin = lp.bottomMargin = lp.topMargin = padding;
++		llContent.addView(rlThumb, lp);
++
++		aivThumb = new AsyncImageView(activity) {
++			public void onImageGot(String url, Bitmap bm) {
++				thumb = bm;
++				super.onImageGot(url, bm);
++			}
++		};
++		aivThumb.setScaleToCropCenter(true);
++		RelativeLayout.LayoutParams rllp = new RelativeLayout.LayoutParams(thumbWidth, thumbWidth);
++		rlThumb.addView(aivThumb, rllp);
++		aivThumb.setOnClickListener(this);
++		initThumb(aivThumb);
++
++		xvRemove = new XView(activity);
++		xvRemove.setRatio(ratio);
++		rllp = new RelativeLayout.LayoutParams(xWidth, xWidth);
++		rllp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
++		rllp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
++		rlThumb.addView(xvRemove, rllp);
++		xvRemove.setOnClickListener(this);
++	}
++
++	private void initBottom(LinearLayout llBottom, float ratio) {
++		LinearLayout llAt = new LinearLayout(activity);
++		llAt.setPadding(0, 0, 0, 5);
++		llAt.setBackgroundColor(0xffffffff);
++		int bottomHeight = (int) (DESIGN_BOTTOM_HEIGHT * ratio);
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, bottomHeight);
++		llBottom.addView(llAt, lp);
++
++		tvAt = new TextView(activity);
++		tvAt.setTextColor(0xff3b3b3b);
++		tvAt.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
++		tvAt.setGravity(Gravity.BOTTOM);
++		tvAt.setText("@");
++		int padding = (int) (DESIGN_LEFT_PADDING * ratio);
++		tvAt.setPadding(padding, 0, padding, 0);
++		lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		llAt.addView(tvAt, lp);
++		tvAt.setOnClickListener(this);
++		if (isShowAtUserLayout(platform.getName())) {
++			tvAt.setVisibility(View.VISIBLE);
++		} else {
++			tvAt.setVisibility(View.INVISIBLE);
++		}
++
++		tvTextCouter = new TextView(activity);
++		tvTextCouter.setTextColor(0xff3b3b3b);
++		tvTextCouter.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21);
++		tvTextCouter.setGravity(Gravity.BOTTOM | Gravity.RIGHT);
++		onTextChanged(etContent.getText(), 0, 0, 0);
++		tvTextCouter.setPadding(padding, 0, padding, 0);
++		lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
++		lp.weight = 1;
++		llAt.addView(tvTextCouter, lp);
++
++		View v = new View(activity);
++		v.setBackgroundColor(0xffcccccc);
++		int px_1 = ratio > 1 ? ((int) ratio) : 1;
++		lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, px_1);
++		llBottom.addView(v, lp);
++	}
++
++	private void initShadow(LinearLayout llShadow, float ratio) {
++		int px_1 = ratio > 1 ? ((int) ratio) : 1;
++		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, px_1);
++
++		View v = new View(activity);
++		v.setBackgroundColor(0x29000000);
++		llShadow.addView(v, lp);
++
++		v = new View(activity);
++		v.setBackgroundColor(0x14000000);
++		llShadow.addView(v, lp);
++
++		v = new View(activity);
++		v.setBackgroundColor(0x07000000);
++		llShadow.addView(v, lp);
++	}
++
++	private void initThumb(AsyncImageView aivThumb) {
++		String imageUrl = sp.getImageUrl();
++		String imagePath = sp.getImagePath();
++		String[] imageArray = sp.getImageArray();
++
++		Bitmap pic = null;
++		rlThumb.setVisibility(View.VISIBLE);
++		if(!TextUtils.isEmpty(imagePath) && new File(imagePath).exists()) {
++			try {
++				pic = BitmapHelper.getBitmap(imagePath);
++			} catch (Throwable e) {
++				e.printStackTrace();
++			}
++		}
++
++		if (pic != null) {
++			thumb = pic;
++			aivThumb.setBitmap(pic);
++		} else if (imageArray != null && imageArray.length > 0) {
++			if (!TextUtils.isEmpty(imageArray[0]) && new File(imageArray[0]).exists()) {
++				try {
++					pic = BitmapHelper.getBitmap(imagePath);
++				} catch (Throwable e) {
++					e.printStackTrace();
++				}
++			}
++		}
++
++		if (pic != null) {
++			thumb = pic;
++			aivThumb.setBitmap(pic);
++		} else if (pic == null && !TextUtils.isEmpty(imageUrl)) {
++			aivThumb.execute(imageUrl, 0);
++		} else {
++			rlThumb.setVisibility(View.GONE);
++		}
++	}
++
++}
+Index: share/src/androidTest/java/me/zsr/share/ExampleInstrumentedTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/androidTest/java/me/zsr/share/ExampleInstrumentedTest.java	(revision )
++++ share/src/androidTest/java/me/zsr/share/ExampleInstrumentedTest.java	(revision )
+@@ -0,0 +1,26 @@
++package me.zsr.share;
++
++import android.content.Context;
++import android.support.test.InstrumentationRegistry;
++import android.support.test.runner.AndroidJUnit4;
++
++import org.junit.Test;
++import org.junit.runner.RunWith;
++
++import static org.junit.Assert.*;
++
++/**
++ * Instrumentation test, which will execute on an Android device.
++ *
++ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
++ */
++@RunWith(AndroidJUnit4.class)
++public class ExampleInstrumentedTest {
++    @Test
++    public void useAppContext() throws Exception {
++        // Context of the app under test.
++        Context appContext = InstrumentationRegistry.getTargetContext();
++
++        assertEquals("me.zsr.share.test", appContext.getPackageName());
++    }
++}
+Index: share/src/main/res/values/ssdk_strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/res/values/ssdk_strings.xml	(revision )
++++ share/src/main/res/values/ssdk_strings.xml	(revision )
+@@ -0,0 +1,78 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <string name="ssdk_weibo_oauth_regiseter">应用授权</string>
++    <string name="ssdk_website">http://www.mob.com</string>
++    <string name="ssdk_weibo_upload_content">分享图片</string>
++    <string name="ssdk_wechat_client_inavailable">目前您的微信版本过低或未安装微信，需要安装微信才能使用</string>
++    <string name="ssdk_google_plus_client_inavailable">Google+ 版本过低或者没有安装，需要升级或安装Google+才能使用！</string>
++    <string name="ssdk_qq_client_inavailable">QQ 版本过低或者没有安装，需要升级或安装QQ才能使用！</string>
++    <string name="ssdk_pinterest_client_inavailable">Pinterest版本过低或者没有安装，需要升级或安装Pinterest才能使用！</string>
++    <string name="ssdk_instagram_client_inavailable">Instagram版本过低或者没有安装，需要升级或安装Instagram才能使用！</string>
++    <string name="ssdk_yixin_client_inavailable">目前您的易信版本过低或未安装，需要安装易信才能使用</string>
++    <string name="ssdk_line_client_inavailable">目前您的Line版本过低或未安装，需要安装Line才能使用</string>
++    <string name="ssdk_kakaotalk_client_inavailable">目前您的KakaoTalk版本过低或未安装，需要安装KakaoTalk才能使用</string>
++    <string name="ssdk_kakaostory_client_inavailable">目前您的KakaoStory版本过低或未安装，需要安装KakaoStory才能使用</string>
++    <string name="ssdk_whatsapp_client_inavailable">目前您的WhatsApp版本过低或未安装，需要安装WhatsApp才能使用</string>
++    <string name="ssdk_laiwang_client_inavailable">目前您的来往版本过低或未安装，需要安装来往才能使用</string>
++    <string name="ssdk_alipay_client_inavailable">目前您的支付宝版本过低或未安装，需要安装支付宝才能使用</string>
++    <string name="ssdk_facebookmessenger_client_inavailable">目前您的FacebookMessenger版本过低或未安装，需要安装才能使用</string>
++    
++	<string name="ssdk_sinaweibo">新浪微博</string>
++	<string name="ssdk_tencentweibo">腾讯微博</string>
++	<string name="ssdk_qzone">QQ空间</string>
++	<string name="ssdk_wechat">微信好友</string>
++	<string name="ssdk_wechatmoments">微信朋友圈</string>
++	<string name="ssdk_wechatfavorite">微信收藏</string>
++	<string name="ssdk_facebook">Facebook</string>
++	<string name="ssdk_twitter">Twitter</string>
++	<string name="ssdk_renren">人人网</string>
++	<string name="ssdk_kaixin">开心网</string>
++	<string name="ssdk_email">邮件</string>
++	<string name="ssdk_shortmessage">信息</string>
++	<string name="ssdk_sohumicroblog">搜狐微博</string>
++	<string name="ssdk_sohusuishenkan">搜狐随身看</string>
++	<string name="ssdk_neteasemicroblog">网易微博</string>
++	<string name="ssdk_douban">豆瓣</string>
++	<string name="ssdk_youdao">有道云笔记</string>
++	<string name="ssdk_evernote">印象笔记</string>
++	<string name="ssdk_linkedin">领英</string>
++	<string name="ssdk_googleplus">Google+</string>
++	<string name="ssdk_foursquare">FourSquare</string>
++	<string name="ssdk_qq">QQ</string>
++	<string name="ssdk_pinterest">Pinterest</string>
++	<string name="ssdk_flickr">Flickr</string>
++	<string name="ssdk_tumblr">Tumblr</string>
++	<string name="ssdk_dropbox">Dropbox</string>
++	<string name="ssdk_vkontakte">VK</string>
++	<string name="ssdk_instagram">Instagram</string>
++	<string name="ssdk_yixin">易信</string>
++	<string name="ssdk_yixinmoments">易信朋友圈</string>
++	<string name="ssdk_mingdao">明道</string>
++	<string name="ssdk_kakaotalk">KakaoTalk</string>
++	<string name="ssdk_kakaostory">KakaoStory</string>
++	<string name="ssdk_line">Line</string>
++	<string name="ssdk_bluetooth">蓝牙</string>
++	<string name="ssdk_whatsapp">WhatsApp</string>
++	<string name="ssdk_pocket">Pocket</string>
++	<string name="ssdk_instapaper">Instapaper</string>
++	<string name="ssdk_instapaper_email">邮箱</string>
++	<string name="ssdk_instapaper_pwd">密码</string>
++	<string name="ssdk_instapaper_login">登录</string>
++	<string name="ssdk_instapaper_logining">登录中…</string>
++	<string name="ssdk_instapager_email_or_password_incorrect">Email或密码不正确</string>
++    <string name="ssdk_facebookmessenger">Facebook Messenger</string>
++    <string name="ssdk_laiwang">来往</string>
++    <string name="ssdk_laiwangmoments">来往动态</string>
++    <string name="ssdk_alipay">支付宝好友</string>
++    <string name="ssdk_alipaymoments">支付宝生活圈</string>
++    <string name="ssdk_plurk">Plurk</string>
++
++	<string name="ssdk_share_to_qzone">分享到QQ空间</string>
++	<string name="ssdk_share_to_qq">分享到QQ</string>
++	<string name="ssdk_share_to_facebook">分享到Facebook</string>
++	<string name="ssdk_mingdao_share_content">网页分享</string>
++	<string name="ssdk_share_to_mingdao">分享到明道</string>
++	<string name="ssdk_share_to_googleplus">分享到Google+</string>
++	<string name="ssdk_share_to_qzone_default">来自%s的分享</string>
++	<string name="ssdk_use_login_button">请改用“登录”按钮</string>
++</resources>
+\ No newline at end of file
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PicViewerPage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PicViewerPage.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/PicViewerPage.java	(revision )
+@@ -0,0 +1,55 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic;
++
++import android.graphics.Bitmap;
++import android.graphics.drawable.ColorDrawable;
++import android.view.ViewTreeObserver.OnGlobalLayoutListener;
++import android.widget.ImageView.ScaleType;
++import cn.sharesdk.onekeyshare.OnekeySharePage;
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++
++import com.mob.tools.gui.ScaledImageView;
++
++/** 图片浏览的视图类 */
++public class PicViewerPage extends OnekeySharePage implements OnGlobalLayoutListener {
++	private Bitmap pic;
++	/** 图片浏览的缩放控件 */
++	private ScaledImageView sivViewer;
++
++	public PicViewerPage(OnekeyShareThemeImpl impl) {
++		super(impl);
++	}
++
++	/** 设置图片用于浏览 */
++	public void setImageBitmap(Bitmap pic) {
++		this.pic = pic;
++	}
++
++	public void onCreate() {
++		activity.getWindow().setBackgroundDrawable(new ColorDrawable(0x4c000000));
++
++		sivViewer = new ScaledImageView(activity);
++		sivViewer.setScaleType(ScaleType.MATRIX);
++		activity.setContentView(sivViewer);
++		if (pic != null) {
++			sivViewer.getViewTreeObserver().addOnGlobalLayoutListener(this);
++		}
++	}
++
++	public void onGlobalLayout() {
++		sivViewer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
++		sivViewer.post(new Runnable() {
++			public void run() {
++				sivViewer.setBitmap(pic);
++			}
++		});
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/PlatformPageAdapterPort.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/PlatformPageAdapterPort.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/PlatformPageAdapterPort.java	(revision )
+@@ -0,0 +1,74 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic.port;
++
++import java.util.ArrayList;
++
++import android.content.Context;
++import cn.sharesdk.onekeyshare.themes.classic.PlatformPage;
++import cn.sharesdk.onekeyshare.themes.classic.PlatformPageAdapter;
++
++import com.mob.tools.utils.R;
++
++/** 竖屏的九宫格页面适配器 */
++public class PlatformPageAdapterPort extends PlatformPageAdapter {
++	private static final int DESIGN_SCREEN_WIDTH_P = 720;
++	private static final int DESIGN_SEP_LINE_WIDTH = 1;
++	private static final int DESIGN_LOGO_HEIGHT = 76;
++	private static final int DESIGN_PADDING_TOP = 20;
++	private static final int PAGE_SIZE_P = 12;
++	private static final int LINE_SIZE_P = 4;
++
++	public PlatformPageAdapterPort(PlatformPage page, ArrayList<Object> cells) {
++		super(page, cells);
++	}
++
++	protected void calculateSize(Context context, ArrayList<Object> plats) {
++		int screenWidth = R.getScreenWidth(context);
++		lineSize = LINE_SIZE_P;
++
++		float ratio = ((float) screenWidth) / DESIGN_SCREEN_WIDTH_P;
++		sepLineWidth = (int) (DESIGN_SEP_LINE_WIDTH * ratio);
++		sepLineWidth = sepLineWidth < 1 ? 1 : sepLineWidth;
++		logoHeight = (int) (DESIGN_LOGO_HEIGHT * ratio);
++		paddingTop = (int) (DESIGN_PADDING_TOP * ratio);
++		bottomHeight = (int) (DESIGN_BOTTOM_HEIGHT * ratio);
++		cellHeight = (screenWidth - sepLineWidth * 3) / 4;
++		if (plats.size() <= lineSize) {
++			panelHeight = cellHeight + sepLineWidth;
++		} else if (plats.size() <= PAGE_SIZE_P - lineSize) {
++			panelHeight = (cellHeight + sepLineWidth) * 2;
++		} else {
++			panelHeight = (cellHeight + sepLineWidth) * 3;
++		}
++	}
++
++	protected void collectCells(ArrayList<Object> plats) {
++		int count = plats.size();
++		if (count < PAGE_SIZE_P) {
++			int lineCount = (count / lineSize);
++			if (count % lineSize != 0) {
++				lineCount++;
++			}
++			cells = new Object[1][lineCount * lineSize];
++		} else {
++			int pageCount = (count / PAGE_SIZE_P);
++			if (count % PAGE_SIZE_P != 0) {
++				pageCount++;
++			}
++			cells = new Object[pageCount][PAGE_SIZE_P];
++		}
++
++		for (int i = 0; i < count; i++) {
++			int p = i / PAGE_SIZE_P;
++			cells[p][i - PAGE_SIZE_P * p] = plats.get(i);
++		}
++	}
++
++}
+Index: share/proguard-rules.pro
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/proguard-rules.pro	(revision )
++++ share/proguard-rules.pro	(revision )
+@@ -0,0 +1,17 @@
++# Add project specific ProGuard rules here.
++# By default, the flags in this file are appended to flags specified
++# in /Users/zsr/Library/Android/sdk/tools/proguard/proguard-android.txt
++# You can edit the include path and order by changing the proguardFiles
++# directive in build.gradle.
++#
++# For more details, see
++#   http://developer.android.com/guide/developing/tools/proguard.html
++
++# Add any project specific keep options here:
++
++# If your project uses WebView with JS, uncomment the following
++# and specify the fully qualified class name to the JavaScript interface
++# class:
++#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
++#   public *;
++#}
+Index: share/src/main/assets/ShareSDK.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/assets/ShareSDK.xml	(revision )
++++ share/src/main/assets/ShareSDK.xml	(revision )
+@@ -0,0 +1,37 @@
++<?xml version="1.0" encoding="utf-8"?>
++<DevInfor>
++    <ShareSDK
++        AppKey="891c2af2da80" />
++    
++    <SinaWeibo
++        Id="1"
++        SortId="1"
++        AppKey="3913915246"
++        AppSecret="5e58e409336d20ef2f4d758c23e5abfa"
++		RedirectUrl="http://www.baidu.com"
++        ShareByAppClient="true"
++        Enable="true" />
++
++    <Wechat
++        Id="4"
++        SortId="4"
++		AppId="wxf0b102ba70e9fae2"
++		AppSecret="9af64d74c83213af375551e268207d50"
++        BypassApproval="false"
++        Enable="true" />
++    
++    <WechatMoments
++        Id="5"
++        SortId="5"
++		AppId="wxf0b102ba70e9fae2"
++		AppSecret="9af64d74c83213af375551e268207d50"
++        BypassApproval="false"
++        Enable="true" />
++
++    <Instapaper
++        Id="38"
++        SortId="38"
++		ConsumerKey="dd523e8342444d11875bc711bf802f97"
++		ConsumerSecret="a7230636ffed48289674fde0891006b0"
++        Enable="true" />
++</DevInfor>
+\ No newline at end of file
+Index: share/src/main/res/values/ssdk_instapaper_strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/res/values/ssdk_instapaper_strings.xml	(revision )
++++ share/src/main/res/values/ssdk_instapaper_strings.xml	(revision )
+@@ -0,0 +1,70 @@
++<?xml version="1.0" encoding="utf-8"?>
++
++<resources>
++    <string name="ssdk_instapager_login_html" formatted="false"><![CDATA[
++<!DOCTYPE html>
++<html>
++<head>
++<meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\">
++<meta content=\"width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no\" id=\"viewport\" name=\"viewport\">
++<meta content=\"yes\" name=\"apple-mobile-web-app-capable\">
++<title>%s</title>
++<style type=\"text/css\">
++body{margin:0;padding:0}
++.inputstyle {
++    -webkit-tap-highlight-color:rgba(255,255,255,0);
++    width:100%%;
++    height:44px;
++    color:#000;
++    background:0;
++    border:0;
++    font-size:16px;
++    outline: none;
++    -webkit-appearance:none
++}
++
++.btn {
++    width:90%%;
++    height:44px;
++    line-height:44px;
++    background:#A0C035;
++    border:0;
++    border-radius:4px;
++    color:#fff;
++    font-size:16px;
++    text-align:center;
++    margin-top:15px;
++    display:block
++}
++.btn:disabled {
++    background: #dddddd;
++}
++.error {
++    color:red;
++}
++</style>
++</head>
++
++<body>
++<script type=\"text/javascript\">
++function login(form){
++    var u=form[\"u\"].value,p=form[\"p\"].value;
++    if(!u || !p)
++        return false;
++    form[\"s\"].disabled = true;
++    return true;
++}
++</script>
++<form style=\"margin-top:45px;\" action=\"%s\" metho=\"get\" onsubmit=\"return login(this);\">
++%s
++<div style=\"padding-left:15px;border-top:1px solid #E3E3E5;border-bottom:1px solid #E3E3E5;\">
++ <input type=\"hidden\" name=\"ID_SIGN\" value=\"OWELJSFPWECSFEW\"/>
++ <input class=\"inputstyle\" id=\"u\" name=\"u\" type=\"text\" value=\"%s\" placeholder=\"%s\" style=\"border-bottom:1px solid #E3E3E5;\"/>
++ <input class=\"inputstyle\" id=\"p\" name=\"p\" type=\"password\" placeholder=\"%s\"/>
++</div>
++<p><input style=\"margin:0 auto;\" type=\"submit\" name=\"s\" value=\"  %s  \" class=\"btn\"/></p>
++</form>
++</body>
++</html>
++]]></string>
++</resources>
+\ No newline at end of file
+Index: share/src/main/java/cn/sharesdk/onekeyshare/ShareContentCustomizeCallback.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/ShareContentCustomizeCallback.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/ShareContentCustomizeCallback.java	(revision )
+@@ -0,0 +1,19 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare;
++
++import cn.sharesdk.framework.Platform;
++import cn.sharesdk.framework.Platform.ShareParams;
++
++/** 自定义不同平台分享不同内容的接口 */
++public interface ShareContentCustomizeCallback {
++
++	public void onShare(Platform platform, ShareParams paramsToShare);
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/PlatformPageAdapterLand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/PlatformPageAdapterLand.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/land/PlatformPageAdapterLand.java	(revision )
+@@ -0,0 +1,68 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic.land;
++
++import java.util.ArrayList;
++
++import android.content.Context;
++import cn.sharesdk.onekeyshare.themes.classic.PlatformPage;
++import cn.sharesdk.onekeyshare.themes.classic.PlatformPageAdapter;
++
++import com.mob.tools.utils.R;
++
++/** 横屏的九宫格页面适配器 */
++public class PlatformPageAdapterLand extends PlatformPageAdapter {
++	private static final int DESIGN_SCREEN_WIDTH_L = 1280;
++	private static final int DESIGN_CELL_WIDTH_L = 160;
++	private static final int DESIGN_SEP_LINE_WIDTH = 1;
++	private static final int DESIGN_LOGO_HEIGHT = 76;
++	private static final int DESIGN_PADDING_TOP = 20;
++
++	public PlatformPageAdapterLand(PlatformPage page, ArrayList<Object> cells) {
++		super(page, cells);
++	}
++
++	protected void calculateSize(Context context, ArrayList<Object> plats) {
++		int screenWidth = R.getScreenWidth(context);
++		float ratio = ((float) screenWidth) / DESIGN_SCREEN_WIDTH_L;
++		int cellWidth = (int) (DESIGN_CELL_WIDTH_L * ratio);
++		lineSize = screenWidth / cellWidth;
++
++		sepLineWidth = (int) (DESIGN_SEP_LINE_WIDTH * ratio);
++		sepLineWidth = sepLineWidth < 1 ? 1 : sepLineWidth;
++		logoHeight = (int) (DESIGN_LOGO_HEIGHT * ratio);
++		paddingTop = (int) (DESIGN_PADDING_TOP * ratio);
++		bottomHeight = (int) (DESIGN_BOTTOM_HEIGHT * ratio);
++		cellHeight = (screenWidth - sepLineWidth * 3) / (lineSize - 1);
++		panelHeight = cellHeight + sepLineWidth;
++	}
++
++	protected void collectCells(ArrayList<Object> plats) {
++		int count = plats.size();
++		if (count < lineSize) {
++			int lineCount = (count / lineSize);
++			if (count % lineSize != 0) {
++				lineCount++;
++			}
++			cells = new Object[1][lineCount * lineSize];
++		} else {
++			int pageCount = (count / lineSize);
++			if (count % lineSize != 0) {
++				pageCount++;
++			}
++			cells = new Object[pageCount][lineSize];
++		}
++
++		for (int i = 0; i < count; i++) {
++			int p = i / lineSize;
++			cells[p][i - lineSize * p] = plats.get(i);
++		}
++	}
++
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/PlatformPagePort.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/PlatformPagePort.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/PlatformPagePort.java	(revision )
+@@ -0,0 +1,33 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic.port;
++
++import java.util.ArrayList;
++
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++import cn.sharesdk.onekeyshare.themes.classic.PlatformPage;
++import cn.sharesdk.onekeyshare.themes.classic.PlatformPageAdapter;
++
++/** 竖屏的九宫格页面 */
++public class PlatformPagePort extends PlatformPage {
++
++	public PlatformPagePort(OnekeyShareThemeImpl impl) {
++		super(impl);
++	}
++
++	public void onCreate() {
++		requestPortraitOrientation();
++		super.onCreate();
++	}
++
++	protected PlatformPageAdapter newAdapter(ArrayList<Object> cells) {
++		return new PlatformPageAdapterPort(this, cells);
++	}
++
++}
+Index: share/src/main/java/me/zsr/share/WXEntryActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/me/zsr/share/WXEntryActivity.java	(revision )
++++ share/src/main/java/me/zsr/share/WXEntryActivity.java	(revision )
+@@ -0,0 +1,52 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package me.zsr.share;
++
++import android.content.Intent;
++import android.widget.Toast;
++import cn.sharesdk.wechat.utils.WXAppExtendObject;
++import cn.sharesdk.wechat.utils.WXMediaMessage;
++import cn.sharesdk.wechat.utils.WechatHandlerActivity;
++
++/** 微信客户端回调activity示例 */
++public class WXEntryActivity extends WechatHandlerActivity {
++
++	/**
++	 * 处理微信发出的向第三方应用请求app message
++	 * <p>
++	 * 在微信客户端中的聊天页面有“添加工具”，可以将本应用的图标添加到其中
++	 * 此后点击图标，下面的代码会被执行。Demo仅仅只是打开自己而已，但你可
++	 * 做点其他的事情，包括根本不打开任何页面
++	 */
++	public void onGetMessageFromWXReq(WXMediaMessage msg) {
++		if (msg != null) {
++			Intent iLaunchMyself = getPackageManager().getLaunchIntentForPackage(getPackageName());
++			startActivity(iLaunchMyself);
++		}
++	}
++
++	/**
++	 * 处理微信向第三方应用发起的消息
++	 * <p>
++	 * 此处用来接收从微信发送过来的消息，比方说本demo在wechatpage里面分享
++	 * 应用时可以不分享应用文件，而分享一段应用的自定义信息。接受方的微信
++	 * 客户端会通过这个方法，将这个信息发送回接收方手机上的本demo中，当作
++	 * 回调。
++	 * <p>
++	 * 本Demo只是将信息展示出来，但你可做点其他的事情，而不仅仅只是Toast
++	 */
++	public void onShowMessageFromWXReq(WXMediaMessage msg) {
++		if (msg != null && msg.mediaObject != null
++				&& (msg.mediaObject instanceof WXAppExtendObject)) {
++			WXAppExtendObject obj = (WXAppExtendObject) msg.mediaObject;
++			Toast.makeText(this, obj.extInfo, Toast.LENGTH_SHORT).show();
++		}
++	}
++
++}
+Index: share/src/main/res/drawable/ssdk_oks_classic_platform_cell_back.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/res/drawable/ssdk_oks_classic_platform_cell_back.xml	(revision )
++++ share/src/main/res/drawable/ssdk_oks_classic_platform_cell_back.xml	(revision )
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<selector xmlns:android="http://schemas.android.com/apk/res/android" >
++	<item android:state_pressed="true" android:drawable="@drawable/ssdk_oks_classic_platfrom_cell_back_sel"/>
++	<item android:drawable="@drawable/ssdk_oks_classic_platfrom_cell_back_nor"/>    
++</selector>
+Index: share/src/main/java/cn/sharesdk/onekeyshare/CustomerLogo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/CustomerLogo.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/CustomerLogo.java	(revision )
+@@ -0,0 +1,19 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare;
++
++import android.graphics.Bitmap;
++import android.view.View.OnClickListener;
++
++/** 九宫格自定义的图标对象 */
++public class CustomerLogo {
++	public String label;
++	public Bitmap logo;
++	public OnClickListener listener;
++}
+Index: share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/FriendListPagePort.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/FriendListPagePort.java	(revision )
++++ share/src/main/java/cn/sharesdk/onekeyshare/themes/classic/port/FriendListPagePort.java	(revision )
+@@ -0,0 +1,34 @@
++/*
++ * 官网地站:http://www.mob.com
++ * 技术支持QQ: 4006852216
++ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
++ *
++ * Copyright (c) 2013年 mob.com. All rights reserved.
++ */
++
++package cn.sharesdk.onekeyshare.themes.classic.port;
++
++import com.mob.tools.utils.R;
++
++import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
++import cn.sharesdk.onekeyshare.themes.classic.FriendListPage;
++
++/** 竖屏的好友列表 */
++public class FriendListPagePort extends FriendListPage {
++	private static final int DESIGN_SCREEN_WIDTH = 720;
++	private static final int DESIGN_TITLE_HEIGHT = 96;
++
++	public FriendListPagePort(OnekeyShareThemeImpl impl) {
++		super(impl);
++	}
++
++	protected float getRatio() {
++		float screenWidth = R.getScreenWidth(activity);
++		return screenWidth / DESIGN_SCREEN_WIDTH;
++	}
++
++	protected int getDesignTitleHeight() {
++		return DESIGN_TITLE_HEIGHT;
++	}
++
++}
+Index: settings.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- settings.gradle	(date 1480124921000)
++++ settings.gradle	(revision )
+@@ -1,1 +1,1 @@
+-include ':app', ':model', ':common', ':domain'
++include ':app', ':model', ':common', ':domain', ':share'
+Index: app/src/main/java/com/feeder/android/App.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/feeder/android/App.java	(date 1480124921000)
++++ app/src/main/java/com/feeder/android/App.java	(revision )
+@@ -9,6 +9,7 @@
+ import com.feeder.domain.DBManager;
+ import com.feeder.domain.VolleySingleton;
+ 
++import cn.sharesdk.framework.ShareSDK;
+ import me.zsr.feeder.BuildConfig;
+ 
+ /**
+@@ -33,5 +34,7 @@
+         DBManager.init(this);
+ 
+         StatManager.init(this);
++
++        ShareSDK.initSDK(this);
+     }
+ }
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(date 1480124921000)
++++ app/build.gradle	(revision )
+@@ -43,6 +43,7 @@
+     compile project (':model')
+     compile project (':common')
+     compile project (':domain')
++    compile project (':share')
+     // Loading Animation
+     compile 'com.wang.avi:library:1.0.5'
+     compile 'com.nineoldandroids:library:2.4.0'

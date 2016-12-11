@@ -1,1 +1,1 @@
-include ':app', ':model', ':common', ':domain', ':share'
+include ':app', ':model', ':common', ':domain', ':share', ':swipebacklayout'

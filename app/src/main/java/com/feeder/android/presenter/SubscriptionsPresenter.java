@@ -93,6 +93,8 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
         Intent intent = new Intent(mActivity, ArticleListActivity.class);
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID, data.getId());
+        bundle.putString(Constants.KEY_BUNDLE_SUBSCRIPTION_TITLE, data.getTitle());
+        bundle.putString(Constants.KEY_BUNDLE_SUBSCRIPTION_ICON_URL, data.getIconUrl());
         intent.putExtras(bundle);
         mActivity.startActivity(intent);
         mActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);

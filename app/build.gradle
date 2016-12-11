@@ -44,6 +44,7 @@ dependencies {
     compile project (':common')
     compile project (':domain')
     compile project (':share')
+    compile project (':swipebacklayout')
     // Loading Animation
     compile 'com.wang.avi:library:1.0.5'
     compile 'com.nineoldandroids:library:2.4.0'
@@ -53,6 +54,5 @@ dependencies {
     // SystemBar
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile 'org.sufficientlysecure:html-textview:2.0'
-    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
 }

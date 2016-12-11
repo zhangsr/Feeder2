@@ -137,10 +137,10 @@ public class ArticleActivity extends BaseSwipeActivity {
         mSubscriptionNameTextView.setText(subscriptionName);
         if (Strings.isNullOrEmpty(article.getContent())) {
             if (!Strings.isNullOrEmpty(article.getDescription())) {
-                mContentTextView.setHtml(article.getDescription(), new HtmlHttpImageGetter(mContentTextView));
+                mContentTextView.setHtml(article.getDescription(), new HtmlHttpImageGetter(mContentTextView, null, true));
             }
         } else {
-            mContentTextView.setHtml(article.getContent(), new HtmlHttpImageGetter(mContentTextView));
+            mContentTextView.setHtml(article.getContent(), new HtmlHttpImageGetter(mContentTextView, null, true));
         }
     }
 

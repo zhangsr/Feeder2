@@ -76,6 +76,7 @@ public class MainActivity extends BaseActivity {
         settingsEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
@@ -87,6 +88,7 @@ public class MainActivity extends BaseActivity {
         aboutEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
