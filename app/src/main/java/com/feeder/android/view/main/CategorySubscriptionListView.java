@@ -16,12 +16,12 @@ import me.zsr.feeder.R;
  * @author: Match
  * @date: 8/4/16
  */
-public class SubscriptionsView extends ISubscriptionsView {
+public class CategorySubscriptionListView extends ISubscriptionsView {
     private RecyclerView mRecyclerView;
-    private SubscriptionAdapter mAdapter;
+    private CategorySubscriptionListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    public SubscriptionsView(Context context) {
+    public CategorySubscriptionListView(Context context) {
         super(context);
         mRecyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.view_recycler, this, false);
 
@@ -48,7 +48,7 @@ public class SubscriptionsView extends ISubscriptionsView {
 
     @Override
     public void setDataSource(List<Category> categoryList) {
-        mAdapter = new SubscriptionAdapter(getContext(), categoryList, mObserver);
+        mAdapter = new CategorySubscriptionListAdapter(getContext(), categoryList, mObserver);
         mRecyclerView.setAdapter(mAdapter);
     }
 }

@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity {
 
     private void initDetailsPanel() {
         LinearLayout detailsPanel = (LinearLayout) findViewById(R.id.details_panel);
-        ISubscriptionsView subscriptionsView = new SubscriptionsView(this);
+        ISubscriptionsView subscriptionsView = SubscriptionsViewFactory.build(this);
         LinearLayout.LayoutParams subscriptionsViewLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);
         detailsPanel.addView(subscriptionsView, subscriptionsViewLp);
         mSubscriptionsPresenter = new SubscriptionsPresenter(this, subscriptionsView);

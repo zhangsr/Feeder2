@@ -19,12 +19,12 @@ import me.zsr.feeder.R;
  * @author: Match
  * @date: 8/8/16
  */
-public class SubscriptionAdapter extends ExpandableRecyclerAdapter<Category, Subscription, CategoryViewHolder, SubscriptionViewHolder> {
+public class CategorySubscriptionListAdapter extends ExpandableRecyclerAdapter<Category, Subscription, CategoryViewHolder, SubscriptionViewHolder> {
     private Context mContext;
     private SubscriptionViewObserver mObserver;
 
-    public SubscriptionAdapter(Context context, @NonNull List<Category> parentItemList,
-                               SubscriptionViewObserver observer) {
+    public CategorySubscriptionListAdapter(Context context, @NonNull List<Category> parentItemList,
+                                           SubscriptionViewObserver observer) {
         super(parentItemList);
         mContext = context;
         mObserver = observer;
