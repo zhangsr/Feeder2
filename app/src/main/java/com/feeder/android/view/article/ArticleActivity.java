@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.feeder.android.util.Constants;
 import com.feeder.android.util.DateUtil;
 import com.feeder.android.util.ShareHelper;
+import com.feeder.android.util.StatManager;
 import com.feeder.android.view.BaseSwipeActivity;
 import com.feeder.android.view.SettingsActivity;
 import com.feeder.common.SPManager;
@@ -137,7 +138,12 @@ public class ArticleActivity extends BaseSwipeActivity {
         mSubscriptionNameTextView.setText(subscriptionName);
         if (Strings.isNullOrEmpty(article.getContent())) {
             if (!Strings.isNullOrEmpty(article.getDescription())) {
-                mContentTextView.setHtml(article.getDescription(), new HtmlHttpImageGetter(mContentTextView, null, true));
+                try {
+                    mContentTextView.setHtml(article.getDescription(), new HtmlHttpImageGetter(mContentTextView, null, true));
+                } catch (IndexOutOfBoundsException e) {
+                    StatManager.statEvent(this, StatManager.EVENT_SET_HTML_ERROR,
+                            "subscription=" + subscriptionName + ", desc=" + article.getDescription());
+                }
             }
         } else {
             mContentTextView.setHtml(article.getContent(), new HtmlHttpImageGetter(mContentTextView, null, true));

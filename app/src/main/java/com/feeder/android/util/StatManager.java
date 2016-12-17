@@ -15,6 +15,7 @@ import me.zsr.feeder.BuildConfig;
  */
 
 public class StatManager {
+    public static final String EVENT_SET_HTML_ERROR = "set_html_error";
 
     public static void init(Context context) {
         if (BuildConfig.DEBUG) {
@@ -28,6 +29,24 @@ public class StatManager {
     public static void trackAppOpened(Intent intent) {
         if (!BuildConfig.DEBUG) {
             AVAnalytics.trackAppOpened(intent);
+        }
+    }
+
+    public static void statEvent(Context context, String event, String tag) {
+        if (!BuildConfig.DEBUG) {
+            AVAnalytics.onEvent(context, event, tag);
+        }
+    }
+
+    public static void onPause(Context context) {
+        if (!BuildConfig.DEBUG) {
+            AVAnalytics.onPause(context);
+        }
+    }
+
+    public static void onResume(Context context) {
+        if (!BuildConfig.DEBUG) {
+            AVAnalytics.onResume(context);
         }
     }
 }

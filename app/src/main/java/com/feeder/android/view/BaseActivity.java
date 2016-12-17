@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.feeder.android.util.StatManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import me.zsr.feeder.R;
@@ -24,6 +25,18 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initSystemBar();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StatManager.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        StatManager.onPause(this);
     }
 
     protected void initSystemBar() {
