@@ -55,6 +55,10 @@
     <string name="donate_summary">激励 Feeder 开发者</string>
     <string name="app_share_desc">Rss 阅读器，开源，Material Design</string>
     <string name="settings">设置</string>
+    <string name="import_opml">导入 OPML</string>
+    <string name="import_failed">导入失败</string>
+    <string name="import_failed_format">导入失败，文件格式无法识别</string>
+    <string name="import_success">导入成功</string>
     <string name="reading_font_size">阅读字体大小</string>
     <string name="account_management">账号管理</string>
     <string name="font">字体</string>

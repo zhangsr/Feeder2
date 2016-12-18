@@ -16,6 +16,7 @@ import com.feeder.common.StringUtil;
 import com.feeder.domain.ArticleController;
 import com.feeder.domain.DataObserver;
 import com.feeder.domain.DataType;
+import com.feeder.domain.RefreshManager;
 import com.feeder.domain.ResponseState;
 import com.feeder.domain.SubscriptionController;
 import com.feeder.model.Subscription;
@@ -56,6 +57,9 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
         SubscriptionController.getInstance().requestData();
         ArticleController.getInstance().registerObserver(this);
         ArticleController.getInstance().requestData();
+
+        // TODO: 12/18/16 verify
+        RefreshManager.getInstance().refreshAll(2000);
     }
 
     @Override

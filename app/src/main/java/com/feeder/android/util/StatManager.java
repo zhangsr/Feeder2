@@ -16,6 +16,8 @@ import me.zsr.feeder.BuildConfig;
 
 public class StatManager {
     public static final String EVENT_SET_HTML_ERROR = "set_html_error";
+    public static final String EVENT_IMPORT_OPML_SUCCESS = "import_opml_success";
+    public static final String EVENT_IMPORT_OPML_FAILED = "import_opml_failed";
 
     public static void init(Context context) {
         if (BuildConfig.DEBUG) {
@@ -35,6 +37,12 @@ public class StatManager {
     public static void statEvent(Context context, String event, String tag) {
         if (!BuildConfig.DEBUG) {
             AVAnalytics.onEvent(context, event, tag);
+        }
+    }
+
+    public static void statEvent(Context context, String event) {
+        if (!BuildConfig.DEBUG) {
+            AVAnalytics.onEvent(context, event);
         }
     }
 

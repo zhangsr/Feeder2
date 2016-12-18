@@ -6,7 +6,6 @@ import com.feeder.common.DateUtil;
 import com.feeder.model.Article;
 import com.google.common.base.Strings;
 
-import org.jsoup.Jsoup;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -14,6 +13,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.feeder.common.XMLUtil.skip;
 
 /**
  * @description:
@@ -157,22 +158,5 @@ public class FeedParser {
             parser.nextTag();
         }
         return result;
-    }
-
-    private static void skip(XmlPullParser parser) throws IOException, XmlPullParserException {
-        if (parser.getEventType() != XmlPullParser.START_TAG) {
-            throw new IllegalStateException();
-        }
-        int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
-                case XmlPullParser.END_TAG:
-                    depth--;
-                    break;
-                case XmlPullParser.START_TAG:
-                    depth++;
-                    break;
-            }
-        }
     }
 }

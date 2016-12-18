@@ -18,11 +18,15 @@ import com.feeder.android.base.ISubscriptionsView;
 import com.feeder.android.base.MVPPresenter;
 import com.feeder.android.presenter.AccountsPresenter;
 import com.feeder.android.presenter.SubscriptionsPresenter;
+import com.feeder.android.util.OPMLHelper;
 import com.feeder.android.util.StatManager;
 import com.feeder.android.view.AboutActivity;
 import com.feeder.android.view.BaseActivity;
 import com.feeder.android.view.SettingsActivity;
+import com.feeder.common.LogUtil;
 import com.feeder.common.ThreadManager;
+import com.nbsp.materialfilepicker.MaterialFilePicker;
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import me.zsr.feeder.R;
 
@@ -31,12 +35,15 @@ import me.zsr.feeder.R;
  * @author: Match
  * @date: 7/18/16
  */
+// TODO: 12/17/16 reformat
 public class MainActivity extends BaseActivity {
+    private static final int OPML_FILE_SELECT_CODE = 1;
     private MVPPresenter mAccountsPresenter;
     private MVPPresenter mSubscriptionsPresenter;
     private DrawerLayout mDrawerLayout;
     private boolean mCanBackExit;
     private MainToolbarController mToolbarController;
+    private OPMLHelper mOPMLHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,8 @@ public class MainActivity extends BaseActivity {
 
         mAccountsPresenter.onCreate();
         mSubscriptionsPresenter.onCreate();
+
+        mOPMLHelper = new OPMLHelper(this);
 
         StatManager.trackAppOpened(getIntent());
     }
@@ -68,15 +77,30 @@ public class MainActivity extends BaseActivity {
         drawerPanel.addView(accountsView, accountsViewLp);
         mAccountsPresenter = new AccountsPresenter(accountsView);
 
+        View importEntrance = LayoutInflater.from(this).inflate(R.layout.import_entrance, drawerPanel, false);
+        drawerPanel.addView(importEntrance);
+        ((ImageView) importEntrance.findViewById(R.id.import_img)).setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        importEntrance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialFilePicker()
+                        .withActivity(MainActivity.this)
+                        .withRequestCode(OPML_FILE_SELECT_CODE)
+                        .withFilterDirectories(true)
+                        .start();
+                closeDrawer(1000);
+            }
+        });
+
         View settingsEntrance = LayoutInflater.from(this).inflate(R.layout.settings_entrance, drawerPanel, false);
         drawerPanel.addView(settingsEntrance);
         ((ImageView) settingsEntrance.findViewById(R.id.settings_img)).setColorFilter(getResources().getColor(R.color.main_grey_normal));
         settingsEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                closeDrawer(1000);
             }
         });
 
@@ -86,9 +110,9 @@ public class MainActivity extends BaseActivity {
         aboutEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                closeDrawer(1000);
             }
         });
     }
@@ -128,7 +152,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
+            closeDrawer(0);
         } else {
             if (mToolbarController.handleBackPressed()) {
                 return;
@@ -161,5 +185,24 @@ public class MainActivity extends BaseActivity {
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    private void closeDrawer(long delay) {
+        ThreadManager.postDelay(new Runnable() {
+            @Override
+            public void run() {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            }
+        }, delay);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == OPML_FILE_SELECT_CODE && resultCode == RESULT_OK) {
+            String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+            mOPMLHelper.add(filePath);
+        }
     }
 }

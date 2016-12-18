@@ -5,6 +5,7 @@ import com.feeder.model.ArticleDao;
 import com.feeder.model.Subscription;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,14 +47,18 @@ public class SubscriptionController extends BaseController {
         return DataType.SUBSCRIPTION;
     }
 
-    public void insert(final Subscription subscription) {
+    public void insert(Subscription... subscriptions) {
+        insert(Arrays.asList(subscriptions));
+    }
+
+    public void insert(final List<Subscription> subscriptions) {
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
-                DBManager.getSubscriptionDao().insertOrReplace(subscription);
-                mSubscriptionList.add(subscription);
+                DBManager.getSubscriptionDao().insertOrReplaceInTx(subscriptions);
+                mSubscriptionList.addAll(subscriptions);
                 fillAndNotifySync();
-                ArticleController.getInstance().requestNetwork(subscription);
+                RefreshManager.getInstance().refresh(subscriptions);
                 // TODO: 10/18/16 how about error ?
             }
         });

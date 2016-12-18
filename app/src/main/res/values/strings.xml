@@ -55,6 +55,10 @@
     <string name="donate_summary">Inspire Feeder developer.</string>
     <string name="app_share_desc">Rss app with material design and open source.</string>
     <string name="settings">Settings</string>
+    <string name="import_opml">Import OPML</string>
+    <string name="import_failed">Import failed</string>
+    <string name="import_failed_format">Import failed, unrecognizable file format</string>
+    <string name="import_success">Import success</string>
     <string name="reading_font_size">Reading font size</string>
     <string name="account_management">Account Management</string>
     <string name="account_feedly_add">Add Feedly Account</string>

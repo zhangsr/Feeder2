@@ -100,7 +100,7 @@ public class ArticleController extends BaseController {
         });
     }
 
-    public void requestNetwork(final Subscription subscription) {
+    void requestNetwork(final Subscription subscription) {
         if (subscription == null) {
             ArticleController.this.notifyAll(ResponseState.ERROR);
             return;
