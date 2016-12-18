@@ -1,11 +1,11 @@
 package com.feeder.android.view.main;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 
 import com.feeder.android.base.IAccountsView;
+import com.feeder.android.other.LinearLayoutManagerEx;
 import com.feeder.model.Account;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class AccountsView extends IAccountsView {
     public AccountsView(Context context) {
         super(context);
         mRecyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.view_accounts, this, false);
-        mLayoutManager = new LinearLayoutManager(context);
+        mLayoutManager = new LinearLayoutManagerEx(context);
         mRecyclerView.setLayoutManager(mLayoutManager);
         addView(mRecyclerView);
     }

@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.feeder.android.util.StatManager;
 import com.feeder.common.LogUtil;
 import com.feeder.common.StringUtil;
 import com.feeder.common.ThreadManager;
@@ -121,6 +122,7 @@ public class MainToolbarController {
                 Subscription subscription = FeedlyUtils.result2Subscription(result);
                 SubscriptionController.getInstance().insert(subscription);
                 mSearchView.closeSearch();
+                StatManager.statEvent(mActivity, StatManager.EVENT_SEARCH_RESULT_CLICK);
             }
         });
     }
@@ -196,6 +198,7 @@ public class MainToolbarController {
             public boolean onMenuItemClick(MenuItem item) {
                 mSearchView.showSearch();
                 showDimLayer();
+                StatManager.statEvent(mActivity, StatManager.EVENT_MENU_SEARCH_CLICK);
                 return true;
             }
         });

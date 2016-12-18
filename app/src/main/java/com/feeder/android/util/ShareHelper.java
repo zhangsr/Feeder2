@@ -37,16 +37,19 @@ public class ShareHelper {
         @Override
         public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
             showToast(mActivity.getString(R.string.share_complete));
+            StatManager.statEvent(mActivity, StatManager.EVENT_SHARE_SUCCESS);
         }
 
         @Override
         public void onError(Platform platform, int i, Throwable throwable) {
             showToast(mActivity.getString(R.string.share_failed));
+            StatManager.statEvent(mActivity, StatManager.EVENT_SHARE_FAILED);
         }
 
         @Override
         public void onCancel(Platform platform, int i) {
             showToast(mActivity.getString(R.string.share_cancel));
+            StatManager.statEvent(mActivity, StatManager.EVENT_SHARE_CANCEl);
         }
     };
 

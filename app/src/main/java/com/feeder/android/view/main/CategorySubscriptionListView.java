@@ -1,11 +1,11 @@
 package com.feeder.android.view.main;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 
 import com.feeder.android.base.ISubscriptionsView;
+import com.feeder.android.other.LinearLayoutManagerEx;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class CategorySubscriptionListView extends ISubscriptionsView {
         super(context);
         mRecyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.view_recycler, this, false);
 
-        mLayoutManager = new LinearLayoutManager(context);
+        mLayoutManager = new LinearLayoutManagerEx(context);
         mRecyclerView.setLayoutManager(mLayoutManager);
         addView(mRecyclerView);
     }

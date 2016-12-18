@@ -18,6 +18,18 @@ public class StatManager {
     public static final String EVENT_SET_HTML_ERROR = "set_html_error";
     public static final String EVENT_IMPORT_OPML_SUCCESS = "import_opml_success";
     public static final String EVENT_IMPORT_OPML_FAILED = "import_opml_failed";
+    public static final String EVENT_MENU_SEARCH_CLICK = "menu_search_click";
+    public static final String EVENT_SEARCH_RESULT_CLICK = "search_result_click";
+    public static final String EVENT_MENU_SHARE_CLICK = "menu_share_click";
+    public static final String EVENT_SHARE_ITEM_CLICK = "share_item_click";
+    public static final String EVENT_SHARE_SUCCESS = "share_success";
+    public static final String EVENT_SHARE_FAILED = "share_failed";
+    public static final String EVENT_SHARE_CANCEl = "share_cancel";
+
+    public static final String TAG_SHARE_WECHAT = "share_wechat";
+    public static final String TAG_SHARE_MOMENT = "share_moment";
+    public static final String TAG_SHARE_WEIBO = "share_weibo";
+    public static final String TAG_SHARE_INSTAPAPER = "share_instapaper";
 
     public static void init(Context context) {
         if (BuildConfig.DEBUG) {

@@ -75,6 +75,7 @@ public class ArticleActivity extends BaseSwipeActivity {
                 switch (item.getItemId()) {
                     case R.id.action_share:
                         showShareMenu();
+                        StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_MENU_SHARE_CLICK);
                         break;
                 }
                 return false;
@@ -200,15 +201,19 @@ public class ArticleActivity extends BaseSwipeActivity {
                         switch (contentIdList.get(which)) {
                             case R.string.wechat:
                                 mShareHelper.shareToWechat(mArticle);
+                                StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_SHARE_ITEM_CLICK, StatManager.TAG_SHARE_WECHAT);
                                 break;
                             case R.string.moment:
                                 mShareHelper.shareToMoment(mArticle);
+                                StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_SHARE_ITEM_CLICK, StatManager.TAG_SHARE_MOMENT);
                                 break;
                             case R.string.weibo:
                                 mShareHelper.shareToWeibo(mArticle);
+                                StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_SHARE_ITEM_CLICK, StatManager.TAG_SHARE_WEIBO);
                                 break;
                             case R.string.instapaper:
                                 mShareHelper.shareToInstapaper(mArticle);
+                                StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_SHARE_ITEM_CLICK, StatManager.TAG_SHARE_INSTAPAPER);
                                 break;
                         }
                         dialog.dismiss();
