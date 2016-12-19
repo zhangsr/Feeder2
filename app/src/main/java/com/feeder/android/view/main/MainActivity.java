@@ -1,7 +1,11 @@
 package com.feeder.android.view.main;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -23,7 +27,6 @@ import com.feeder.android.util.StatManager;
 import com.feeder.android.view.AboutActivity;
 import com.feeder.android.view.BaseActivity;
 import com.feeder.android.view.SettingsActivity;
-import com.feeder.common.LogUtil;
 import com.feeder.common.ThreadManager;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
@@ -38,6 +41,7 @@ import me.zsr.feeder.R;
 // TODO: 12/17/16 reformat
 public class MainActivity extends BaseActivity {
     private static final int OPML_FILE_SELECT_CODE = 1;
+    private static final int PERMISSION_REQUEST_WIRTE_EXTERNAL_STORAGE = 1;
     private MVPPresenter mAccountsPresenter;
     private MVPPresenter mSubscriptionsPresenter;
     private DrawerLayout mDrawerLayout;
@@ -83,12 +87,19 @@ public class MainActivity extends BaseActivity {
         importEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MaterialFilePicker()
-                        .withActivity(MainActivity.this)
-                        .withRequestCode(OPML_FILE_SELECT_CODE)
-                        .withFilterDirectories(true)
-                        .start();
-                closeDrawer(1000);
+                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.WRITE_CALENDAR);
+                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    pickFile();
+                    closeDrawer(1000);
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_REQUEST_WIRTE_EXTERNAL_STORAGE);
+                    closeDrawer(0);
+                }
+
+                StatManager.statEvent(MainActivity.this, StatManager.EVENT_IMPORT_OPML_CLICK);
             }
         });
 
@@ -115,6 +126,14 @@ public class MainActivity extends BaseActivity {
                 closeDrawer(1000);
             }
         });
+    }
+
+    private void pickFile() {
+        new MaterialFilePicker()
+                .withActivity(MainActivity.this)
+                .withRequestCode(OPML_FILE_SELECT_CODE)
+                .withFilterDirectories(true)
+                .start();
     }
 
     private void initDetailsPanel() {
@@ -202,7 +221,21 @@ public class MainActivity extends BaseActivity {
 
         if (requestCode == OPML_FILE_SELECT_CODE && resultCode == RESULT_OK) {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+            StatManager.statEvent(MainActivity.this, StatManager.EVENT_IMPORT_OPML_GET_FILE);
             mOPMLHelper.add(filePath);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_WIRTE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickFile();
+                }
+            }
         }
     }
 }

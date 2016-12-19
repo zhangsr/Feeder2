@@ -16,6 +16,8 @@ import me.zsr.feeder.BuildConfig;
 
 public class StatManager {
     public static final String EVENT_SET_HTML_ERROR = "set_html_error";
+    public static final String EVENT_IMPORT_OPML_CLICK = "import_opml_click";
+    public static final String EVENT_IMPORT_OPML_GET_FILE = "import_opml_get_file";
     public static final String EVENT_IMPORT_OPML_SUCCESS = "import_opml_success";
     public static final String EVENT_IMPORT_OPML_FAILED = "import_opml_failed";
     public static final String EVENT_MENU_SEARCH_CLICK = "menu_search_click";
