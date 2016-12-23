@@ -27,6 +27,7 @@ public class StatManager {
     public static final String EVENT_SHARE_SUCCESS = "share_success";
     public static final String EVENT_SHARE_FAILED = "share_failed";
     public static final String EVENT_SHARE_CANCEl = "share_cancel";
+    public static final String EVENT_ENTER_LIST = "enter_list";
 
     public static final String TAG_SHARE_WECHAT = "share_wechat";
     public static final String TAG_SHARE_MOMENT = "share_moment";
