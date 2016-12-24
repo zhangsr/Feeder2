@@ -59,9 +59,11 @@ public class OPMLHelper {
             StatManager.statEvent(mActivity, StatManager.EVENT_IMPORT_OPML_SUCCESS);
             Toast.makeText(mActivity, R.string.import_success, Toast.LENGTH_SHORT).show();
         } catch (XmlPullParserException e) {
+            StatManager.uploadFile("OPMLFailed", file);
             StatManager.statEvent(mActivity, StatManager.EVENT_IMPORT_OPML_FAILED);
             Toast.makeText(mActivity, R.string.import_failed_format, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
+            StatManager.uploadFile("OPMLFailed", file);
             StatManager.statEvent(mActivity, StatManager.EVENT_IMPORT_OPML_FAILED);
             Toast.makeText(mActivity, R.string.import_failed, Toast.LENGTH_SHORT).show();
         }

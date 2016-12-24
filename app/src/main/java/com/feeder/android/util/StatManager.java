@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.avos.avoscloud.AVAnalytics;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVOSCloud;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 import me.zsr.feeder.BuildConfig;
 
@@ -73,6 +77,20 @@ public class StatManager {
     public static void onResume(Context context) {
         if (!BuildConfig.DEBUG) {
             AVAnalytics.onResume(context);
+        }
+    }
+
+    public static void uploadFile(String mark, File file) {
+        if (BuildConfig.DEBUG) {
+            return;
+        }
+        try {
+            AVFile avFile = AVFile.withAbsoluteLocalPath(mark + "_" + file.getName(), file.getAbsolutePath());
+            if (avFile.getSize() < 512 * 1024) {
+                avFile.saveInBackground();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }
