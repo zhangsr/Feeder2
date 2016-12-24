@@ -61,6 +61,11 @@ public class MainToolbarController {
     private MaterialSearchView mSearchView;
     private String mCurrentSearchText;
 
+
+    private static final String[] BLACK_LIST = new String[] {
+        "http://feeds.feedburner.com/zhihu-daily"
+    };
+
     public MainToolbarController(Activity activity) {
         mActivity = activity;
         initToolbar();
@@ -158,6 +163,7 @@ public class MainToolbarController {
                             String json = jsonObject.getString("results");
                             Type listType = new TypeToken<List<FeedlyResult>>() {}.getType();
                             mResultList = new Gson().fromJson(json, listType);
+                            filterResult(mResultList);
 
                             for (FeedlyResult result : mResultList) {
                                 titleList.add(result.title);
@@ -202,6 +208,17 @@ public class MainToolbarController {
                 return true;
             }
         });
+    }
+
+    private void filterResult(List<FeedlyResult> resultList) {
+        List<FeedlyResult> removeList = new ArrayList<>();
+        for (FeedlyResult result : resultList) {
+            for (String s : BLACK_LIST) {
+                if (s.equals(result.feedId.substring(5))) {
+                    removeList.add(result);
+                }
+            }
+        }
     }
 
     private void showDimLayer() {
