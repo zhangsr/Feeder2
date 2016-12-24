@@ -1,6 +1,7 @@
 package com.feeder.android.util;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.Toast;
@@ -12,7 +13,6 @@ import java.util.HashMap;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.instapaper.Instapaper;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
@@ -103,16 +103,28 @@ public class ShareHelper {
         platform.share(sp);
     }
 
-    public void shareToInstapaper(Article article) {
-        Instapaper.ShareParams sp = new Instapaper.ShareParams();
-        sp.setTitle(article.getTitle());
-        sp.setText(HtmlUtil.getOptimizedDesc(article.getDescription()));
-        sp.setUrl(article.getLink());
+    public void shareToApp(Article article, String packageName) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.setPackage(packageName);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, article.getLink());
+        sendIntent.putExtra(Intent.EXTRA_TITLE, article.getTitle());
+        sendIntent.putExtra("source", Constants.PACKAGE_NAME_FEEDER);
+        sendIntent.setType("text/plain");
+        mActivity.startActivity(sendIntent);
 
-        Platform platform = ShareSDK.getPlatform(Instapaper.NAME);
-        platform.setPlatformActionListener(mPlatformActionListener);
-        platform.share(sp);
     }
+
+    public void shareToOthers(Article article) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, article.getLink());
+        sendIntent.putExtra(Intent.EXTRA_TITLE, article.getTitle());
+        sendIntent.putExtra("source", Constants.PACKAGE_NAME_FEEDER);
+        sendIntent.setType("text/plain");
+        mActivity.startActivity(sendIntent);
+    }
+
 
     private String getPureTextShare(Article article) {
         String shareText = article.getTitle()

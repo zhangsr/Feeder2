@@ -41,9 +41,11 @@
     <string name="moment">Moments</string>
     <string name="weibo">Weibo</string>
     <string name="instapaper">Instapaper</string>
+    <string name="more">More</string>
     <string name="share_to">Share To</string>
     <string name="google_plus">Google Plus</string>
     <string name="pocket">Pocket</string>
+    <string name="evernote">Evernote</string>
     <string name="share_complete">Share Complete</string>
     <string name="share_failed">Share Failed</string>
     <string name="share_cancel">Share Cancel</string>

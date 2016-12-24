@@ -38,6 +38,7 @@
             <ImageView
                 android:id="@+id/wechat_img"
                 android:src="@drawable/ic_menu_wechat"
+                android:tint="@color/main_grey_normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -74,6 +75,7 @@
             <ImageView
                 android:id="@+id/moment_img"
                 android:src="@drawable/ic_menu_moment"
+                android:tint="@color/main_grey_normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -110,6 +112,7 @@
             <ImageView
                 android:id="@+id/weibo_img"
                 android:src="@drawable/ic_menu_weibo"
+                android:tint="@color/main_grey_normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -146,6 +149,7 @@
             <ImageView
                 android:id="@+id/instapaper_img"
                 android:src="@drawable/ic_menu_instapaper"
+                android:tint="@color/main_grey_normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -208,7 +212,6 @@
         <LinearLayout
             android:id="@+id/pocket_layout"
             android:minHeight="48dp"
-            android:visibility="gone"
             android:gravity="center_vertical"
             android:background="@drawable/rect_selector"
             android:clickable="true"
@@ -220,6 +223,7 @@
             <ImageView
                 android:id="@+id/pocket_img"
                 android:src="@drawable/ic_menu_pocket"
+                android:tint="@color/main_grey_normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -236,6 +240,80 @@
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/pocket_switch"
+                android:clickable="false"
+                android:background="@null"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/evernote_layout"
+            android:minHeight="48dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/rect_selector"
+            android:clickable="true"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/evernote_img"
+                android:src="@drawable/ic_menu_evernote"
+                android:tint="@color/main_grey_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:text="@string/evernote"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/evernote_switch"
+                android:clickable="false"
+                android:background="@null"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/more_layout"
+            android:minHeight="48dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/rect_selector"
+            android:clickable="true"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/more_img"
+                android:src="@drawable/ic_menu_more"
+                android:tint="@color/main_grey_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:text="@string/more"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/more_switch"
                 android:clickable="false"
                 android:background="@null"
                 android:layout_width="wrap_content"

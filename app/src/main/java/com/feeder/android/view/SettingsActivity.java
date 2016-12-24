@@ -29,6 +29,8 @@ public class SettingsActivity extends BaseSwipeActivity {
     public static final String KEY_SWITCH_SHARE_INSTAPAPER = "switch_share_instapaper";
     public static final String KEY_SWITCH_SHARE_GOOGLE_PLUS = "switch_share_google_plus";
     public static final String KEY_SWITCH_SHARE_POCKET = "switch_share_pocket";
+    public static final String KEY_SWITCH_SHARE_EVERNOTE = "switch_share_evernote";
+    public static final String KEY_SWITCH_SHARE_MORE = "switch_share_more";
 
     @Bind(R.id.back_btn)
     ImageButton mBackButton;
@@ -71,6 +73,12 @@ public class SettingsActivity extends BaseSwipeActivity {
     ImageView mPocketImageView;
     @Bind(R.id.pocket_switch)
     SwitchCompat mPocketSwitch;
+    @Bind(R.id.evernote_img)
+    ImageView mEvernoteImageView;
+    @Bind(R.id.evernote_switch)
+    SwitchCompat mEvernoteSwitch;
+    @Bind(R.id.more_switch)
+    SwitchCompat mMoreSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +112,8 @@ public class SettingsActivity extends BaseSwipeActivity {
         mInstapaperSwitch.setChecked(SPManager.getBoolean(KEY_SWITCH_SHARE_INSTAPAPER, true));
         mGooglePlusSwitch.setChecked(SPManager.getBoolean(KEY_SWITCH_SHARE_GOOGLE_PLUS, true));
         mPocketSwitch.setChecked(SPManager.getBoolean(KEY_SWITCH_SHARE_POCKET, true));
+        mEvernoteSwitch.setChecked(SPManager.getBoolean(KEY_SWITCH_SHARE_EVERNOTE, true));
+        mMoreSwitch.setChecked(SPManager.getBoolean(KEY_SWITCH_SHARE_MORE, true));
     }
 
     private void setListener() {
@@ -143,6 +153,18 @@ public class SettingsActivity extends BaseSwipeActivity {
                 SPManager.setBoolean(KEY_SWITCH_SHARE_POCKET, isChecked);
             }
         });
+        mEvernoteSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPManager.setBoolean(KEY_SWITCH_SHARE_EVERNOTE, isChecked);
+            }
+        });
+        mMoreSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPManager.setBoolean(KEY_SWITCH_SHARE_MORE, isChecked);
+            }
+        });
     }
 
     @Override
@@ -165,6 +187,8 @@ public class SettingsActivity extends BaseSwipeActivity {
             R.id.instapaper_layout,
             R.id.google_plus_layout,
             R.id.pocket_layout,
+            R.id.evernote_layout,
+            R.id.more_layout,
     })
     public void layoutOnClick(View view) {
         switch (view.getId()) {
@@ -194,6 +218,12 @@ public class SettingsActivity extends BaseSwipeActivity {
                 break;
             case R.id.pocket_layout:
                 mPocketSwitch.setChecked(!mPocketSwitch.isChecked());
+                break;
+            case R.id.evernote_layout:
+                mEvernoteSwitch.setChecked(!mEvernoteSwitch.isChecked());
+                break;
+            case R.id.more_layout:
+                mMoreSwitch.setChecked(!mMoreSwitch.isChecked());
                 break;
         }
     }

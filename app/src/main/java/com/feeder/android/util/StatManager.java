@@ -33,6 +33,9 @@ public class StatManager {
     public static final String TAG_SHARE_MOMENT = "share_moment";
     public static final String TAG_SHARE_WEIBO = "share_weibo";
     public static final String TAG_SHARE_INSTAPAPER = "share_instapaper";
+    public static final String TAG_SHARE_POCKET = "share_pocket";
+    public static final String TAG_SHARE_EVERNOTE = "share_evernote";
+    public static final String TAG_SHARE_OTHERS = "share_others";
 
     public static void init(Context context) {
         if (BuildConfig.DEBUG) {

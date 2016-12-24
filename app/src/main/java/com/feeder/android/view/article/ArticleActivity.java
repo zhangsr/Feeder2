@@ -1,6 +1,8 @@
 package com.feeder.android.view.article;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -17,6 +19,7 @@ import com.feeder.android.util.ShareHelper;
 import com.feeder.android.util.StatManager;
 import com.feeder.android.view.BaseSwipeActivity;
 import com.feeder.android.view.SettingsActivity;
+import com.feeder.common.AppUtil;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.DBManager;
@@ -160,37 +163,82 @@ public class ArticleActivity extends BaseSwipeActivity {
     private void showShareMenu() {
         final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(this);
         final List<Integer> contentIdList = new ArrayList<>();
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_WECHAT, true)) {
+        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_WECHAT, true)
+                && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_WECHAT)) {
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_wechat);
+            drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
             adapter.add(new MaterialSimpleListItem.Builder(this)
                     .content(R.string.wechat)
-                    .icon(R.drawable.ic_menu_wechat)
+                    .icon(drawable)
                     .backgroundColor(Color.WHITE)
                     .build());
             contentIdList.add(R.string.wechat);
         }
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_MOMENT, true)) {
+        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_MOMENT, true)
+                && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_WECHAT)) {
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_moment);
+            drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
             adapter.add(new MaterialSimpleListItem.Builder(this)
                     .content(R.string.moment)
-                    .icon(R.drawable.ic_menu_moment)
+                    .icon(drawable)
                     .backgroundColor(Color.WHITE)
                     .build());
             contentIdList.add(R.string.moment);
         }
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_WEIBO, true)) {
+        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_WEIBO, true)
+                && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_WEIBO)) {
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_weibo);
+            drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
             adapter.add(new MaterialSimpleListItem.Builder(this)
                     .content(R.string.weibo)
-                    .icon(R.drawable.ic_menu_weibo)
+                    .icon(drawable)
                     .backgroundColor(Color.WHITE)
                     .build());
             contentIdList.add(R.string.weibo);
         }
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_INSTAPAPER, true)) {
+        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_INSTAPAPER, true)
+                && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_INSTAPAPER)) {
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_instapaper);
+            drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
             adapter.add(new MaterialSimpleListItem.Builder(this)
                     .content(R.string.instapaper)
-                    .icon(R.drawable.ic_menu_instapaper)
+                    .icon(drawable)
                     .backgroundColor(Color.WHITE)
                     .build());
             contentIdList.add(R.string.instapaper);
+        }
+        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_POCKET, true)
+                && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_POCKET)) {
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_pocket);
+            drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
+            adapter.add(new MaterialSimpleListItem.Builder(this)
+                    .content(R.string.pocket)
+                    .icon(drawable)
+                    .backgroundColor(Color.WHITE)
+                    .build());
+            contentIdList.add(R.string.pocket);
+        }
+        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_EVERNOTE, true)
+                && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_EVERNOTE)) {
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_evernote);
+            drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
+            adapter.add(new MaterialSimpleListItem.Builder(this)
+                    .content(R.string.evernote)
+                    .icon(drawable)
+                    .backgroundColor(Color.WHITE)
+                    .build());
+            contentIdList.add(R.string.evernote);
+        }
+
+        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_MORE, true)) {
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_more);
+            drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
+            adapter.add(new MaterialSimpleListItem.Builder(this)
+                    .content(R.string.more)
+                    .icon(drawable)
+                    .backgroundColor(Color.WHITE)
+                    .build());
+            contentIdList.add(R.string.more);
         }
 
         new MaterialDialog.Builder(this)
@@ -212,9 +260,22 @@ public class ArticleActivity extends BaseSwipeActivity {
                                 StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_SHARE_ITEM_CLICK, StatManager.TAG_SHARE_WEIBO);
                                 break;
                             case R.string.instapaper:
-                                mShareHelper.shareToInstapaper(mArticle);
+                                mShareHelper.shareToApp(mArticle, Constants.PACKAGE_NAME_INSTAPAPER);
                                 StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_SHARE_ITEM_CLICK, StatManager.TAG_SHARE_INSTAPAPER);
                                 break;
+                            case R.string.pocket:
+                                mShareHelper.shareToApp(mArticle, Constants.PACKAGE_NAME_POCKET);
+                                StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_SHARE_ITEM_CLICK, StatManager.TAG_SHARE_POCKET);
+                                break;
+                            case R.string.evernote:
+                                mShareHelper.shareToApp(mArticle, Constants.PACKAGE_NAME_EVERNOTE);
+                                StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_SHARE_ITEM_CLICK, StatManager.TAG_SHARE_EVERNOTE);
+                                break;
+                            case R.string.more:
+                                mShareHelper.shareToOthers(mArticle);
+                                StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_SHARE_ITEM_CLICK, StatManager.TAG_SHARE_OTHERS);
+                                break;
+
                         }
                         dialog.dismiss();
                     }
