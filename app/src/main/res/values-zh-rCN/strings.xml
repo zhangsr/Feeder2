@@ -71,6 +71,7 @@
     <string name="alipay_account_copied">支付宝账号 已复制</string>
     <string name="account_feedly_add">添加 Feedly 账号</string>
     <string name="back_exit_hint">再点返回退出</string>
+    <string name="search_hint">搜索</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>

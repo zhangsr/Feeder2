@@ -82,6 +82,7 @@ public class MainToolbarController {
         mToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
 
         mSearchView = (MaterialSearchView) mActivity.findViewById(R.id.search_view);
+        mSearchView.setHint(mActivity.getString(R.string.search_hint));
         mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
