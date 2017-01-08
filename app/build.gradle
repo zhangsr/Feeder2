@@ -19,6 +19,16 @@ android {
         buildConfigField("String", "AVOS_APP_ID", "\"${AVOS_APP_ID}\"")
         buildConfigField("String", "AVOS_CLIENT_KEY", "\"${AVOS_CLIENT_KEY}\"");
     }
+
+    productFlavors {
+        coolapk {
+            buildConfigField("String", "LEANCLOUD_CHANNEL", "\"CoolApk\"")
+        }
+        googleplay {
+            buildConfigField("String", "LEANCLOUD_CHANNEL", "\"GooglePlay\"")
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false

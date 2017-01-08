@@ -47,6 +47,7 @@ public class StatManager {
             AVAnalytics.enableCrashReport(context, false);
         } else {
             AVOSCloud.initialize(context, BuildConfig.AVOS_APP_ID, BuildConfig.AVOS_CLIENT_KEY);
+            AVAnalytics.setAppChannel(BuildConfig.LEANCLOUD_CHANNEL);
         }
     }
 
