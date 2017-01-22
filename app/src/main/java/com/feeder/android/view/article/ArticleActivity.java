@@ -257,6 +257,13 @@ public class ArticleActivity extends BaseSwipeActivity {
             contentIdList.add(R.string.more);
         }
 
+        if (contentIdList.size() == 0 ||
+                (contentIdList.size() == 1 &&contentIdList.get(0) == R.string.more)) {
+            mShareHelper.shareToOthers(mArticle);
+            StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_SHARE_ITEM_CLICK, StatManager.TAG_SHARE_OTHERS);
+            return;
+        }
+
         new MaterialDialog.Builder(this)
                 .title(R.string.share_to)
                 .adapter(adapter, new MaterialDialog.ListCallback() {
