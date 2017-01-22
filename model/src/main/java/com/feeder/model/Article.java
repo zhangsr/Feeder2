@@ -151,7 +151,7 @@ public class Article {
     }
 
     public Boolean getFavorite() {
-        return this.favorite;
+        return this.favorite == null ? false : this.favorite;
     }
 
     public void setFavorite(Boolean favorite) {

@@ -9,6 +9,8 @@ import com.feeder.model.ArticleDao;
 import com.feeder.model.Subscription;
 import com.feeder.model.SubscriptionDao;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,11 +99,13 @@ public class ArticleController extends BaseController {
     }
 
     List<Article> queryBySubscriptionIdSync(long subscriptionId) {
-        return DBManager.getArticleDao().queryBuilder().where(
-                ArticleDao.Properties.SubscriptionId.eq(subscriptionId),
+        QueryBuilder qb = DBManager.getArticleDao().queryBuilder();
+        qb.where(ArticleDao.Properties.SubscriptionId.eq(subscriptionId),
                 ArticleDao.Properties.Trash.eq(false),
-                ArticleDao.Properties.Favorite.eq(false))
-                .orderDesc(ArticleDao.Properties.Published).list();
+                qb.or(ArticleDao.Properties.Favorite.eq(false),
+                        ArticleDao.Properties.Favorite.isNull()))
+                .orderDesc(ArticleDao.Properties.Published);
+        return qb.list();
     }
 
     public void requestNetwork(final long subscriptionId) {
@@ -245,10 +249,13 @@ public class ArticleController extends BaseController {
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
-                List<Article> articleListToTrash = DBManager.getArticleDao().queryBuilder().where(
+                QueryBuilder qb = DBManager.getArticleDao().queryBuilder();
+                qb.where(
                         ArticleDao.Properties.Read.eq(true),
-                        ArticleDao.Properties.Favorite.eq(false),
-                        ArticleDao.Properties.Trash.eq(false)).list();
+                        ArticleDao.Properties.Trash.eq(false),
+                        qb.or(ArticleDao.Properties.Favorite.eq(false),
+                                ArticleDao.Properties.Favorite.isNull()));
+                List<Article> articleListToTrash = qb.list();
                 for (Article article : articleListToTrash) {
                     article.setTrash(true);
                 }

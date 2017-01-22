@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.feeder.model.ArticleDao;
+import com.feeder.model.DBOpenHelper;
 import com.feeder.model.DaoMaster;
 import com.feeder.model.DaoSession;
 import com.feeder.model.SubscriptionDao;
@@ -19,7 +20,7 @@ public class DBManager {
     private static DaoSession sDaoSession;
 
     public static void init(Context context) {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, DB_NAME, null);
+        DaoMaster.OpenHelper helper = new DBOpenHelper(context, DB_NAME, null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         sDaoSession = daoMaster.newSession();
