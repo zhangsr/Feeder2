@@ -9,6 +9,7 @@ import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
@@ -22,6 +23,7 @@ import com.feeder.android.view.SettingsActivity;
 import com.feeder.common.AppUtil;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
+import com.feeder.domain.ArticleController;
 import com.feeder.domain.DBManager;
 import com.feeder.model.Article;
 import com.feeder.model.ArticleDao;
@@ -44,7 +46,6 @@ import me.zsr.feeder.R;
  * @date: 10/23/16
  */
 
-// TODO: 10/31/16 optimize : make image match parent``
 // TODO: 10/30/16 to be modularity
 public class ArticleActivity extends BaseSwipeActivity {
     private Toolbar mToolbar;
@@ -76,6 +77,18 @@ public class ArticleActivity extends BaseSwipeActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.action_fav:
+                        if (mArticle.getFavorite()) {
+                            mArticle.setFavorite(false);
+                            item.setIcon(R.drawable.ic_star_border_white_24dp);
+                            Toast.makeText(ArticleActivity.this, R.string.unfavorited, Toast.LENGTH_SHORT).show();
+                        } else {
+                            mArticle.setFavorite(true);
+                            item.setIcon(R.drawable.ic_star_white_24dp);
+                            Toast.makeText(ArticleActivity.this, R.string.favorited, Toast.LENGTH_SHORT).show();
+                        }
+                        ArticleController.getInstance().saveArticle(mArticle);
+                        break;
                     case R.id.action_share:
                         showShareMenu();
                         StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_MENU_SHARE_CLICK);
@@ -140,17 +153,20 @@ public class ArticleActivity extends BaseSwipeActivity {
         mDateTextView.setText(DateUtil.formatDate(this, article.getPublished()));
         mTimeTextView.setText(DateUtil.formatTime(article.getPublished()));
         mSubscriptionNameTextView.setText(subscriptionName);
-        if (Strings.isNullOrEmpty(article.getContent())) {
-            if (!Strings.isNullOrEmpty(article.getDescription())) {
-                try {
+        try {
+            if (Strings.isNullOrEmpty(article.getContent())) {
+                if (!Strings.isNullOrEmpty(article.getDescription())) {
                     mContentTextView.setHtml(article.getDescription(), new HtmlHttpImageGetter(mContentTextView, null, true));
-                } catch (IndexOutOfBoundsException e) {
-                    StatManager.statEvent(this, StatManager.EVENT_SET_HTML_ERROR,
-                            "subscription=" + subscriptionName + ", desc=" + article.getDescription());
                 }
+            } else {
+                mContentTextView.setHtml(article.getContent(), new HtmlHttpImageGetter(mContentTextView, null, true));
             }
-        } else {
-            mContentTextView.setHtml(article.getContent(), new HtmlHttpImageGetter(mContentTextView, null, true));
+        } catch (IndexOutOfBoundsException e) {
+            StatManager.statEvent(this, StatManager.EVENT_SET_HTML_ERROR,
+                    "subscription=" + subscriptionName + ", desc=" + article.getDescription());
+        }
+        if (article.getFavorite()) {
+            mToolbar.getMenu().findItem(R.id.action_fav).setIcon(R.drawable.ic_star_white_24dp);
         }
     }
 

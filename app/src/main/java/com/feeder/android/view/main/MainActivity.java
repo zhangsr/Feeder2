@@ -22,12 +22,15 @@ import com.feeder.android.base.ISubscriptionsView;
 import com.feeder.android.base.MVPPresenter;
 import com.feeder.android.presenter.AccountsPresenter;
 import com.feeder.android.presenter.SubscriptionsPresenter;
+import com.feeder.android.util.Constants;
 import com.feeder.android.util.OPMLHelper;
 import com.feeder.android.util.StatManager;
 import com.feeder.android.view.AboutActivity;
 import com.feeder.android.view.BaseActivity;
 import com.feeder.android.view.SettingsActivity;
+import com.feeder.android.view.articlelist.ArticleListActivity;
 import com.feeder.common.ThreadManager;
+import com.feeder.domain.ArticleController;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
@@ -100,6 +103,25 @@ public class MainActivity extends BaseActivity {
                 }
 
                 StatManager.statEvent(MainActivity.this, StatManager.EVENT_IMPORT_OPML_CLICK);
+            }
+        });
+
+        View favEntrance = LayoutInflater.from(this).inflate(R.layout.fav_entrance, drawerPanel, false);
+        drawerPanel.addView(favEntrance);
+        ((ImageView) favEntrance.findViewById(R.id.fav_img)).setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        favEntrance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ArticleListActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID, ArticleController.ID_FAV);
+                bundle.putString(Constants.KEY_BUNDLE_SUBSCRIPTION_TITLE, getString(R.string.fav));
+                bundle.putString(Constants.KEY_BUNDLE_SUBSCRIPTION_ICON_URL, "");
+                intent.putExtras(bundle);
+                startActivity(intent);
+
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                closeDrawer(1000);
             }
         });
 

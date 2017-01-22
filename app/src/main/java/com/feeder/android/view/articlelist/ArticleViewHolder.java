@@ -42,7 +42,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
         mItemView.setOnClickListener(listener);
         mItemView.setOnLongClickListener(longClickListener);
         mTitleTextView.setText(article.getTitle());
-        if (article.getRead()) {
+        if (article.getRead() && !article.getFavorite()) {
             mTitleTextView.setAlpha(0.54f);
             mTitleTextView.setTextColor(mItemView.getResources().getColor(R.color.main_grey_normal));
         } else {

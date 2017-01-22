@@ -26,7 +26,11 @@ public class FeedlyUtils {
                 "",
                 "",
                 0L,
-                0L
+                0L,
+                0L,
+                "",
+                "",
+                ""
         );
         return subscription;
     }

@@ -157,7 +157,11 @@ public class OPMLHelper {
                 "",
                 "",
                 0L,
-                0L
+                0L,
+                0L,
+                "",
+                "",
+                ""
         );
         return subscription;
     }

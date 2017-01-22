@@ -20,8 +20,9 @@ import java.util.List;
  */
 
 public class ArticleController extends BaseController {
+    public static final long ID_FAV = -2L;
     private static final long ID_UNKNOWN = -1L;
-    public static final long ID_ALL = 0L;
+    private static final long ID_ALL = 0L;
     private static ArticleController sArticleController;
     private List<Article> mArticleList = new ArrayList<>();
     private long mCurrentSubscriptionId = ID_UNKNOWN;
@@ -71,16 +72,35 @@ public class ArticleController extends BaseController {
             @Override
             public void run() {
                 mCurrentSubscriptionId = subscriptionId;
+                // TODO: 1/17/17 clear data in bg may cause IndexOutOfBound
                 mArticleList.clear();
                 updateMemoryIfNeed(subscriptionId, queryBySubscriptionIdSync(subscriptionId), false);
             }
         });
     }
 
-    public List<Article> queryBySubscriptionIdSync(long subscriptionId) {
+    public void requestFav() {
+        ThreadManager.postInBackground(new Runnable() {
+            @Override
+            public void run() {
+                mCurrentSubscriptionId = ID_FAV;
+                mArticleList.clear();
+                updateMemoryIfNeed(ID_FAV, queryFav(), false);
+            }
+        });
+    }
+
+    private List<Article> queryFav() {
+        return DBManager.getArticleDao().queryBuilder().where(
+                ArticleDao.Properties.Favorite.eq(true))
+                .orderDesc(ArticleDao.Properties.Published).list();
+    }
+
+    List<Article> queryBySubscriptionIdSync(long subscriptionId) {
         return DBManager.getArticleDao().queryBuilder().where(
                 ArticleDao.Properties.SubscriptionId.eq(subscriptionId),
-                ArticleDao.Properties.Trash.eq(false))
+                ArticleDao.Properties.Trash.eq(false),
+                ArticleDao.Properties.Favorite.eq(false))
                 .orderDesc(ArticleDao.Properties.Published).list();
     }
 
@@ -205,6 +225,18 @@ public class ArticleController extends BaseController {
         });
     }
 
+    public void saveArticle(final Article article) {
+        if (article == null) {
+            return;
+        }
+        ThreadManager.postInBackground(new Runnable() {
+            @Override
+            public void run() {
+                DBManager.getArticleDao().update(article);
+            }
+        });
+    }
+
     /**
      * Mark trashed to avoid pull again
      */
@@ -215,6 +247,7 @@ public class ArticleController extends BaseController {
             public void run() {
                 List<Article> articleListToTrash = DBManager.getArticleDao().queryBuilder().where(
                         ArticleDao.Properties.Read.eq(true),
+                        ArticleDao.Properties.Favorite.eq(false),
                         ArticleDao.Properties.Trash.eq(false)).list();
                 for (Article article : articleListToTrash) {
                     article.setTrash(true);

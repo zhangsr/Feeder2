@@ -113,7 +113,7 @@ public class FeedParser {
             }
         }
         return new Article(null, title, link, description, false, false, content, null,
-                DateUtil.parseRfc822(pubDate).getTime());
+                DateUtil.parseRfc822(pubDate).getTime(), false, "", "", "");
     }
 
     private static String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {

@@ -49,6 +49,9 @@
     <string name="share_failed">分享失败</string>
     <string name="share_cancel">分享取消</string>
     <string name="share">分享</string>
+    <string name="fav">收藏</string>
+    <string name="favorited">已收藏</string>
+    <string name="unfavorited">取消收藏</string>
     <string name="share_summary">如果你喜欢 Feeder 请把它分享给你的朋友</string>
     <string name="join">加入</string>
     <string name="join_summary">一起创造高效的 RSS 阅读器</string>

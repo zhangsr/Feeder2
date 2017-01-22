@@ -22,6 +22,12 @@ public class Account {
 
     private Long signUpTime;
 
+    private String ext1;
+
+    private String ext2;
+
+    private String ext3;
+
     public String getName() {
         return this.name;
     }
@@ -62,14 +68,41 @@ public class Account {
         this.email = email;
     }
 
-    @Generated(hash = 852110296)
+    public String getExt1() {
+        return this.ext1;
+    }
+
+    public void setExt1(String ext1) {
+        this.ext1 = ext1;
+    }
+
+    public String getExt2() {
+        return this.ext2;
+    }
+
+    public void setExt2(String ext2) {
+        this.ext2 = ext2;
+    }
+
+    public String getExt3() {
+        return this.ext3;
+    }
+
+    public void setExt3(String ext3) {
+        this.ext3 = ext3;
+    }
+
+    @Generated(hash = 503954081)
     public Account(Long id, String name, String avatarUrl, String email,
-            Long signUpTime) {
+            Long signUpTime, String ext1, String ext2, String ext3) {
         this.id = id;
         this.name = name;
         this.avatarUrl = avatarUrl;
         this.email = email;
         this.signUpTime = signUpTime;
+        this.ext1 = ext1;
+        this.ext2 = ext2;
+        this.ext3 = ext3;
     }
 
     @Generated(hash = 882125521)

@@ -49,8 +49,12 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
     @Override
     public void onStart() {
         ArticleController.getInstance().registerObserver(this);
-        ArticleController.getInstance().requestData(mSubscriptionId);
-        ArticleController.getInstance().requestNetwork(mSubscriptionId);
+        if (mSubscriptionId == ArticleController.ID_FAV) {
+            ArticleController.getInstance().requestFav();
+        } else {
+            ArticleController.getInstance().requestData(mSubscriptionId);
+            ArticleController.getInstance().requestNetwork(mSubscriptionId);
+        }
     }
 
     @Override
@@ -94,7 +98,8 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
 
     @Override
     public boolean onItemLongClick(View view, final Article data) {
-        if (data.getRead()) {
+        // TODO: 1/18/17 use state pattern ?
+        if (data.getRead() && !data.getFavorite()) {
             List<CharSequence> menuList = new ArrayList<>();
             menuList.add(view.getResources().getString(R.string.mark_as_unread));
             new MaterialDialog.Builder(mActivity)

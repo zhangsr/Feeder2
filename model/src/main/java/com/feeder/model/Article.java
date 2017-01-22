@@ -34,6 +34,14 @@ public class Article {
 
     private Long published;
 
+    private Boolean favorite;
+
+    private String ext1;
+
+    private String ext2;
+
+    private String ext3;
+
     public Long getPublished() {
         return this.published;
     }
@@ -106,10 +114,10 @@ public class Article {
         this.id = id;
     }
 
-    @Generated(hash = 1082740550)
-    public Article(Long id, String title, String link, String description,
-            Boolean read, Boolean trash, String content, Long subscriptionId,
-            Long published) {
+    @Generated(hash = 19592054)
+    public Article(Long id, String title, String link, String description, Boolean read,
+            Boolean trash, String content, Long subscriptionId, Long published,
+            Boolean favorite, String ext1, String ext2, String ext3) {
         this.id = id;
         this.title = title;
         this.link = link;
@@ -119,6 +127,10 @@ public class Article {
         this.content = content;
         this.subscriptionId = subscriptionId;
         this.published = published;
+        this.favorite = favorite;
+        this.ext1 = ext1;
+        this.ext2 = ext2;
+        this.ext3 = ext3;
     }
 
     @Generated(hash = 742516792)
@@ -136,5 +148,37 @@ public class Article {
                     && NumberUtil.equals(article.getSubscriptionId(), subscriptionId);
         }
         return false;
+    }
+
+    public Boolean getFavorite() {
+        return this.favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    public String getExt1() {
+        return this.ext1;
+    }
+
+    public void setExt1(String ext1) {
+        this.ext1 = ext1;
+    }
+
+    public String getExt2() {
+        return this.ext2;
+    }
+
+    public void setExt2(String ext2) {
+        this.ext2 = ext2;
+    }
+
+    public String getExt3() {
+        return this.ext3;
+    }
+
+    public void setExt3(String ext3) {
+        this.ext3 = ext3;
     }
 }
