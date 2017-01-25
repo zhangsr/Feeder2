@@ -39,6 +39,7 @@ public class SubscriptionViewHolder extends ChildViewHolder {
         mItemView.setOnClickListener(clickListener);
         mItemView.setOnLongClickListener(longClickListener);
         mNameTextView.setText(subscription.getTitle());
+        mNameTextView.setSingleLine();
         mIconImageView.setImageUrl(subscription.getIconUrl(), VolleySingleton.getInstance().getImageLoader());
         if (subscription.getUnreadCount() <= 0) {
             mCountTextView.setText("");

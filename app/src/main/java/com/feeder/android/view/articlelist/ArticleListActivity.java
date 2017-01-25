@@ -33,6 +33,7 @@ public class ArticleListActivity extends BaseSwipeActivity {
         setContentView(R.layout.activity_article_list);
 
         mTitleTextView = (TextView) findViewById(R.id.title_txt);
+        mTitleTextView.setSingleLine();
         mTitleTextView.setText(title);
 
         LinearLayout container = (LinearLayout) findViewById(R.id.container);
