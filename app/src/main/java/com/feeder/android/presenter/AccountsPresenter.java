@@ -42,6 +42,11 @@ public class AccountsPresenter implements MVPPresenter, DataObserver {
     }
 
     @Override
+    public void onDataChanged() {
+
+    }
+
+    @Override
     public void onDataResponse(ResponseState state, DataType type) {
         switch (state) {
             case SUCCESS:

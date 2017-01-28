@@ -6,6 +6,7 @@
     <string name="add_star_mark">Star</string>
     <string name="remove_star_mark">Unstar</string>
     <string name="mark_as_read">Mark as Read</string>
+    <string name="mark_as_all_read">Mark all as Read</string>
     <string name="mark_as_unread">Mark as Unread</string>
     <string name="add_subscription">Add Subscription</string>
     <string name="add">Add</string>
@@ -42,6 +43,7 @@
     <string name="weibo">Weibo</string>
     <string name="instapaper">Instapaper</string>
     <string name="more">More</string>
+    <string name="change_layout">Change layout</string>
     <string name="share_to">Share To</string>
     <string name="google_plus">Google Plus</string>
     <string name="pocket">Pocket</string>

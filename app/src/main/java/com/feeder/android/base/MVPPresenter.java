@@ -13,4 +13,6 @@ public interface MVPPresenter {
     void onStop();
 
     void onDestroy();
+
+    void onDataChanged();
 }

@@ -1,17 +1,24 @@
 package com.feeder.android.view.articlelist;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.feeder.android.base.IArticlesView;
 import com.feeder.android.base.MVPPresenter;
 import com.feeder.android.presenter.ArticlesPresenter;
 import com.feeder.android.util.Constants;
 import com.feeder.android.view.BaseSwipeActivity;
+import com.feeder.common.SPManager;
+import com.feeder.common.ThreadManager;
+import com.feeder.domain.ArticleController;
 
 import me.zsr.feeder.R;
+
+import static com.feeder.android.util.Constants.*;
 
 /**
  * @description:
@@ -20,21 +27,49 @@ import me.zsr.feeder.R;
  */
 
 public class ArticleListActivity extends BaseSwipeActivity {
-    private TextView mTitleTextView;
+    private Toolbar mToolbar;
     private MVPPresenter mArticlePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Long id = getIntent().getExtras().getLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID);
+        final Long id = getIntent().getExtras().getLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID);
         String title = getIntent().getExtras().getString(Constants.KEY_BUNDLE_SUBSCRIPTION_TITLE);
 
         setContentView(R.layout.activity_article_list);
 
-        mTitleTextView = (TextView) findViewById(R.id.title_txt);
-        mTitleTextView.setSingleLine();
-        mTitleTextView.setText(title);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.inflateMenu(R.menu.menu_article_list);
+        mToolbar.setTitle(title);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_change_layout:
+                        // TODO: 1/26/17 Support more
+                        if (SPManager.getInt(KEY_ARTICLE_LIST_LAYOUT, LAYOUT_STYLE_SIMPLE) == LAYOUT_STYLE_SIMPLE) {
+                            SPManager.setInt(KEY_ARTICLE_LIST_LAYOUT, LAYOUT_STYLE_RIGHT_IMAGE);
+                        } else if (SPManager.getInt(KEY_ARTICLE_LIST_LAYOUT, LAYOUT_STYLE_SIMPLE) == LAYOUT_STYLE_RIGHT_IMAGE) {
+                            SPManager.setInt(KEY_ARTICLE_LIST_LAYOUT, LAYOUT_STYLE_SIMPLE);
+                        }
+                        mArticlePresenter.onDataChanged();
+                        break;
+                    case R.id.action_mark_as_all_read:
+                        ArticleController.getInstance().markAllRead(true, id);
+                        ThreadManager.postDelay(new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
+                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            }
+                        }, 300);
+                        break;
+                }
+                return false;
+            }
+        });
 
         LinearLayout container = (LinearLayout) findViewById(R.id.container);
 

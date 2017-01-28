@@ -8,7 +8,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/subscription_icon"
         android:src="@drawable/ic_rss_feed_black_24dp"
         android:alpha="0.87"

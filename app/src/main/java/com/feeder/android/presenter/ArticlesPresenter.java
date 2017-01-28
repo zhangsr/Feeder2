@@ -68,6 +68,11 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
     }
 
     @Override
+    public void onDataChanged() {
+        mArticlesView.notifyDataChanged();
+    }
+
+    @Override
     public void onDataResponse(ResponseState state, DataType dataType) {
         switch (state) {
             case SUCCESS:

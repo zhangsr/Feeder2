@@ -1,42 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:paddingLeft="16dp"
               android:paddingRight="16dp"
               android:paddingTop="8dp"
               android:paddingBottom="8dp"
+              android:gravity="center_vertical"
               android:background="@drawable/rect_selector"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/article_title"
-        android:maxLines="2"
-        android:layout_width="match_parent"
-        android:ellipsize="end"
-        android:textSize="16sp"
-        android:textColor="@color/main_grey_dark"
-        android:alpha="0.87"
-        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/article_desc"
-        android:lines="1"
-        android:ellipsize="end"
-        android:textSize="12sp"
-        android:textColor="@color/main_grey_normal"
-        android:alpha="0.54"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/article_title"
+            android:maxLines="2"
+            android:layout_width="match_parent"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:textColor="@color/main_grey_dark"
+            android:alpha="0.87"
+            android:layout_height="wrap_content"/>
 
-    <!-- TODO optimize time position -->
-    <TextView
-        android:id="@+id/article_time"
-        android:lines="1"
-        android:ellipsize="end"
-        android:textSize="12sp"
-        android:textColor="@color/main_grey_normal"
-        android:alpha="0.54"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/article_desc"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            android:textColor="@color/main_grey_normal"
+            android:alpha="0.54"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/article_time"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            android:textColor="@color/main_grey_normal"
+            android:alpha="0.54"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/article_image"
+        android:background="@color/main_grey_light"
+        android:layout_marginLeft="16dp"
+        android:scaleType="centerCrop"
+        android:layout_width="80dp"
+        android:layout_height="60dp"/>
 </LinearLayout>

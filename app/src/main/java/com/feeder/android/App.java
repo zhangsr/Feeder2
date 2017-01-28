@@ -2,6 +2,7 @@ package com.feeder.android;
 
 import android.app.Application;
 
+import com.feeder.android.util.ImageLoaderManager;
 import com.feeder.common.LogUtil;
 import com.feeder.android.util.StatManager;
 import com.feeder.common.SPManager;
@@ -33,5 +34,7 @@ public class App extends Application {
         DBManager.init(this);
 
         StatManager.init(this);
+
+        ImageLoaderManager.init(this);
     }
 }

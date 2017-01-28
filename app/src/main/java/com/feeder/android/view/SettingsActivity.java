@@ -18,19 +18,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.zsr.feeder.R;
 
+import static com.feeder.android.util.Constants.*;
+
 public class SettingsActivity extends BaseSwipeActivity {
-    public static final String KEY_FONT_SIZE = "font_size";
-    public static final int FONT_SIZE_SMALL = 0;
-    public static final int FONT_SIZE_MEDIUM = 1;
-    public static final int FONT_SIZE_BIG = 2;
-    public static final String KEY_SWITCH_SHARE_WECHAT = "switch_share_wechat";
-    public static final String KEY_SWITCH_SHARE_MOMENT = "switch_share_moment";
-    public static final String KEY_SWITCH_SHARE_WEIBO = "switch_share_weibo";
-    public static final String KEY_SWITCH_SHARE_INSTAPAPER = "switch_share_instapaper";
-    public static final String KEY_SWITCH_SHARE_GOOGLE_PLUS = "switch_share_google_plus";
-    public static final String KEY_SWITCH_SHARE_POCKET = "switch_share_pocket";
-    public static final String KEY_SWITCH_SHARE_EVERNOTE = "switch_share_evernote";
-    public static final String KEY_SWITCH_SHARE_MORE = "switch_share_more";
 
     @Bind(R.id.back_btn)
     ImageButton mBackButton;

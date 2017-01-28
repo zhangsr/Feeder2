@@ -6,6 +6,7 @@
     <string name="add_star_mark">加上星标</string>
     <string name="remove_star_mark">取消星标</string>
     <string name="mark_as_read">标记为已读</string>
+    <string name="mark_as_all_read">全部标记为已读</string>
     <string name="mark_as_unread">标记为未读</string>
     <string name="add_subscription">添加订阅</string>
     <string name="add">添加</string>
@@ -45,6 +46,7 @@
     <string name="google_plus">Google+</string>
     <string name="pocket">Pocket</string>
     <string name="more">更多</string>
+    <string name="change_layout">更换布局</string>
     <string name="share_complete">分享完成</string>
     <string name="share_failed">分享失败</string>
     <string name="share_cancel">分享取消</string>

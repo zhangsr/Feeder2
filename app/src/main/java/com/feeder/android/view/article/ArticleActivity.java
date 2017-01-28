@@ -14,12 +14,12 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+import com.feeder.android.util.ArticleUtil;
 import com.feeder.android.util.Constants;
 import com.feeder.android.util.DateUtil;
 import com.feeder.android.util.ShareHelper;
 import com.feeder.android.util.StatManager;
 import com.feeder.android.view.BaseSwipeActivity;
-import com.feeder.android.view.SettingsActivity;
 import com.feeder.common.AppUtil;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
@@ -29,9 +29,7 @@ import com.feeder.model.Article;
 import com.feeder.model.ArticleDao;
 import com.feeder.model.Subscription;
 import com.feeder.model.SubscriptionDao;
-import com.google.common.base.Strings;
 
-import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.util.ArrayList;
@@ -39,6 +37,8 @@ import java.util.List;
 
 import cn.sharesdk.framework.ShareSDK;
 import me.zsr.feeder.R;
+
+import static com.feeder.android.util.Constants.*;
 
 /**
  * @description:
@@ -104,17 +104,16 @@ public class ArticleActivity extends BaseSwipeActivity {
         mSubscriptionNameTextView = (TextView) findViewById(R.id.subscription_name);
 
         mContentTextView = (HtmlTextView) findViewById(R.id.article_content);
-        switch (SPManager.getInt(SettingsActivity.KEY_FONT_SIZE,
-                SettingsActivity.FONT_SIZE_MEDIUM)) {
-            case SettingsActivity.FONT_SIZE_SMALL:
+        switch (SPManager.getInt(KEY_FONT_SIZE, FONT_SIZE_MEDIUM)) {
+            case FONT_SIZE_SMALL:
                 mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                         getResources().getDimension(R.dimen.text_size_small));
                 break;
-            case SettingsActivity.FONT_SIZE_MEDIUM:
+            case FONT_SIZE_MEDIUM:
                 mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                         getResources().getDimension(R.dimen.text_size_medium));
                 break;
-            case SettingsActivity.FONT_SIZE_BIG:
+            case FONT_SIZE_BIG:
                 mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                         getResources().getDimension(R.dimen.text_size_big));
                 break;
@@ -153,18 +152,7 @@ public class ArticleActivity extends BaseSwipeActivity {
         mDateTextView.setText(DateUtil.formatDate(this, article.getPublished()));
         mTimeTextView.setText(DateUtil.formatTime(article.getPublished()));
         mSubscriptionNameTextView.setText(subscriptionName);
-        try {
-            if (Strings.isNullOrEmpty(article.getContent())) {
-                if (!Strings.isNullOrEmpty(article.getDescription())) {
-                    mContentTextView.setHtml(article.getDescription(), new HtmlHttpImageGetter(mContentTextView, null, true));
-                }
-            } else {
-                mContentTextView.setHtml(article.getContent(), new HtmlHttpImageGetter(mContentTextView, null, true));
-            }
-        } catch (IndexOutOfBoundsException e) {
-            StatManager.statEvent(this, StatManager.EVENT_SET_HTML_ERROR,
-                    "subscription=" + subscriptionName + ", desc=" + article.getDescription());
-        }
+        ArticleUtil.setContent(this, article, mContentTextView, subscriptionName);
         if (article.getFavorite()) {
             mToolbar.getMenu().findItem(R.id.action_fav).setIcon(R.drawable.ic_star_white_24dp);
         }
@@ -179,7 +167,7 @@ public class ArticleActivity extends BaseSwipeActivity {
     private void showShareMenu() {
         final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(this);
         final List<Integer> contentIdList = new ArrayList<>();
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_WECHAT, true)
+        if (SPManager.getBoolean(KEY_SWITCH_SHARE_WECHAT, true)
                 && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_WECHAT)) {
             Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_wechat);
             drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
@@ -190,7 +178,7 @@ public class ArticleActivity extends BaseSwipeActivity {
                     .build());
             contentIdList.add(R.string.wechat);
         }
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_MOMENT, true)
+        if (SPManager.getBoolean(KEY_SWITCH_SHARE_MOMENT, true)
                 && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_WECHAT)) {
             Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_moment);
             drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
@@ -201,7 +189,7 @@ public class ArticleActivity extends BaseSwipeActivity {
                     .build());
             contentIdList.add(R.string.moment);
         }
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_WEIBO, true)
+        if (SPManager.getBoolean(KEY_SWITCH_SHARE_WEIBO, true)
                 && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_WEIBO)) {
             Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_weibo);
             drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
@@ -212,7 +200,7 @@ public class ArticleActivity extends BaseSwipeActivity {
                     .build());
             contentIdList.add(R.string.weibo);
         }
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_INSTAPAPER, true)
+        if (SPManager.getBoolean(KEY_SWITCH_SHARE_INSTAPAPER, true)
                 && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_INSTAPAPER)) {
             Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_instapaper);
             drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
@@ -223,7 +211,7 @@ public class ArticleActivity extends BaseSwipeActivity {
                     .build());
             contentIdList.add(R.string.instapaper);
         }
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_POCKET, true)
+        if (SPManager.getBoolean(KEY_SWITCH_SHARE_POCKET, true)
                 && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_POCKET)) {
             Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_pocket);
             drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
@@ -234,7 +222,7 @@ public class ArticleActivity extends BaseSwipeActivity {
                     .build());
             contentIdList.add(R.string.pocket);
         }
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_EVERNOTE, true)
+        if (SPManager.getBoolean(KEY_SWITCH_SHARE_EVERNOTE, true)
                 && AppUtil.isAppInstalled(this, Constants.PACKAGE_NAME_EVERNOTE)) {
             Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_evernote);
             drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
@@ -246,7 +234,7 @@ public class ArticleActivity extends BaseSwipeActivity {
             contentIdList.add(R.string.evernote);
         }
 
-        if (SPManager.getBoolean(SettingsActivity.KEY_SWITCH_SHARE_MORE, true)) {
+        if (SPManager.getBoolean(KEY_SWITCH_SHARE_MORE, true)) {
             Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_more);
             drawable.setColorFilter(getResources().getColor(R.color.main_grey_normal), PorterDuff.Mode.SRC_IN);
             adapter.add(new MaterialSimpleListItem.Builder(this)

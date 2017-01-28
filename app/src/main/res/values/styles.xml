@@ -5,7 +5,8 @@
         <item name="android:windowIsTranslucent">true</item>
         <!-- Customize your theme here. -->
         <!--<item name="colorAccent">@color/main_grey_dark</item>-->
-        <!--<item name="colorControlNormal">@color/main_grey_dark</item>-->
+        <!-- TOOLBAR ICON -->
+        <item name="colorControlNormal">@android:color/white</item>
         <!--<item name="colorControlActivated">@color/main_grey_dark</item>-->
         <!--<item name="colorControlHighlight">@color/main_grey_dark</item>-->
     </style>

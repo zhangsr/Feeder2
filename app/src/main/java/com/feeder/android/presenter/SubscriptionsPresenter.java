@@ -75,6 +75,11 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     }
 
     @Override
+    public void onDataChanged() {
+
+    }
+
+    @Override
     public void onDataResponse(ResponseState state, DataType type) {
         switch (state) {
             case SUCCESS:
@@ -121,7 +126,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
                                             CharSequence charSequence) {
                         switch (i) {
                             case 0:
-                                ArticleController.getInstance().markAllRead(true, data);
+                                ArticleController.getInstance().markAllRead(true, data.getId());
                                 break;
                             case 1:
                                 SubscriptionController.getInstance().delete(data);
