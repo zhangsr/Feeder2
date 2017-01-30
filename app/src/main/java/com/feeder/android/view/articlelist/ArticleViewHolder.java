@@ -59,9 +59,11 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
         if (article.getRead() && !article.getFavorite()) {
             mTitleTextView.setAlpha(0.54f);
             mTitleTextView.setTextColor(mItemView.getResources().getColor(R.color.main_grey_normal));
+            mImageView.setAlpha(0.24f);
         } else {
             mTitleTextView.setAlpha(0.87f);
             mTitleTextView.setTextColor(mItemView.getResources().getColor(R.color.main_grey_dark));
+            mImageView.setAlpha(1f);
         }
         mDescTextView.setText(HtmlUtil.getOptimizedDesc(article.getDescription()));
         mTimeTextView.setText(formatTime(article.getPublished()));

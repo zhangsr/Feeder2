@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import com.feeder.android.base.IArticlesView;
 import com.feeder.android.base.MVPPresenter;
 import com.feeder.android.presenter.ArticlesPresenter;
+import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.Constants;
 import com.feeder.android.view.BaseSwipeActivity;
 import com.feeder.common.SPManager;
@@ -62,7 +63,7 @@ public class ArticleListActivity extends BaseSwipeActivity {
                             @Override
                             public void run() {
                                 finish();
-                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                AnimationHelper.overridePendingTransition(ArticleListActivity.this);
                             }
                         }, 300);
                         break;
@@ -96,6 +97,6 @@ public class ArticleListActivity extends BaseSwipeActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        AnimationHelper.overridePendingTransition(ArticleListActivity.this);
     }
 }

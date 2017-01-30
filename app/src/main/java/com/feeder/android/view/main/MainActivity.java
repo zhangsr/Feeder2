@@ -22,6 +22,7 @@ import com.feeder.android.base.ISubscriptionsView;
 import com.feeder.android.base.MVPPresenter;
 import com.feeder.android.presenter.AccountsPresenter;
 import com.feeder.android.presenter.SubscriptionsPresenter;
+import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.Constants;
 import com.feeder.android.util.OPMLHelper;
 import com.feeder.android.util.StatManager;
@@ -120,7 +121,7 @@ public class MainActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
 
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                AnimationHelper.overridePendingTransition(MainActivity.this);
                 closeDrawer(1000);
             }
         });
@@ -132,7 +133,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                AnimationHelper.overridePendingTransition(MainActivity.this);
                 closeDrawer(1000);
             }
         });
@@ -144,7 +145,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                AnimationHelper.overridePendingTransition(MainActivity.this);
                 closeDrawer(1000);
             }
         });

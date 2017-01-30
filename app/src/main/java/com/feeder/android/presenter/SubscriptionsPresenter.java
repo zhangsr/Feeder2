@@ -8,6 +8,7 @@ import android.view.View;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.feeder.android.base.ISubscriptionsView;
 import com.feeder.android.base.MVPPresenter;
+import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.StatManager;
 import com.feeder.android.view.main.Category;
 import com.feeder.android.util.Constants;
@@ -107,7 +108,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
         bundle.putString(Constants.KEY_BUNDLE_SUBSCRIPTION_ICON_URL, data.getIconUrl());
         intent.putExtras(bundle);
         mActivity.startActivity(intent);
-        mActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        AnimationHelper.overridePendingTransition(mActivity);
 
         StatManager.statEvent(mActivity, StatManager.EVENT_ENTER_LIST, data.getTitle());
     }

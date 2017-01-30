@@ -9,6 +9,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.feeder.android.base.IArticlesView;
 import com.feeder.android.base.MVPPresenter;
 import com.feeder.android.base.ArticleViewObserver;
+import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.Constants;
 import com.feeder.android.view.article.ArticleActivity;
 import com.feeder.domain.ArticleController;
@@ -98,7 +99,7 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
         bundle.putLong(Constants.KEY_BUNDLE_ARTICLE_ID, data.getId());
         intent.putExtras(bundle);
         mActivity.startActivity(intent);
-        mActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        AnimationHelper.overridePendingTransition(mActivity);
     }
 
     @Override

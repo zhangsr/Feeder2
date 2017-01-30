@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+import com.feeder.android.util.AnimationHelper;
 import com.feeder.common.MarkdownView;
 
 import butterknife.Bind;
@@ -256,6 +257,6 @@ public class AboutActivity extends BaseSwipeActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        AnimationHelper.overridePendingTransition(this);
     }
 }

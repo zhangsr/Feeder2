@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.feeder.android.util.AnimationHelper;
 import com.feeder.common.SPManager;
 
 import butterknife.Bind;
@@ -253,6 +254,6 @@ public class SettingsActivity extends BaseSwipeActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        AnimationHelper.overridePendingTransition(this);
     }
 }
