@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.feeder.android.base.IArticlesView;
 import com.feeder.android.base.MVPPresenter;
@@ -52,8 +53,10 @@ public class ArticleListActivity extends BaseSwipeActivity {
                         // TODO: 1/26/17 Support more
                         if (SPManager.getInt(KEY_ARTICLE_LIST_LAYOUT, LAYOUT_STYLE_SIMPLE) == LAYOUT_STYLE_SIMPLE) {
                             SPManager.setInt(KEY_ARTICLE_LIST_LAYOUT, LAYOUT_STYLE_RIGHT_IMAGE);
+                            Toast.makeText(ArticleListActivity.this, R.string.switch_to_image_layout, Toast.LENGTH_SHORT).show();
                         } else if (SPManager.getInt(KEY_ARTICLE_LIST_LAYOUT, LAYOUT_STYLE_SIMPLE) == LAYOUT_STYLE_RIGHT_IMAGE) {
                             SPManager.setInt(KEY_ARTICLE_LIST_LAYOUT, LAYOUT_STYLE_SIMPLE);
+                            Toast.makeText(ArticleListActivity.this, R.string.switch_to_text_layout, Toast.LENGTH_SHORT).show();
                         }
                         mArticlePresenter.onDataChanged();
                         break;

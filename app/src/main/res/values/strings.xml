@@ -44,6 +44,8 @@
     <string name="instapaper">Instapaper</string>
     <string name="more">More</string>
     <string name="change_layout">Change layout</string>
+    <string name="switch_to_image_layout">Switch to Image Layout</string>
+    <string name="switch_to_text_layout">Switch to Text Layout</string>
     <string name="share_to">Share To</string>
     <string name="google_plus">Google Plus</string>
     <string name="pocket">Pocket</string>
