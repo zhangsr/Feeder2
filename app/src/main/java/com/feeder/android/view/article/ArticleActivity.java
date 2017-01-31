@@ -79,16 +79,18 @@ public class ArticleActivity extends BaseSwipeActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_fav:
-                        if (mArticle.getFavorite()) {
-                            mArticle.setFavorite(false);
-                            item.setIcon(R.drawable.ic_star_border_white_24dp);
-                            Toast.makeText(ArticleActivity.this, R.string.unfavorited, Toast.LENGTH_SHORT).show();
-                        } else {
-                            mArticle.setFavorite(true);
-                            item.setIcon(R.drawable.ic_star_white_24dp);
-                            Toast.makeText(ArticleActivity.this, R.string.favorited, Toast.LENGTH_SHORT).show();
+                        if (mArticle != null) {
+                            if (mArticle.getFavorite()) {
+                                mArticle.setFavorite(false);
+                                item.setIcon(R.drawable.ic_star_border_white_24dp);
+                                Toast.makeText(ArticleActivity.this, R.string.unfavorited, Toast.LENGTH_SHORT).show();
+                            } else {
+                                mArticle.setFavorite(true);
+                                item.setIcon(R.drawable.ic_star_white_24dp);
+                                Toast.makeText(ArticleActivity.this, R.string.favorited, Toast.LENGTH_SHORT).show();
+                            }
+                            ArticleController.getInstance().saveArticle(mArticle);
                         }
-                        ArticleController.getInstance().saveArticle(mArticle);
                         break;
                     case R.id.action_share:
                         showShareMenu();
