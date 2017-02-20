@@ -6,6 +6,7 @@ import com.feeder.common.DateUtil;
 import com.feeder.model.Article;
 import com.google.common.base.Strings;
 
+import org.jsoup.Jsoup;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -118,8 +119,9 @@ public class FeedParser {
 
     private static String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, TITLE);
-        String title = readText(parser);
+        String title = Jsoup.parse(readText(parser)).text();
         parser.require(XmlPullParser.END_TAG, null, TITLE);
+
         return title;
     }
 
