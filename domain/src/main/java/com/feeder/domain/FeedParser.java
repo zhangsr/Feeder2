@@ -4,6 +4,7 @@ import android.util.Xml;
 
 import com.feeder.common.DateUtil;
 import com.feeder.model.Article;
+import com.feeder.model.Subscription;
 import com.google.common.base.Strings;
 
 import org.jsoup.Jsoup;
@@ -33,8 +34,9 @@ public class FeedParser {
     private static final String PUB_DATE = "pubDate";
     private static final String DESC = "description";
     private static final String CONTENT = "content:encoded";
+    private static final String LAST_BUILD_DATE = "lastBuildDate";
 
-    public static List<Article> parse(String xmlStr) {
+    public static Subscription parseSubscription(String xmlStr) {
         if (Strings.isNullOrEmpty(xmlStr)) {
             return null;
         }
@@ -44,14 +46,16 @@ public class FeedParser {
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(new StringReader(xmlStr));
             parser.nextTag();
-            return readRss(parser);
+
+            // TODO: 2/22/17 verify source
+            return readRssForSubscription(parser);
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private static List<Article> readRss(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static Subscription readRssForSubscription(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, RSS);
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -60,7 +64,7 @@ public class FeedParser {
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals(CHANNEL)) {
-                return readChannel(parser);
+                return readChannelForSubscription(parser);
             } else {
                 skip(parser);
             }
@@ -68,7 +72,72 @@ public class FeedParser {
         return null;
     }
 
-    private static List<Article> readChannel(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static Subscription readChannelForSubscription(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Subscription subscription = new Subscription();
+
+        parser.require(XmlPullParser.START_TAG, null, CHANNEL);
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            // Starts by looking for the entry tag
+            if (name.equals(TITLE)) {
+                subscription.setTitle(readTitle(parser));
+            } else if (name.equals(LINK)) {
+                subscription.setSiteUrl(readLink(parser));
+            } else if (name.equals(LAST_BUILD_DATE)) {
+                subscription.setTime(readLastBuildDate(parser));
+            } else if (name.equals(DESC)) {
+                subscription.setDesc(readDesc(parser));
+            } else {
+                skip(parser);
+            }
+        }
+        subscription.setKey("feed/" + subscription.getUrl());
+        subscription.setCategory("");
+        subscription.setSortid("");
+        subscription.setAccountId(0L);
+        subscription.setTotalCount(0L);
+        subscription.setUnreadCount(0L);
+        return subscription;
+    }
+
+    public static List<Article> parseArticle(String xmlStr) {
+        if (Strings.isNullOrEmpty(xmlStr)) {
+            return null;
+        }
+
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(new StringReader(xmlStr));
+            parser.nextTag();
+            return readRssForArticle(parser);
+        } catch (XmlPullParserException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static List<Article> readRssForArticle(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, null, RSS);
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            // Starts by looking for the entry tag
+            if (name.equals(CHANNEL)) {
+                return readChannelForArticle(parser);
+            } else {
+                skip(parser);
+            }
+        }
+        return null;
+    }
+
+    private static List<Article> readChannelForArticle(XmlPullParser parser) throws XmlPullParserException, IOException {
         List entries = new ArrayList();
 
         parser.require(XmlPullParser.START_TAG, null, CHANNEL);
@@ -79,7 +148,7 @@ public class FeedParser {
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals(ITEM)) {
-                entries.add(readItem(parser));
+                entries.add(readItemForArticle(parser));
             } else {
                 skip(parser);
             }
@@ -87,7 +156,7 @@ public class FeedParser {
         return entries;
     }
 
-    private static Article readItem(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private static Article readItemForArticle(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, ITEM);
         String title = null;
         String link = null;
@@ -151,6 +220,14 @@ public class FeedParser {
         String content = readText(parser);
         parser.require(XmlPullParser.END_TAG, null, CONTENT);
         return content;
+    }
+
+    private static Long readLastBuildDate(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, LAST_BUILD_DATE);
+        String dateStr = readText(parser);
+        parser.require(XmlPullParser.END_TAG, null, LAST_BUILD_DATE);
+
+        return DateUtil.parseRfc822(dateStr).getTime();
     }
 
     private static String readText(XmlPullParser parser) throws IOException, XmlPullParserException {

@@ -26,6 +26,9 @@ public class StatManager {
     public static final String EVENT_IMPORT_OPML_FAILED = "import_opml_failed";
     public static final String EVENT_MENU_SEARCH_CLICK = "menu_search_click";
     public static final String EVENT_SEARCH_RESULT_CLICK = "search_result_click";
+    public static final String EVENT_CUSTOM_SOURCE_CLICK = "custom_source_click";
+    public static final String EVENT_CUSTOM_SOURCE_ADD_SUCCESS = "custom_source_add_success";
+    public static final String EVENT_CUSTOM_SOURCE_ADD_FAILED = "custom_source_add_failed";
     public static final String EVENT_MENU_SHARE_CLICK = "menu_share_click";
     public static final String EVENT_SHARE_ITEM_CLICK = "share_item_click";
     public static final String EVENT_SHARE_SUCCESS = "share_success";

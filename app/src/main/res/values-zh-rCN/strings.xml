@@ -79,6 +79,8 @@
     <string name="account_feedly_add">添加 Feedly 账号</string>
     <string name="back_exit_hint">再点返回退出</string>
     <string name="search_hint">搜索</string>
+    <string name="add_custom_success">添加成功</string>
+    <string name="add_custom_failed">添加失败</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>

@@ -80,6 +80,8 @@
     <string name="alipay_account_copied">AliPay account Copied</string>
     <string name="back_exit_hint">Back again to exit</string>
     <string name="search_hint">Search</string>
+    <string name="add_custom_success">Add Success</string>
+    <string name="add_custom_failed">Add Failed</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>

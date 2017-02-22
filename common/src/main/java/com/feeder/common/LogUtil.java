@@ -14,7 +14,7 @@ public class LogUtil {
     private static final boolean LOGI_DEBUG = true;
     private static final boolean LOGW_DEBUG = true;
     private static final boolean LOGE_DEBUG = true;
-    private static final int STACK_INDEX = 2;
+    private static final int STACK_INDEX = 3;
 
     public static void enable(boolean enable) {
         sLogAll = enable;

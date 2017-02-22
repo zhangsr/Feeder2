@@ -7,13 +7,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.feeder.common.LogUtil;
 import com.feeder.common.StringUtil;
-import com.feeder.model.Article;
 import com.feeder.model.Subscription;
 
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.util.List;
 
 /**
  * @description:
@@ -21,24 +20,21 @@ import java.util.List;
  * @date: 10/22/16
  */
 
-public class ArticleListRequest extends Request<List<Article>> {
-    private static final String TAG = ArticleListRequest.class.getSimpleName();
-    private final Response.Listener<List<Article>> mListener;
-    private Subscription mSubscription;
+public class SubscriptionRequest extends Request<Subscription> {
+    private static final String TAG = SubscriptionRequest.class.getSimpleName();
+    private final Response.Listener<Subscription> mListener;
 
-    public ArticleListRequest(Subscription subscription, Response.Listener<List<Article>> mListener, Response.ErrorListener errorListener) {
-        // TODO: 10/29/16 handle exception data
-        this(Method.GET, subscription.getUrl(), errorListener, mListener);
-        mSubscription = subscription;
+    public SubscriptionRequest(String url, Response.Listener<Subscription> mListener, Response.ErrorListener errorListener) {
+        this(Method.GET, url, errorListener, mListener);
     }
 
-    private ArticleListRequest(int method, String url, Response.ErrorListener listener, Response.Listener<List<Article>> mListener) {
+    private SubscriptionRequest(int method, String url, Response.ErrorListener listener, Response.Listener<Subscription> mListener) {
         super(method, url, listener);
         this.mListener = mListener;
     }
 
     @Override
-    protected Response<List<Article>> parseNetworkResponse(NetworkResponse response) {
+    protected Response<Subscription> parseNetworkResponse(NetworkResponse response) {
         String responseStr;
         try {
             responseStr = new String(response.data, StringUtil.guessEncoding(response.data));
@@ -46,26 +42,16 @@ public class ArticleListRequest extends Request<List<Article>> {
             e.printStackTrace();
             responseStr = new String(response.data);
         }
-        List<Article> articleList = FeedParser.parseArticle(responseStr);
-        if (articleList == null || articleList.size() == 0) {
-            return Response.error(new VolleyError("Parse result an empty article list"));
+        Log.e(TAG, "responseStr=" + responseStr);
+        Subscription subscription = FeedParser.parseSubscription(responseStr);
+        if (subscription == null) {
+            return Response.error(new VolleyError("Parse result an empty subscription"));
         }
-
-        fillData(articleList);
-        return Response.success(articleList, HttpHeaderParser.parseCacheHeaders(response));
-    }
-
-    private void fillData(List<Article> list) {
-        if (list == null) {
-            return;
-        }
-        for (Article article : list) {
-            article.setSubscriptionId(mSubscription.getId());
-        }
+        return Response.success(subscription, HttpHeaderParser.parseCacheHeaders(response));
     }
 
     @Override
-    protected void deliverResponse(List<Article> response) {
+    protected void deliverResponse(Subscription response) {
         if (mListener != null) {
             mListener.onResponse(response);
         }
@@ -73,7 +59,9 @@ public class ArticleListRequest extends Request<List<Article>> {
 
     @Override
     public void deliverError(VolleyError error) {
-        Log.d(TAG, "deliverError " + error);
+        super.deliverError(error);
+
+        LogUtil.d(TAG, "deliverError " + error);
 
         if (error == null || error.networkResponse == null) {
             return;
@@ -87,8 +75,7 @@ public class ArticleListRequest extends Request<List<Article>> {
 
             final String location = error.networkResponse.headers.get("Location");
             Log.d(TAG, "Location: " + location);
-            mSubscription.setUrl(location);
-            ArticleListRequest request = new ArticleListRequest(mSubscription, mListener, getErrorListener());
+            SubscriptionRequest request = new SubscriptionRequest(location, mListener, getErrorListener());
             // Construct a request clone and change the url to redirect location.
             VolleySingleton.getInstance().addToRequestQueue(request);
         }

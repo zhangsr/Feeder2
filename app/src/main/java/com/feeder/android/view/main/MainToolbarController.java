@@ -4,12 +4,17 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -20,6 +25,7 @@ import com.feeder.common.StringUtil;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.FeedlyUtils;
 import com.feeder.domain.SubscriptionController;
+import com.feeder.domain.SubscriptionRequest;
 import com.feeder.domain.VolleySingleton;
 import com.feeder.model.FeedlyResult;
 import com.feeder.model.Subscription;
@@ -59,8 +65,9 @@ public class MainToolbarController {
     private ListView mResultListView;
     private View mDimLayer;
     private MaterialSearchView mSearchView;
-    private String mCurrentSearchText;
-
+    private String mCurrentSearchText = "";
+    private LinearLayout mHeaderContainer;
+    private TextView mAddCustomSourceTextView;
 
     private static final String[] BLACK_LIST = new String[] {
         "http://feeds.feedburner.com/zhihu-daily"
@@ -94,16 +101,20 @@ public class MainToolbarController {
             public boolean onQueryTextChange(String newText) {
                 mCurrentSearchText = newText;
                 if (!TextUtils.isEmpty(newText)) {
+                    if (likeRssAddr(newText)) {
+                        mAddCustomSourceTextView.setVisibility(View.VISIBLE);
+                        mAddCustomSourceTextView.setText("添加源 \"" + newText + "\"");
+                    } else {
+                        mAddCustomSourceTextView.setVisibility(View.GONE);
+                    }
                     try {
                         if (mCanSearch) {
                             disableSearchForAWhile();
-                            searchFor(newText);
+                            searchByFeedly(newText);
                         }
                     } catch (URISyntaxException | MalformedURLException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    mResultListView.setVisibility(View.GONE);
                 }
                 return true;
             }
@@ -111,12 +122,35 @@ public class MainToolbarController {
         mSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
+                mResultListView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onSearchViewClosed() {
+                mResultListView.setAdapter(null);
+                mAddCustomSourceTextView.setVisibility(View.GONE);
                 mResultListView.setVisibility(View.GONE);
                 hideDimLayer();
+            }
+        });
+
+        mHeaderContainer = (LinearLayout) mActivity.findViewById(R.id.custom_container);
+        mAddCustomSourceTextView = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.result_list_item, null);
+        mAddCustomSourceTextView.setVisibility(View.GONE);
+        mHeaderContainer.addView(mAddCustomSourceTextView);
+
+        mAddCustomSourceTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url;
+                if (mCurrentSearchText.startsWith("http://")) {
+                    url = mCurrentSearchText;
+                } else {
+                    url = "http://" + mCurrentSearchText;
+                }
+                addByUrl(url);
+                StatManager.statEvent(mActivity, StatManager.EVENT_CUSTOM_SOURCE_CLICK);
+                mSearchView.closeSearch();
             }
         });
 
@@ -140,10 +174,10 @@ public class MainToolbarController {
             public void run() {
                 mCanSearch = true;
             }
-        }, 500);
+        }, 100);
     }
 
-    private void searchFor(final String input) throws URISyntaxException, MalformedURLException {
+    private void searchByFeedly(final String input) throws URISyntaxException, MalformedURLException {
         List<BasicNameValuePair> params = new LinkedList<>();
         params.add(new BasicNameValuePair("query", input));
         final String requestUrl = URIUtils.createURI("http", "cloud.feedly.com", -1,
@@ -171,13 +205,10 @@ public class MainToolbarController {
                             }
 
                             if (titleList.size() > 0) {
-                                mResultListView.setVisibility(View.VISIBLE);
                                 mResultAdapter = new ArrayAdapter<>(mActivity,
                                         R.layout.result_list_item, R.id.result_txt,
                                         titleList.toArray(new String[titleList.size()]));
                                 mResultListView.setAdapter(mResultAdapter);
-                            } else {
-                                mResultListView.setVisibility(View.GONE);
                             }
 
                         } catch (JSONException e) {
@@ -194,6 +225,34 @@ public class MainToolbarController {
         );
         request.setTag(this);
         LogUtil.d("request=" + requestUrl);
+        VolleySingleton.getInstance().addToRequestQueue(request);
+    }
+
+    private void addByUrl(final String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+        VolleySingleton.getInstance().getRequestQueue().cancelAll(this);
+        SubscriptionRequest request = new SubscriptionRequest(url, new Response.Listener<Subscription>() {
+            @Override
+            public void onResponse(Subscription response) {
+                if (response == null) {
+                    return;
+                }
+                response.setUrl(url);
+                SubscriptionController.getInstance().insert(response);
+                Toast.makeText(mActivity, R.string.add_custom_success, Toast.LENGTH_SHORT).show();
+                StatManager.statEvent(mActivity, StatManager.EVENT_CUSTOM_SOURCE_ADD_SUCCESS);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(mActivity, R.string.add_custom_failed, Toast.LENGTH_SHORT).show();
+                StatManager.statEvent(mActivity, StatManager.EVENT_CUSTOM_SOURCE_ADD_FAILED);
+            }
+        });
+        request.setTag(this);
+        LogUtil.d("request=" + url);
         VolleySingleton.getInstance().addToRequestQueue(request);
     }
 
@@ -246,5 +305,9 @@ public class MainToolbarController {
             return true;
         }
         return false;
+    }
+
+    private boolean likeRssAddr(String str) {
+        return Patterns.WEB_URL.matcher(str).matches();
     }
 }
