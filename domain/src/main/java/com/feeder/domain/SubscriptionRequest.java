@@ -1,7 +1,5 @@
 package com.feeder.domain;
 
-import android.util.Log;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -42,7 +40,6 @@ public class SubscriptionRequest extends Request<Subscription> {
             e.printStackTrace();
             responseStr = new String(response.data);
         }
-        Log.e(TAG, "responseStr=" + responseStr);
         Subscription subscription = FeedParser.parseSubscription(responseStr);
         if (subscription == null) {
             return Response.error(new VolleyError("Parse result an empty subscription"));
@@ -74,7 +71,7 @@ public class SubscriptionRequest extends Request<Subscription> {
                 || status == HttpURLConnection.HTTP_SEE_OTHER) {
 
             final String location = error.networkResponse.headers.get("Location");
-            Log.d(TAG, "Location: " + location);
+            LogUtil.d(TAG, "Location: " + location);
             SubscriptionRequest request = new SubscriptionRequest(location, mListener, getErrorListener());
             // Construct a request clone and change the url to redirect location.
             VolleySingleton.getInstance().addToRequestQueue(request);
