@@ -242,13 +242,13 @@ public class MainToolbarController {
                 response.setUrl(url);
                 SubscriptionController.getInstance().insert(response);
                 Toast.makeText(mActivity, R.string.add_custom_success, Toast.LENGTH_SHORT).show();
-                StatManager.statEvent(mActivity, StatManager.EVENT_CUSTOM_SOURCE_ADD_SUCCESS);
+                StatManager.statEvent(mActivity, StatManager.EVENT_CUSTOM_SOURCE_ADD_SUCCESS, url);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(mActivity, R.string.add_custom_failed, Toast.LENGTH_SHORT).show();
-                StatManager.statEvent(mActivity, StatManager.EVENT_CUSTOM_SOURCE_ADD_FAILED);
+                StatManager.statEvent(mActivity, StatManager.EVENT_CUSTOM_SOURCE_ADD_FAILED, url);
             }
         });
         request.setTag(this);

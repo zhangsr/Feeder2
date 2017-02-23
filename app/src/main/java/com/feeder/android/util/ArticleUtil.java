@@ -8,6 +8,8 @@ import com.google.common.base.Strings;
 import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
+import java.util.EmptyStackException;
+
 /**
  * @description:
  * @author: Match
@@ -32,8 +34,12 @@ public class ArticleUtil {
                 textView.setHtml(article.getContent(), new HtmlHttpImageGetter(textView, null, true));
             }
         } catch (IndexOutOfBoundsException e) {
-            StatManager.statEvent(context, StatManager.EVENT_SET_HTML_ERROR,
+            StatManager.statEvent(context, StatManager.EXCEPTION_SET_HTML,
                     "subscription=" + subscriptionName + ", desc=" + article.getDescription());
+        } catch (EmptyStackException e) {
+            StatManager.statEvent(context, StatManager.EXCEPTION_PARSE_HTML,
+                    "subscription=" + subscriptionName + ", desc=" + article.getDescription()
+                            + ", message=" + e.getMessage());
         }
     }
 
