@@ -161,6 +161,10 @@ public class MainToolbarController {
         mResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mResultList.size() - 1 < position) {
+                    StatManager.statEvent(mActivity, StatManager.EXCEPTION_SILENT_HANDLE, "Click Out Of Bound");
+                    return;
+                }
                 final FeedlyResult result = mResultList.get(position);
                 Subscription subscription = FeedlyUtils.result2Subscription(result);
                 SubscriptionController.getInstance().insert(subscription);
@@ -212,6 +216,8 @@ public class MainToolbarController {
                                         R.layout.result_list_item, R.id.result_txt,
                                         titleList.toArray(new String[titleList.size()]));
                                 mResultListView.setAdapter(mResultAdapter);
+                            } else {
+                                mResultListView.setAdapter(null);
                             }
 
                         } catch (JSONException e) {

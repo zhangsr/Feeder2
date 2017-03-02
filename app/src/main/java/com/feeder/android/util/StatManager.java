@@ -21,6 +21,7 @@ import me.zsr.feeder.BuildConfig;
 public class StatManager {
     public static final String EXCEPTION_SET_HTML = "exception_set_html";
     public static final String EXCEPTION_PARSE_HTML = "exception_parse_html";
+    public static final String EXCEPTION_SILENT_HANDLE = "exception_silent_handle";
 
     public static final String EVENT_IMPORT_OPML_CLICK = "import_opml_click";
     public static final String EVENT_IMPORT_OPML_GET_FILE = "import_opml_get_file";
