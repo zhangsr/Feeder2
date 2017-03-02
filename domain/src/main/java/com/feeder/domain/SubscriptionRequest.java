@@ -56,11 +56,11 @@ public class SubscriptionRequest extends Request<Subscription> {
 
     @Override
     public void deliverError(VolleyError error) {
-        super.deliverError(error);
 
         LogUtil.d(TAG, "deliverError " + error);
 
         if (error == null || error.networkResponse == null) {
+            super.deliverError(error);
             return;
         }
 
@@ -75,6 +75,8 @@ public class SubscriptionRequest extends Request<Subscription> {
             SubscriptionRequest request = new SubscriptionRequest(location, mListener, getErrorListener());
             // Construct a request clone and change the url to redirect location.
             VolleySingleton.getInstance().addToRequestQueue(request);
+            return;
         }
+        super.deliverError(error);
     }
 }

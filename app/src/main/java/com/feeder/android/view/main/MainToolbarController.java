@@ -143,8 +143,11 @@ public class MainToolbarController {
             @Override
             public void onClick(View v) {
                 String url;
+                // TODO: 2/24/17 handle https
                 if (mCurrentSearchText.startsWith("http://")) {
                     url = mCurrentSearchText;
+                } else if (mCurrentSearchText.startsWith("https://")) {
+                    url = mCurrentSearchText.replace("https", "http");
                 } else {
                     url = "http://" + mCurrentSearchText;
                 }
@@ -247,6 +250,7 @@ public class MainToolbarController {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                // TODO: 2/24/17 optimize retry by adding "feed" suffix
                 Toast.makeText(mActivity, R.string.add_custom_failed, Toast.LENGTH_SHORT).show();
                 StatManager.statEvent(mActivity, StatManager.EVENT_CUSTOM_SOURCE_ADD_FAILED, url);
             }
