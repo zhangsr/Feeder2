@@ -22,6 +22,7 @@ import com.feeder.android.util.ShareHelper;
 import com.feeder.android.util.StatManager;
 import com.feeder.android.view.BaseSwipeActivity;
 import com.feeder.common.AppUtil;
+import com.feeder.common.IntentUtil;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.ArticleController;
@@ -30,6 +31,7 @@ import com.feeder.model.Article;
 import com.feeder.model.ArticleDao;
 import com.feeder.model.Subscription;
 import com.feeder.model.SubscriptionDao;
+import com.google.common.base.Strings;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
@@ -78,6 +80,13 @@ public class ArticleActivity extends BaseSwipeActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.action_link:
+                        StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_MENU_LINK_CLICK);
+                        if (mArticle == null || Strings.isNullOrEmpty(mArticle.getLink())) {
+                            return false;
+                        }
+                        IntentUtil.openUrl(ArticleActivity.this, mArticle.getLink());
+                        break;
                     case R.id.action_fav:
                         if (mArticle != null) {
                             if (mArticle.getFavorite()) {
@@ -91,6 +100,7 @@ public class ArticleActivity extends BaseSwipeActivity {
                             }
                             ArticleController.getInstance().saveArticle(mArticle);
                         }
+                        StatManager.statEvent(ArticleActivity.this, StatManager.EVENT_MENU_FAV_CLICK);
                         break;
                     case R.id.action_share:
                         showShareMenu();
@@ -156,6 +166,9 @@ public class ArticleActivity extends BaseSwipeActivity {
         mTimeTextView.setText(DateUtil.formatTime(article.getPublished()));
         mSubscriptionNameTextView.setText(subscriptionName);
         ArticleUtil.setContent(this, article, mContentTextView, subscriptionName);
+        if (Strings.isNullOrEmpty(article.getLink())) {
+            mToolbar.getMenu().findItem(R.id.action_link).setVisible(false);
+        }
         if (article.getFavorite()) {
             mToolbar.getMenu().findItem(R.id.action_fav).setIcon(R.drawable.ic_star_white_24dp);
         }

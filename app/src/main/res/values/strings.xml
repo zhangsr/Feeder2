@@ -55,6 +55,7 @@
     <string name="share_cancel">Share Cancel</string>
     <string name="share">Share</string>
     <string name="fav">Favorite</string>
+    <string name="link">Open Article Link</string>
     <string name="favorited">Starred</string>
     <string name="unfavorited">Unstarred</string>
     <string name="share_summary">Share to friends if you like Feeder.</string>

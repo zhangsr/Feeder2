@@ -2,8 +2,6 @@ package com.feeder.android.view;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.feeder.android.util.AnimationHelper;
+import com.feeder.common.IntentUtil;
 import com.feeder.common.MarkdownView;
 
 import butterknife.Bind;
@@ -98,10 +97,7 @@ public class AboutActivity extends BaseSwipeActivity {
     }
 
     private void openUrl(String url) {
-        Intent intent = new Intent("android.intent.action.VIEW");
-        intent.setData(Uri.parse(url));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        IntentUtil.openUrl(this, url);
     }
 
     @OnClick({
