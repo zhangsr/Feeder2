@@ -73,7 +73,7 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.8.6.2'
     // SystemBar
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
-    compile 'org.sufficientlysecure:html-textview:2.0'
+    compile 'org.sufficientlysecure:html-textview:3.3'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
     // File Picker
     compile 'com.nbsp:library:1.1'
