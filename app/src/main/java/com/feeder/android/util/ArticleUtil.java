@@ -2,10 +2,10 @@ package com.feeder.android.util;
 
 import android.content.Context;
 
+import com.feeder.android.other.HtmlImageGetterEx;
 import com.feeder.model.Article;
 import com.google.common.base.Strings;
 
-import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.util.EmptyStackException;
@@ -27,11 +27,10 @@ public class ArticleUtil {
         try {
             if (Strings.isNullOrEmpty(article.getContent())) {
                 if (!Strings.isNullOrEmpty(article.getDescription())) {
-                    // TODO: 1/27/17 rewrite ImageGetter
-                    textView.setHtml(article.getDescription(), new HtmlHttpImageGetter(textView, null, true));
+                    textView.setHtml(article.getDescription(), new HtmlImageGetterEx(textView, null, true));
                 }
             } else {
-                textView.setHtml(article.getContent(), new HtmlHttpImageGetter(textView, null, true));
+                textView.setHtml(article.getContent(), new HtmlImageGetterEx(textView, null, true));
             }
         } catch (IndexOutOfBoundsException e) {
             StatManager.statEvent(context, StatManager.EXCEPTION_SET_HTML,
