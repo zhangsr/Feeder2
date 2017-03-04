@@ -58,7 +58,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
         SubscriptionController.getInstance().registerObserver(this);
         SubscriptionController.getInstance().requestData();
         ArticleController.getInstance().registerObserver(this);
-        ArticleController.getInstance().requestData();
+//        ArticleController.getInstance().requestData();
 
         // TODO: 12/18/16 verify
         RefreshManager.getInstance().refreshAll(2000);
