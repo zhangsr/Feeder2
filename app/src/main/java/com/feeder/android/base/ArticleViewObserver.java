@@ -4,6 +4,8 @@ import android.view.View;
 
 import com.feeder.model.Article;
 
+import java.util.List;
+
 /**
  * @description:
  * @author: Match
@@ -12,5 +14,5 @@ import com.feeder.model.Article;
 
 public interface ArticleViewObserver {
     void onItemClick(View view, Article data);
-    boolean onItemLongClick(View view, Article data);
+    boolean onItemLongClick(View view, List<Article> dataList, int pos);
 }

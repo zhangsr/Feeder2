@@ -204,7 +204,25 @@ public class ArticleController extends BaseController {
             }
         });
     }
-    
+
+    public void markAllLaterAsRead(Article article) {
+        int index = mArticleList.indexOf(article);
+        if (index <= 0 || index == mArticleList.size()) {
+            return;
+        }
+        List<Article> articleList = mArticleList.subList(0, index);
+        markAllRead(true, articleList);
+    }
+
+    public void markAllEarlierAsRead(Article article) {
+        int index = mArticleList.indexOf(article);
+        if (index < 0 || index == mArticleList.size() - 1) {
+            return;
+        }
+        List<Article> articleList = mArticleList.subList(index + 1, mArticleList.size());
+        markAllRead(true, articleList);
+    }
+
     public void markAllRead(boolean read, Article... articles) {
         if (articles == null) {
             return;

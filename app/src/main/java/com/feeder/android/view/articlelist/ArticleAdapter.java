@@ -47,7 +47,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
         }, new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                return mObserver.onItemLongClick(v, mArticleList.get(position));
+                return mObserver.onItemLongClick(v, mArticleList, position);
             }
         });
     }

@@ -103,28 +103,41 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
     }
 
     @Override
-    public boolean onItemLongClick(View view, final Article data) {
+    public boolean onItemLongClick(View view, List<Article> dataList, int pos) {
         // TODO: 1/18/17 use state pattern ?
-        if (data.getRead() && !data.getFavorite()) {
-            List<CharSequence> menuList = new ArrayList<>();
-            menuList.add(view.getResources().getString(R.string.mark_as_unread));
-            new MaterialDialog.Builder(mActivity)
-                    .title(data.getTitle())
-                    .items(menuList.toArray(new CharSequence[menuList.size()]))
-                    .itemsCallback(new MaterialDialog.ListCallback() {
-                        @Override
-                        public void onSelection(MaterialDialog materialDialog, View view, int i,
-                                                CharSequence charSequence) {
-                            switch (i) {
-                                case 0:
-                                    ArticleController.getInstance().markAllRead(false, data);
-                                    break;
-                            }
-                        }
-                    }).show();
-            return true;
-        } else {
-            return false;
+        final Article data = dataList.get(pos);
+        List<CharSequence> menuList = new ArrayList<>();
+        if (pos != 0) {
+            menuList.add(view.getResources().getString(R.string.mark_all_above_as_read));
         }
+        if (data.getRead()) {
+            menuList.add(view.getResources().getString(R.string.mark_as_unread));
+        }
+        if (pos != dataList.size() - 1) {
+            menuList.add(view.getResources().getString(R.string.mark_all_below_as_read));
+        }
+        if (menuList.size() == 0) {
+            return true;
+        }
+
+        new MaterialDialog.Builder(mActivity)
+                .title(data.getTitle())
+                .items(menuList.toArray(new CharSequence[menuList.size()]))
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog materialDialog, View view, int i,
+                                            CharSequence charSequence) {
+                        if (charSequence.equals(view.getResources().getString(R.string.mark_all_above_as_read))) {
+
+                            ArticleController.getInstance().markAllLaterAsRead(data);
+                        } else if (charSequence.equals(view.getResources().getString(R.string.mark_as_read))){
+                            ArticleController.getInstance().markAllRead(false, data);
+
+                        } else if (charSequence.equals(view.getResources().getString(R.string.mark_all_below_as_read))){
+                            ArticleController.getInstance().markAllEarlierAsRead(data);
+                        }
+                    }
+                }).show();
+        return true;
     }
 }
