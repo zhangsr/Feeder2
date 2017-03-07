@@ -42,7 +42,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
         holder.bind(mArticleList.get(position), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mObserver.onItemClick(v, mArticleList.get(position));
+                mObserver.onItemClick(v, mArticleList, position);
             }
         }, new View.OnLongClickListener() {
             @Override

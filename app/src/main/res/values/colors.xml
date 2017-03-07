@@ -13,6 +13,7 @@
     <color name="navdrawer_selected_item_background">#1a000000</color>
     <color name="pressed_bg">#11000000</color>
 
+    <color name="white_93">#eeffffff</color>
     <color name="black_87">#b6000000</color>
     <color name="white_87">#b6ffffff</color>
     <color name="black_54">#8a000000</color>

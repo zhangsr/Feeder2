@@ -40,6 +40,7 @@ public class StatManager {
     public static final String EVENT_SHARE_FAILED = "share_failed";
     public static final String EVENT_SHARE_CANCEl = "share_cancel";
     public static final String EVENT_ENTER_LIST = "enter_list";
+    public static final String EVENT_LOAD_ARTICLE_TIME = "load_article_time";
 
     public static final String TAG_SHARE_WECHAT = "share_wechat";
     public static final String TAG_SHARE_MOMENT = "share_moment";
@@ -48,6 +49,10 @@ public class StatManager {
     public static final String TAG_SHARE_POCKET = "share_pocket";
     public static final String TAG_SHARE_EVERNOTE = "share_evernote";
     public static final String TAG_SHARE_OTHERS = "share_others";
+    public static final String TAG_TIME_BELOW_100_MS = "time_below_100_ms";
+    public static final String TAG_TIME_BELOW_300_MS = "time_below_300_ms";
+    public static final String TAG_TIME_BELOW_500_MS = "time_below_500_ms";
+    public static final String TAG_TIME_ABOVE_500_MS = "time_above_500_ms";
 
     public static void init(Context context) {
         if (BuildConfig.DEBUG) {

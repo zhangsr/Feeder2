@@ -87,7 +87,8 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
     }
 
     @Override
-    public void onItemClick(View view, Article data) {
+    public void onItemClick(View view, List<Article> dataList, int pos) {
+        Article data = dataList.get(pos);
         if (!data.getRead()) {
             ArticleController.getInstance().markAllRead(true, data);
         }
@@ -96,10 +97,22 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
 
         Intent intent = new Intent(mActivity, ArticleActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putLong(Constants.KEY_BUNDLE_ARTICLE_ID, data.getId());
+        bundle.putLongArray(Constants.KEY_BUNDLE_ARTICLE_ID, getIdArray(dataList));
+        bundle.putInt(Constants.KEY_BUNDLE_ARTICLE_INDEX, pos);
         intent.putExtras(bundle);
         mActivity.startActivity(intent);
         AnimationHelper.overridePendingTransition(mActivity);
+    }
+
+    private long[] getIdArray(List<Article> dataList) {
+        if (dataList == null || dataList.size() == 0) {
+            return null;
+        }
+        long[] idArray = new long[dataList.size()];
+        for (int i = 0; i < idArray.length; i++) {
+            idArray[i] = dataList.get(i).getId();
+        }
+        return idArray;
     }
 
     @Override

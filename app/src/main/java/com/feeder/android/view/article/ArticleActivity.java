@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,8 +52,9 @@ import static com.feeder.android.util.Constants.*;
  */
 
 // TODO: 10/30/16 to be modularity
-public class ArticleActivity extends BaseSwipeActivity {
+public class ArticleActivity extends BaseSwipeActivity implements View.OnClickListener {
     private Toolbar mToolbar;
+    private ScrollView mScrollView;
     private HtmlTextView mContentTextView;
     private TextView mTitleTextView;
     private TextView mSubscriptionNameTextView;
@@ -59,6 +62,14 @@ public class ArticleActivity extends BaseSwipeActivity {
     private TextView mTimeTextView;
     private ShareHelper mShareHelper;
     private Article mArticle;
+    private long[] mIdArray;
+    private int mCurrentIndex;
+
+    private ImageButton mPreviousBtn;
+    private ImageButton mNextBtn;
+
+    private boolean mIsClickEnabled= true;
+    private boolean mIsLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +77,9 @@ public class ArticleActivity extends BaseSwipeActivity {
         setContentView(R.layout.activity_article);
 
         initViews();
-        Long articleId = getIntent().getExtras().getLong(Constants.KEY_BUNDLE_ARTICLE_ID);
-        loadDataAsync(articleId);
+        mIdArray = getIntent().getExtras().getLongArray(Constants.KEY_BUNDLE_ARTICLE_ID);
+        mCurrentIndex = getIntent().getExtras().getInt(Constants.KEY_BUNDLE_ARTICLE_INDEX);
+        loadDataAsync(mIdArray[mCurrentIndex]);
 
         ShareSDK.initSDK(this);
         mShareHelper = new ShareHelper(this);
@@ -111,6 +123,8 @@ public class ArticleActivity extends BaseSwipeActivity {
             }
         });
 
+        mScrollView = (ScrollView) findViewById(R.id.scroll_container);
+
         mTitleTextView = (TextView) findViewById(R.id.article_title);
         mDateTextView = (TextView) findViewById(R.id.article_date);
         mTimeTextView = (TextView) findViewById(R.id.article_time);
@@ -131,9 +145,16 @@ public class ArticleActivity extends BaseSwipeActivity {
                         getResources().getDimension(R.dimen.text_size_big));
                 break;
         }
+
+        mPreviousBtn = (ImageButton) findViewById(R.id.previous_btn);
+        mPreviousBtn.setOnClickListener(this);
+        mNextBtn = (ImageButton) findViewById(R.id.next_btn);
+        mNextBtn.setOnClickListener(this);
     }
 
     private void loadDataAsync(final Long articleId) {
+        mIsLoading = true;
+        final long timeStart = System.currentTimeMillis();
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
@@ -150,14 +171,34 @@ public class ArticleActivity extends BaseSwipeActivity {
                     return;
                 }
 
+                if (!mArticle.getRead()) {
+                    ArticleController.getInstance().markAllRead(true, mArticle);
+                }
+
                 ThreadManager.post(new Runnable() {
                     @Override
                     public void run() {
                         setData(mArticle, subscriptionList.get(0).getTitle());
+                        mIsLoading = false;
+                        statTimeSpend(timeStart);
                     }
                 });
             }
         });
+    }
+
+    private void statTimeSpend(long timeStart) {
+        String tag;
+        if (timeStart < 100) {
+            tag = StatManager.TAG_TIME_BELOW_100_MS;
+        } else if (timeStart < 300) {
+            tag = StatManager.TAG_TIME_BELOW_300_MS;
+        } else if (timeStart < 500) {
+            tag = StatManager.TAG_TIME_BELOW_500_MS;
+        } else {
+            tag = StatManager.TAG_TIME_ABOVE_500_MS;
+        }
+        StatManager.statEvent(this, StatManager.EVENT_LOAD_ARTICLE_TIME, tag);
     }
 
     private void setData(Article article, String subscriptionName) {
@@ -166,11 +207,31 @@ public class ArticleActivity extends BaseSwipeActivity {
         mTimeTextView.setText(DateUtil.formatTime(article.getPublished()));
         mSubscriptionNameTextView.setText(subscriptionName);
         ArticleUtil.setContent(this, article, mContentTextView, subscriptionName);
+        mScrollView.scrollTo(0, 0);
         if (Strings.isNullOrEmpty(article.getLink())) {
             mToolbar.getMenu().findItem(R.id.action_link).setVisible(false);
+        } else {
+            mToolbar.getMenu().findItem(R.id.action_link).setVisible(true);
         }
         if (article.getFavorite()) {
             mToolbar.getMenu().findItem(R.id.action_fav).setIcon(R.drawable.ic_star_white_24dp);
+        } else {
+            mToolbar.getMenu().findItem(R.id.action_fav).setIcon(R.drawable.ic_star_border_white_24dp);
+        }
+
+        if (mCurrentIndex == 0) {
+            mPreviousBtn.setAlpha(0.2f);
+            mPreviousBtn.setClickable(false);
+        } else {
+            mPreviousBtn.setAlpha(1f);
+            mPreviousBtn.setClickable(true);
+        }
+        if (mCurrentIndex == mIdArray.length - 1) {
+            mNextBtn.setAlpha(0.2f);
+            mNextBtn.setClickable(false);
+        } else {
+            mNextBtn.setAlpha(1f);
+            mNextBtn.setClickable(true);
         }
     }
 
@@ -308,5 +369,33 @@ public class ArticleActivity extends BaseSwipeActivity {
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (!mIsClickEnabled) {
+            return;
+        }
+        recordClick();
+
+        if (v == mPreviousBtn) {
+            if (!mIsLoading) {
+                loadDataAsync(mIdArray[--mCurrentIndex]);
+            }
+        } else if (v == mNextBtn) {
+            if (!mIsLoading) {
+                loadDataAsync(mIdArray[++mCurrentIndex]);
+            }
+        }
+    }
+
+    private void recordClick() {
+        mIsClickEnabled = false;
+        ThreadManager.postDelay(new Runnable() {
+            @Override
+            public void run() {
+                mIsClickEnabled = true;
+            }
+        }, 500);
     }
 }
