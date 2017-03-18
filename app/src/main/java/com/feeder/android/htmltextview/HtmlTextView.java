@@ -148,15 +148,15 @@ public class HtmlTextView extends JellyBeanSpanFixTextView {
         return text;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        linkHit = false;
-        boolean res = super.onTouchEvent(event);
-
-        if (dontConsumeNonUrlClicks) {
-            return linkHit;
-        }
-        return res;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        linkHit = false;
+//        boolean res = super.onTouchEvent(event);
+//
+//        if (dontConsumeNonUrlClicks) {
+//            return linkHit;
+//        }
+//        return res;
+//    }
 
 }

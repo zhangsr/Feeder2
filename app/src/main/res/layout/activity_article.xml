@@ -76,6 +76,7 @@
                     android:textColor="#646464"
                     android:textColorLink="#646464"
                     android:paddingBottom="36dp"
+                    android:textIsSelectable="true"
                     android:textSize="16sp" />
             </LinearLayout>
         </ScrollView>
