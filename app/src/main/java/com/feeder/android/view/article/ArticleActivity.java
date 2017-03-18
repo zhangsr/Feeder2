@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+import com.feeder.android.htmltextview.HtmlTextView;
 import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.ArticleUtil;
 import com.feeder.android.util.Constants;
@@ -35,7 +36,6 @@ import com.feeder.model.Subscription;
 import com.feeder.model.SubscriptionDao;
 import com.google.common.base.Strings;
 
-import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,11 +2,11 @@ package com.feeder.android.util;
 
 import android.content.Context;
 
+import com.feeder.android.htmltextview.HtmlTextView;
 import com.feeder.android.other.HtmlImageGetterEx;
 import com.feeder.model.Article;
 import com.google.common.base.Strings;
 
-import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.util.EmptyStackException;
 
