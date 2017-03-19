@@ -85,6 +85,7 @@
     <string name="search_hint">Search</string>
     <string name="add_custom_success">Add Success</string>
     <string name="add_custom_failed">Add Failed</string>
+    <string name="send_to">Send to</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>

@@ -84,6 +84,7 @@
     <string name="search_hint">搜索</string>
     <string name="add_custom_success">添加成功</string>
     <string name="add_custom_failed">添加失败</string>
+    <string name="send_to">发送到</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>

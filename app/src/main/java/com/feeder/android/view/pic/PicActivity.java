@@ -21,8 +21,10 @@ import me.zsr.feeder.R;
 
 // TODO: 3/19/17 Animate scale from origin location
 // TODO: 3/19/17 slide down to exit
-public class PicActivity extends BaseActivity implements View.OnClickListener{
-
+public class PicActivity extends BaseActivity implements View.OnClickListener,
+        View.OnLongClickListener {
+    private String mImageUrl;
+    private PhotoView mPhotoView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,12 +36,13 @@ public class PicActivity extends BaseActivity implements View.OnClickListener{
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        String imageUrl = bundle.getString(Constants.KEY_BUNDLE_IMAGE_URL);
+        mImageUrl = bundle.getString(Constants.KEY_BUNDLE_IMAGE_URL);
 
-        PhotoView photoView = (PhotoView) findViewById(R.id.photo_view);
-        photoView.setOnClickListener(this);
+        mPhotoView = (PhotoView) findViewById(R.id.photo_view);
+        mPhotoView.setOnClickListener(this);
+        mPhotoView.setOnLongClickListener(this);
 
-        ImageLoader.getInstance().displayImage(imageUrl, photoView);
+        ImageLoader.getInstance().displayImage(mImageUrl, mPhotoView);
     }
 
     @Override
@@ -51,5 +54,11 @@ public class PicActivity extends BaseActivity implements View.OnClickListener{
     public void onBackPressed() {
         super.onBackPressed();
         AnimationHelper.setFadeTransition(this);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        // TODO: 3/19/17 share and save
+        return false;
     }
 }
