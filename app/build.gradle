@@ -76,4 +76,6 @@ dependencies {
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
     // File Picker
     compile 'com.nbsp:library:1.1'
+    // Pic viewer
+    compile 'com.github.chrisbanes:PhotoView:2.0.0'
 }

@@ -24,6 +24,8 @@ import android.text.Html;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.feeder.android.other.LinkMovementMethodEx;
+
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -104,7 +106,7 @@ public class HtmlTextView extends JellyBeanSpanFixTextView {
         }
 
         // make links work
-        setMovementMethod(LocalLinkMovementMethod.getInstance());
+        setMovementMethod(LinkMovementMethodEx.getInstance());
     }
 
     /**

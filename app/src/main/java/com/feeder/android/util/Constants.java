@@ -30,6 +30,7 @@ public class Constants {
     public static final String KEY_BUNDLE_SUBSCRIPTION_ICON_URL = "subscription_icon_url";
     public static final String KEY_BUNDLE_ARTICLE_ID = "article_id";
     public static final String KEY_BUNDLE_ARTICLE_INDEX = "article_index";
+    public static final String KEY_BUNDLE_IMAGE_URL = "image_url";
 
     public static final String PACKAGE_NAME_FEEDER = "me.zsr.feeder";
     public static final String PACKAGE_NAME_INSTAPAPER = "com.instapaper.android";
