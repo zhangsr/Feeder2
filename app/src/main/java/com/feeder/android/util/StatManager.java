@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVOSCloud;
+import com.feeder.common.LogUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,10 +51,12 @@ public class StatManager {
     public static final String TAG_SHARE_POCKET = "share_pocket";
     public static final String TAG_SHARE_EVERNOTE = "share_evernote";
     public static final String TAG_SHARE_OTHERS = "share_others";
-    public static final String TAG_TIME_BELOW_100_MS = "time_below_100_ms";
-    public static final String TAG_TIME_BELOW_300_MS = "time_below_300_ms";
-    public static final String TAG_TIME_BELOW_500_MS = "time_below_500_ms";
-    public static final String TAG_TIME_ABOVE_500_MS = "time_above_500_ms";
+    public static final String TAG_TIME_0_TO_50_MS = "time_0_to_50_ms";
+    public static final String TAG_TIME_50_TO_100_MS = "time_50_to_100_ms";
+    public static final String TAG_TIME_100_TO_300_MS = "time_100_to_300_ms";
+    public static final String TAG_TIME_300_TO_500_MS = "time_300_to_500_ms";
+    public static final String TAG_TIME_500_TO_800_MS = "time_500_to_800_ms";
+    public static final String TAG_TIME_ABOVE_800_MS = "time_above_800_ms";
 
     public static void init(Context context) {
         if (BuildConfig.DEBUG) {
@@ -74,12 +77,16 @@ public class StatManager {
     public static void statEvent(Context context, String event, String tag) {
         if (!BuildConfig.DEBUG) {
             AVAnalytics.onEvent(context, event, tag);
+        } else {
+            LogUtil.e("statEvent event=" + event + " tag=" + tag);
         }
     }
 
     public static void statEvent(Context context, String event) {
         if (!BuildConfig.DEBUG) {
             AVAnalytics.onEvent(context, event);
+        } else {
+            LogUtil.e("statEvent event=" + event);
         }
     }
 

@@ -180,23 +180,27 @@ public class ArticleActivity extends BaseSwipeActivity implements View.OnClickLi
                     public void run() {
                         setData(mArticle, subscriptionList.get(0).getTitle());
                         mIsLoading = false;
-                        statTimeSpend(timeStart);
+                        statTimeSpend(System.currentTimeMillis() - timeStart);
                     }
                 });
             }
         });
     }
 
-    private void statTimeSpend(long timeStart) {
+    private void statTimeSpend(long timeSpent) {
         String tag;
-        if (timeStart < 100) {
-            tag = StatManager.TAG_TIME_BELOW_100_MS;
-        } else if (timeStart < 300) {
-            tag = StatManager.TAG_TIME_BELOW_300_MS;
-        } else if (timeStart < 500) {
-            tag = StatManager.TAG_TIME_BELOW_500_MS;
+        if (timeSpent < 50) {
+            tag = StatManager.TAG_TIME_0_TO_50_MS;
+        } else if (timeSpent < 100) {
+            tag = StatManager.TAG_TIME_50_TO_100_MS;
+        } else if (timeSpent < 300) {
+            tag = StatManager.TAG_TIME_100_TO_300_MS;
+        } else if (timeSpent < 500) {
+            tag = StatManager.TAG_TIME_300_TO_500_MS;
+        } else if (timeSpent < 800) {
+            tag = StatManager.TAG_TIME_500_TO_800_MS;
         } else {
-            tag = StatManager.TAG_TIME_ABOVE_500_MS;
+            tag = StatManager.TAG_TIME_ABOVE_800_MS;
         }
         StatManager.statEvent(this, StatManager.EVENT_LOAD_ARTICLE_TIME, tag);
     }
