@@ -1,6 +1,7 @@
 package com.feeder.android.other;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Layout;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.Constants;
+import com.feeder.android.util.ExceptionHandlerEx;
 import com.feeder.android.view.pic.PicActivity;
 
 /**
@@ -61,7 +63,13 @@ public class LinkMovementMethodEx extends LinkMovementMethod {
             }
         }
 
-        return super.onTouchEvent(widget, buffer, event);
+        try {
+            return super.onTouchEvent(widget, buffer, event);
+        } catch (ActivityNotFoundException e) {
+            ExceptionHandlerEx.statException(widget.getContext(), e);
+        }
+
+        return false;
     }
 
     private void onClick(TextView widget, ImageSpan imageSpan) {

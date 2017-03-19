@@ -20,7 +20,7 @@ public class IntentUtil {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            // TODO: 3/7/17  tips or ?
+            ExceptionHandler.silentHandle(e);
         }
     }
 }
