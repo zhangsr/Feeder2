@@ -51,7 +51,6 @@ public class MainActivity extends BaseActivity {
     private DrawerLayout mDrawerLayout;
     private boolean mCanBackExit;
     private MainToolbarController mToolbarController;
-    private OPMLHelper mOPMLHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +65,6 @@ public class MainActivity extends BaseActivity {
 
         mAccountsPresenter.onCreate();
         mSubscriptionsPresenter.onCreate();
-
-        mOPMLHelper = new OPMLHelper(this);
 
         StatManager.trackAppOpened(getIntent());
     }
@@ -245,7 +242,7 @@ public class MainActivity extends BaseActivity {
         if (requestCode == OPML_FILE_SELECT_CODE && resultCode == RESULT_OK) {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
             StatManager.statEvent(MainActivity.this, StatManager.EVENT_IMPORT_OPML_GET_FILE);
-            mOPMLHelper.add(filePath);
+            OPMLHelper.getInstance().add(filePath, MainActivity.this);
         }
     }
 

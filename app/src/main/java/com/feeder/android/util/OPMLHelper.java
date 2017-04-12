@@ -32,14 +32,16 @@ public class OPMLHelper {
     private static final String OPML = "opml";
     private static final String BODY = "body";
     private static final String OUTLINE = "outline";
+    private static OPMLHelper sInstance;
 
-    private Activity mActivity;
-
-    public OPMLHelper(Activity activity) {
-        mActivity = activity;
+    public static OPMLHelper getInstance() {
+        if (sInstance == null) {
+            sInstance = new OPMLHelper();
+        }
+        return sInstance;
     }
 
-    public void add(String filePath) {
+    public void add(String filePath, Activity activity) {
         if (Strings.isNullOrEmpty(filePath)) {
             return;
         }
@@ -56,16 +58,16 @@ public class OPMLHelper {
             List<Subscription> subscriptionList = readOPML(parser);
             SubscriptionModel.getInstance().insert(subscriptionList);
 
-            StatManager.statEvent(mActivity, StatManager.EVENT_IMPORT_OPML_SUCCESS);
-            Toast.makeText(mActivity, R.string.import_success, Toast.LENGTH_SHORT).show();
+            StatManager.statEvent(activity, StatManager.EVENT_IMPORT_OPML_SUCCESS);
+            Toast.makeText(activity, R.string.import_success, Toast.LENGTH_SHORT).show();
         } catch (XmlPullParserException e) {
             StatManager.uploadFile("OPMLFailed", file);
-            StatManager.statEvent(mActivity, StatManager.EVENT_IMPORT_OPML_FAILED);
-            Toast.makeText(mActivity, R.string.import_failed_format, Toast.LENGTH_SHORT).show();
+            StatManager.statEvent(activity, StatManager.EVENT_IMPORT_OPML_FAILED);
+            Toast.makeText(activity, R.string.import_failed_format, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             StatManager.uploadFile("OPMLFailed", file);
-            StatManager.statEvent(mActivity, StatManager.EVENT_IMPORT_OPML_FAILED);
-            Toast.makeText(mActivity, R.string.import_failed, Toast.LENGTH_SHORT).show();
+            StatManager.statEvent(activity, StatManager.EVENT_IMPORT_OPML_FAILED);
+            Toast.makeText(activity, R.string.import_failed, Toast.LENGTH_SHORT).show();
         }
     }
 
