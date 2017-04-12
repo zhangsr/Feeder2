@@ -28,7 +28,7 @@ import com.feeder.common.AppUtil;
 import com.feeder.common.IntentUtil;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
-import com.feeder.domain.ArticleModel;
+import com.feeder.domain.model.ArticleModel;
 import com.feeder.domain.DBManager;
 import com.feeder.model.Article;
 import com.feeder.model.ArticleDao;

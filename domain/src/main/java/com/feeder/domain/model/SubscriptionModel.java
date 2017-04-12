@@ -1,6 +1,8 @@
-package com.feeder.domain;
+package com.feeder.domain.model;
 
 import com.feeder.common.ThreadManager;
+import com.feeder.domain.DBManager;
+import com.feeder.domain.RefreshManager;
 import com.feeder.model.ArticleDao;
 import com.feeder.model.Subscription;
 

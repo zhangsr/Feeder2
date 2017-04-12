@@ -1,4 +1,4 @@
-package com.feeder.domain;
+package com.feeder.domain.net;
 
 import android.util.Log;
 
@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.feeder.common.StringUtil;
+import com.feeder.domain.FeedParser;
 import com.feeder.model.Article;
 import com.feeder.model.Subscription;
 

@@ -12,10 +12,10 @@ import com.feeder.android.base.ArticleViewObserver;
 import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.Constants;
 import com.feeder.android.view.article.ArticleActivity;
-import com.feeder.domain.ArticleModel;
-import com.feeder.domain.DataObserver;
-import com.feeder.domain.DataType;
-import com.feeder.domain.ResponseState;
+import com.feeder.domain.model.ArticleModel;
+import com.feeder.domain.model.DataObserver;
+import com.feeder.domain.model.DataType;
+import com.feeder.domain.model.ResponseState;
 import com.feeder.model.Article;
 
 import java.util.ArrayList;

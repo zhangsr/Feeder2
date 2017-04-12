@@ -1,4 +1,4 @@
-package com.feeder.domain;
+package com.feeder.domain.net;
 
 import android.content.Context;
 import android.graphics.Bitmap;

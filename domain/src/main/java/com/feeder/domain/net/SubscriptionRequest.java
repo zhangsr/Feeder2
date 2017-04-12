@@ -1,4 +1,4 @@
-package com.feeder.domain;
+package com.feeder.domain.net;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -7,6 +7,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.feeder.common.LogUtil;
 import com.feeder.common.StringUtil;
+import com.feeder.domain.FeedParser;
 import com.feeder.model.Subscription;
 
 import java.io.UnsupportedEncodingException;

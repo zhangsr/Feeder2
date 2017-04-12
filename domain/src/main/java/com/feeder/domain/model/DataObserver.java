@@ -1,4 +1,4 @@
-package com.feeder.domain;
+package com.feeder.domain.model;
 
 /**
  * @description:

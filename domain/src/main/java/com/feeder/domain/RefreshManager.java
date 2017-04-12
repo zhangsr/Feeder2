@@ -1,6 +1,8 @@
 package com.feeder.domain;
 
 import com.feeder.common.ThreadManager;
+import com.feeder.domain.model.ArticleModel;
+import com.feeder.domain.model.SubscriptionModel;
 import com.feeder.model.Subscription;
 
 import java.util.Arrays;

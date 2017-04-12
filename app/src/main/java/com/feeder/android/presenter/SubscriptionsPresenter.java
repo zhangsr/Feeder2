@@ -15,12 +15,12 @@ import com.feeder.android.util.Constants;
 import com.feeder.android.base.SubscriptionViewObserver;
 import com.feeder.android.view.articlelist.ArticleListActivity;
 import com.feeder.common.StringUtil;
-import com.feeder.domain.ArticleModel;
-import com.feeder.domain.DataObserver;
-import com.feeder.domain.DataType;
+import com.feeder.domain.model.ArticleModel;
+import com.feeder.domain.model.DataObserver;
+import com.feeder.domain.model.DataType;
 import com.feeder.domain.RefreshManager;
-import com.feeder.domain.ResponseState;
-import com.feeder.domain.SubscriptionModel;
+import com.feeder.domain.model.ResponseState;
+import com.feeder.domain.model.SubscriptionModel;
 import com.feeder.model.Subscription;
 
 import java.util.ArrayList;

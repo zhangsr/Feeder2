@@ -5,7 +5,7 @@ import android.util.Xml;
 import android.widget.Toast;
 
 import com.feeder.common.StringUtil;
-import com.feeder.domain.SubscriptionModel;
+import com.feeder.domain.model.SubscriptionModel;
 import com.feeder.model.Subscription;
 import com.google.common.base.Strings;
 

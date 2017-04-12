@@ -16,7 +16,7 @@ import com.feeder.android.util.Constants;
 import com.feeder.android.view.BaseSwipeActivity;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
-import com.feeder.domain.ArticleModel;
+import com.feeder.domain.model.ArticleModel;
 
 import me.zsr.feeder.R;
 

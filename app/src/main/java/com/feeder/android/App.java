@@ -8,7 +8,7 @@ import com.feeder.android.util.StatManager;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.DBManager;
-import com.feeder.domain.VolleySingleton;
+import com.feeder.domain.net.VolleySingleton;
 
 import me.zsr.feeder.BuildConfig;
 

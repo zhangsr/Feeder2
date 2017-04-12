@@ -1,9 +1,12 @@
-package com.feeder.domain;
+package com.feeder.domain.model;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.feeder.common.LogUtil;
 import com.feeder.common.ThreadManager;
+import com.feeder.domain.DBManager;
+import com.feeder.domain.net.ArticleListRequest;
+import com.feeder.domain.net.VolleySingleton;
 import com.feeder.model.Article;
 import com.feeder.model.ArticleDao;
 import com.feeder.model.Subscription;
@@ -124,7 +127,7 @@ public class ArticleModel extends BaseModel {
         });
     }
 
-    void requestNetwork(final Subscription subscription) {
+    public void requestNetwork(final Subscription subscription) {
         if (subscription == null) {
             ArticleModel.this.notifyAll(ResponseState.ERROR);
             return;

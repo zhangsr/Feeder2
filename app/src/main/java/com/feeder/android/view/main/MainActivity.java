@@ -31,7 +31,7 @@ import com.feeder.android.view.BaseActivity;
 import com.feeder.android.view.SettingsActivity;
 import com.feeder.android.view.articlelist.ArticleListActivity;
 import com.feeder.common.ThreadManager;
-import com.feeder.domain.ArticleModel;
+import com.feeder.domain.model.ArticleModel;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 

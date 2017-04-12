@@ -2,10 +2,10 @@ package com.feeder.android.presenter;
 
 import com.feeder.android.base.IAccountsView;
 import com.feeder.android.base.MVPPresenter;
-import com.feeder.domain.AccountModel;
-import com.feeder.domain.DataObserver;
-import com.feeder.domain.DataType;
-import com.feeder.domain.ResponseState;
+import com.feeder.domain.model.AccountModel;
+import com.feeder.domain.model.DataObserver;
+import com.feeder.domain.model.DataType;
+import com.feeder.domain.model.ResponseState;
 
 /**
  * @description:
