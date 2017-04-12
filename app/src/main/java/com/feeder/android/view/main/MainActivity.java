@@ -31,7 +31,7 @@ import com.feeder.android.view.BaseActivity;
 import com.feeder.android.view.SettingsActivity;
 import com.feeder.android.view.articlelist.ArticleListActivity;
 import com.feeder.common.ThreadManager;
-import com.feeder.domain.ArticleController;
+import com.feeder.domain.ArticleModel;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ArticleListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID, ArticleController.ID_FAV);
+                bundle.putLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID, ArticleModel.ID_FAV);
                 bundle.putString(Constants.KEY_BUNDLE_SUBSCRIPTION_TITLE, getString(R.string.fav));
                 bundle.putString(Constants.KEY_BUNDLE_SUBSCRIPTION_ICON_URL, "");
                 intent.putExtras(bundle);

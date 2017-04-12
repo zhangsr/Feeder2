@@ -2,7 +2,7 @@ package com.feeder.android.presenter;
 
 import com.feeder.android.base.IAccountsView;
 import com.feeder.android.base.MVPPresenter;
-import com.feeder.domain.AccountController;
+import com.feeder.domain.AccountModel;
 import com.feeder.domain.DataObserver;
 import com.feeder.domain.DataType;
 import com.feeder.domain.ResponseState;
@@ -22,18 +22,18 @@ public class AccountsPresenter implements MVPPresenter, DataObserver {
     @Override
     public void onCreate() {
         mAccountsView.showLoading();
-        mAccountsView.setDataSource(AccountController.getInstance().getDataSource());
+        mAccountsView.setDataSource(AccountModel.getInstance().getDataSource());
     }
 
     @Override
     public void onStart() {
-        AccountController.getInstance().registerObserver(this);
-        AccountController.getInstance().requestData();
+        AccountModel.getInstance().registerObserver(this);
+        AccountModel.getInstance().requestData();
     }
 
     @Override
     public void onStop() {
-        AccountController.getInstance().unRegisterObserver(this);
+        AccountModel.getInstance().unRegisterObserver(this);
     }
 
     @Override

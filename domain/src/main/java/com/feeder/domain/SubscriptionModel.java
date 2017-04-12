@@ -13,15 +13,15 @@ import java.util.List;
  * @author: Match
  * @date: 8/8/16
  */
-public class SubscriptionController extends BaseController {
-    private static SubscriptionController sAccountController;
+public class SubscriptionModel extends BaseModel {
+    private static SubscriptionModel sModel;
     private List<Subscription> mSubscriptionList = new ArrayList<>();
 
-    public static SubscriptionController getInstance() {
-        if (sAccountController == null) {
-            sAccountController = new SubscriptionController();
+    public static SubscriptionModel getInstance() {
+        if (sModel == null) {
+            sModel = new SubscriptionModel();
         }
-        return sAccountController;
+        return sModel;
     }
 
     @Override
@@ -83,18 +83,18 @@ public class SubscriptionController extends BaseController {
             subscription.setTotalCount(totalCount);
             subscription.setUnreadCount(unreadCount);
         }
-        SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
+        SubscriptionModel.this.notifyAll(ResponseState.SUCCESS);
     }
 
     public void delete(final Subscription subscription) {
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
-                DBManager.getArticleDao().deleteInTx(ArticleController.getInstance()
+                DBManager.getArticleDao().deleteInTx(ArticleModel.getInstance()
                         .queryBySubscriptionIdSync(subscription.getId()));
                 DBManager.getSubscriptionDao().delete(subscription);
                 mSubscriptionList.remove(subscription);
-                SubscriptionController.this.notifyAll(ResponseState.SUCCESS);
+                SubscriptionModel.this.notifyAll(ResponseState.SUCCESS);
             }
         });
     }

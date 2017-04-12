@@ -10,7 +10,7 @@ import java.util.List;
  * @author: Match
  * @date: 8/8/16
  */
-public abstract class BaseController {
+public abstract class BaseModel {
     private List<DataObserver> mObserverList = new ArrayList<>();
 
     public abstract List<?> getDataSource();

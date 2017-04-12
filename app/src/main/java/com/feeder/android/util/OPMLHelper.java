@@ -5,7 +5,7 @@ import android.util.Xml;
 import android.widget.Toast;
 
 import com.feeder.common.StringUtil;
-import com.feeder.domain.SubscriptionController;
+import com.feeder.domain.SubscriptionModel;
 import com.feeder.model.Subscription;
 import com.google.common.base.Strings;
 
@@ -54,7 +54,7 @@ public class OPMLHelper {
             parser.setInput(fis, null);
             parser.nextTag();
             List<Subscription> subscriptionList = readOPML(parser);
-            SubscriptionController.getInstance().insert(subscriptionList);
+            SubscriptionModel.getInstance().insert(subscriptionList);
 
             StatManager.statEvent(mActivity, StatManager.EVENT_IMPORT_OPML_SUCCESS);
             Toast.makeText(mActivity, R.string.import_success, Toast.LENGTH_SHORT).show();

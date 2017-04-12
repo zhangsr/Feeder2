@@ -21,19 +21,19 @@ import java.util.List;
  * @date: 10/22/16
  */
 
-public class ArticleController extends BaseController {
+public class ArticleModel extends BaseModel {
     public static final long ID_FAV = -2L;
     private static final long ID_UNKNOWN = -1L;
     private static final long ID_ALL = 0L;
-    private static ArticleController sArticleController;
+    private static ArticleModel sModel;
     private List<Article> mArticleList = new ArrayList<>();
     private long mCurrentSubscriptionId = ID_UNKNOWN;
 
-    public static ArticleController getInstance() {
-        if (sArticleController == null) {
-            sArticleController = new ArticleController();
+    public static ArticleModel getInstance() {
+        if (sModel == null) {
+            sModel = new ArticleModel();
         }
-        return sArticleController;
+        return sModel;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ArticleController extends BaseController {
                 // TODO: 11/15/16 too heavy ?
                 mArticleList.addAll(DBManager.getArticleDao().queryBuilder().where(
                         ArticleDao.Properties.Trash.eq(false)).list());
-                ArticleController.this.notifyAll(ResponseState.SUCCESS);
+                ArticleModel.this.notifyAll(ResponseState.SUCCESS);
             }
         });
     }
@@ -116,7 +116,7 @@ public class ArticleController extends BaseController {
                 List<Subscription> subscriptionList = DBManager.getSubscriptionDao().queryBuilder().where(
                         SubscriptionDao.Properties.Id.eq(subscriptionId)).list();
                 if (subscriptionList.size() != 1) {
-                    ArticleController.this.notifyAll(ResponseState.ERROR);
+                    ArticleModel.this.notifyAll(ResponseState.ERROR);
                     return;
                 }
                 requestNetwork(subscriptionList.get(0));
@@ -126,7 +126,7 @@ public class ArticleController extends BaseController {
 
     void requestNetwork(final Subscription subscription) {
         if (subscription == null) {
-            ArticleController.this.notifyAll(ResponseState.ERROR);
+            ArticleModel.this.notifyAll(ResponseState.ERROR);
             return;
         }
         ArticleListRequest request = new ArticleListRequest(
@@ -187,12 +187,12 @@ public class ArticleController extends BaseController {
                 }
             }
             if (changed) {
-                ArticleController.this.notifyAll(ResponseState.SUCCESS);
+                ArticleModel.this.notifyAll(ResponseState.SUCCESS);
             } else {
-                ArticleController.this.notifyAll(ResponseState.NO_CHANGE);
+                ArticleModel.this.notifyAll(ResponseState.NO_CHANGE);
             }
         } else {
-            ArticleController.this.notifyAll(ResponseState.SUCCESS);
+            ArticleModel.this.notifyAll(ResponseState.SUCCESS);
         }
     }
 

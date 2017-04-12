@@ -15,12 +15,12 @@ import com.feeder.android.util.Constants;
 import com.feeder.android.base.SubscriptionViewObserver;
 import com.feeder.android.view.articlelist.ArticleListActivity;
 import com.feeder.common.StringUtil;
-import com.feeder.domain.ArticleController;
+import com.feeder.domain.ArticleModel;
 import com.feeder.domain.DataObserver;
 import com.feeder.domain.DataType;
 import com.feeder.domain.RefreshManager;
 import com.feeder.domain.ResponseState;
-import com.feeder.domain.SubscriptionController;
+import com.feeder.domain.SubscriptionModel;
 import com.feeder.model.Subscription;
 
 import java.util.ArrayList;
@@ -48,17 +48,17 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     @Override
     public void onCreate() {
         mSubscriptionView.showLoading();
-        mSubscriptionList = SubscriptionController.getInstance().getDataSource();
+        mSubscriptionList = SubscriptionModel.getInstance().getDataSource();
         mCategoryList.add(new Category(mSubscriptionList));
         mSubscriptionView.setDataSource(mCategoryList);
     }
 
     @Override
     public void onStart() {
-        SubscriptionController.getInstance().registerObserver(this);
-        SubscriptionController.getInstance().requestData();
-        ArticleController.getInstance().registerObserver(this);
-//        ArticleController.getInstance().requestData();
+        SubscriptionModel.getInstance().registerObserver(this);
+        SubscriptionModel.getInstance().requestData();
+        ArticleModel.getInstance().registerObserver(this);
+//        ArticleModel.getInstance().requestData();
 
         // TODO: 12/18/16 verify
         RefreshManager.getInstance().refreshAll(2000);
@@ -66,13 +66,13 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
 
     @Override
     public void onStop() {
-        SubscriptionController.getInstance().unRegisterObserver(this);
-        ArticleController.getInstance().unRegisterObserver(this);
+        SubscriptionModel.getInstance().unRegisterObserver(this);
+        ArticleModel.getInstance().unRegisterObserver(this);
     }
 
     @Override
     public void onDestroy() {
-        ArticleController.getInstance().markReadTrash();
+        ArticleModel.getInstance().markReadTrash();
     }
 
     @Override
@@ -90,7 +90,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
                     mSubscriptionView.hideLoading();
                     mSubscriptionView.notifyDataChanged();
                 } else if (type == DataType.ARTICLE) {
-                    SubscriptionController.getInstance().updateArticleInfo();
+                    SubscriptionModel.getInstance().updateArticleInfo();
                 }
                 break;
             case NO_CHANGE:
@@ -127,10 +127,10 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
                                             CharSequence charSequence) {
                         switch (i) {
                             case 0:
-                                ArticleController.getInstance().markAllRead(true, data.getId());
+                                ArticleModel.getInstance().markAllRead(true, data.getId());
                                 break;
                             case 1:
-                                SubscriptionController.getInstance().delete(data);
+                                SubscriptionModel.getInstance().delete(data);
                                 break;
                         }
                     }

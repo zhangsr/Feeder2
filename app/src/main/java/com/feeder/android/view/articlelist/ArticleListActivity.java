@@ -16,7 +16,7 @@ import com.feeder.android.util.Constants;
 import com.feeder.android.view.BaseSwipeActivity;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
-import com.feeder.domain.ArticleController;
+import com.feeder.domain.ArticleModel;
 
 import me.zsr.feeder.R;
 
@@ -61,7 +61,7 @@ public class ArticleListActivity extends BaseSwipeActivity {
                         mArticlePresenter.onDataChanged();
                         break;
                     case R.id.action_mark_as_all_read:
-                        ArticleController.getInstance().markAllRead(true, id);
+                        ArticleModel.getInstance().markAllRead(true, id);
                         ThreadManager.postDelay(new Runnable() {
                             @Override
                             public void run() {

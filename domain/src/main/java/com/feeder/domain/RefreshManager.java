@@ -29,7 +29,7 @@ public class RefreshManager {
 
     public void refresh(List<Subscription> subscriptions) {
         for (Subscription subscription : subscriptions) {
-            ArticleController.getInstance().requestNetwork(subscription);
+            ArticleModel.getInstance().requestNetwork(subscription);
         }
     }
 
@@ -37,7 +37,7 @@ public class RefreshManager {
         ThreadManager.postDelay(new Runnable() {
             @Override
             public void run() {
-                refresh(SubscriptionController.getInstance().getDataSource());
+                refresh(SubscriptionModel.getInstance().getDataSource());
             }
         }, delay);
     }

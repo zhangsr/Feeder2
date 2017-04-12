@@ -12,7 +12,7 @@ import com.feeder.android.base.ArticleViewObserver;
 import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.Constants;
 import com.feeder.android.view.article.ArticleActivity;
-import com.feeder.domain.ArticleController;
+import com.feeder.domain.ArticleModel;
 import com.feeder.domain.DataObserver;
 import com.feeder.domain.DataType;
 import com.feeder.domain.ResponseState;
@@ -44,23 +44,23 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
     @Override
     public void onCreate() {
         mArticlesView.showLoading();
-        mArticlesView.setDataSource(ArticleController.getInstance().getDataSource(mSubscriptionId));
+        mArticlesView.setDataSource(ArticleModel.getInstance().getDataSource(mSubscriptionId));
     }
 
     @Override
     public void onStart() {
-        ArticleController.getInstance().registerObserver(this);
-        if (mSubscriptionId == ArticleController.ID_FAV) {
-            ArticleController.getInstance().requestFav();
+        ArticleModel.getInstance().registerObserver(this);
+        if (mSubscriptionId == ArticleModel.ID_FAV) {
+            ArticleModel.getInstance().requestFav();
         } else {
-            ArticleController.getInstance().requestData(mSubscriptionId);
-            ArticleController.getInstance().requestNetwork(mSubscriptionId);
+            ArticleModel.getInstance().requestData(mSubscriptionId);
+            ArticleModel.getInstance().requestNetwork(mSubscriptionId);
         }
     }
 
     @Override
     public void onStop() {
-        ArticleController.getInstance().unRegisterObserver(this);
+        ArticleModel.getInstance().unRegisterObserver(this);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
     public void onItemClick(View view, List<Article> dataList, int pos) {
         Article data = dataList.get(pos);
         if (!data.getRead()) {
-            ArticleController.getInstance().markAllRead(true, data);
+            ArticleModel.getInstance().markAllRead(true, data);
         }
 
         // TODO: 11/10/16 if no content and desc, shake then stay, and upload source
@@ -142,12 +142,12 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
                                             CharSequence charSequence) {
                         if (charSequence.equals(view.getResources().getString(R.string.mark_all_above_as_read))) {
 
-                            ArticleController.getInstance().markAllLaterAsRead(data);
+                            ArticleModel.getInstance().markAllLaterAsRead(data);
                         } else if (charSequence.equals(view.getResources().getString(R.string.mark_as_read))){
-                            ArticleController.getInstance().markAllRead(false, data);
+                            ArticleModel.getInstance().markAllRead(false, data);
 
                         } else if (charSequence.equals(view.getResources().getString(R.string.mark_all_below_as_read))){
-                            ArticleController.getInstance().markAllEarlierAsRead(data);
+                            ArticleModel.getInstance().markAllEarlierAsRead(data);
                         }
                     }
                 }).show();

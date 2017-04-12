@@ -24,7 +24,7 @@ import com.feeder.common.LogUtil;
 import com.feeder.common.StringUtil;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.FeedlyUtils;
-import com.feeder.domain.SubscriptionController;
+import com.feeder.domain.SubscriptionModel;
 import com.feeder.domain.SubscriptionRequest;
 import com.feeder.domain.VolleySingleton;
 import com.feeder.model.FeedlyResult;
@@ -167,7 +167,7 @@ public class MainToolbarController {
                 }
                 final FeedlyResult result = mResultList.get(position);
                 Subscription subscription = FeedlyUtils.result2Subscription(result);
-                SubscriptionController.getInstance().insert(subscription);
+                SubscriptionModel.getInstance().insert(subscription);
                 mSearchView.closeSearch();
                 StatManager.statEvent(mActivity, StatManager.EVENT_SEARCH_RESULT_CLICK);
             }
@@ -249,7 +249,7 @@ public class MainToolbarController {
                     return;
                 }
                 response.setUrl(url);
-                SubscriptionController.getInstance().insert(response);
+                SubscriptionModel.getInstance().insert(response);
                 Toast.makeText(mActivity, R.string.add_custom_success, Toast.LENGTH_SHORT).show();
                 StatManager.statEvent(mActivity, StatManager.EVENT_CUSTOM_SOURCE_ADD_SUCCESS, url);
             }

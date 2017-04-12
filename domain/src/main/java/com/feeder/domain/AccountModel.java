@@ -11,17 +11,17 @@ import java.util.List;
  * @author: Match
  * @date: 7/22/16
  */
-public class AccountController extends BaseController {
-    private static AccountController sAccountController;
+public class AccountModel extends BaseModel {
+    private static AccountModel sModel;
     private List<Account> mAccountList = new ArrayList<>();
 
-    private AccountController(){}
+    private AccountModel(){}
 
-    public static AccountController getInstance() {
-        if (sAccountController == null) {
-            sAccountController = new AccountController();
+    public static AccountModel getInstance() {
+        if (sModel == null) {
+            sModel = new AccountModel();
         }
-        return sAccountController;
+        return sModel;
     }
 
     @Override
@@ -36,9 +36,9 @@ public class AccountController extends BaseController {
             @Override
             public void run() {
                 if (mAccountList.size() == 0) {
-                    AccountController.this.notifyAll(ResponseState.SUCCESS);
+                    AccountModel.this.notifyAll(ResponseState.SUCCESS);
                 } else {
-                    AccountController.this.notifyAll(ResponseState.NO_CHANGE);
+                    AccountModel.this.notifyAll(ResponseState.NO_CHANGE);
                 }
             }
         });
