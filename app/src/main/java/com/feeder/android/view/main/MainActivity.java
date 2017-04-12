@@ -45,7 +45,7 @@ import me.zsr.feeder.R;
 // TODO: 12/17/16 reformat
 public class MainActivity extends BaseActivity {
     private static final int OPML_FILE_SELECT_CODE = 1;
-    private static final int PERMISSION_REQUEST_WIRTE_EXTERNAL_STORAGE = 1;
+    private static final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private MVPPresenter mAccountsPresenter;
     private MVPPresenter mSubscriptionsPresenter;
     private DrawerLayout mDrawerLayout;
@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity {
                 } else {
                     ActivityCompat.requestPermissions(MainActivity.this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            PERMISSION_REQUEST_WIRTE_EXTERNAL_STORAGE);
+                            PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
                     closeDrawer(0);
                 }
 
@@ -252,7 +252,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case PERMISSION_REQUEST_WIRTE_EXTERNAL_STORAGE: {
+            case PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

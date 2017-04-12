@@ -41,6 +41,7 @@ public class ArticleListActivity extends BaseSwipeActivity {
 
         setContentView(R.layout.activity_article_list);
 
+        // TODO: 4/12/17 move toolbar manager to presenter
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.inflateMenu(R.menu.menu_article_list);
         mToolbar.setTitle(title);
