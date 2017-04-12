@@ -31,7 +31,7 @@ public class AccountModel extends BaseModel {
 
     @Override
     public void requestData() {
-        // TODO: 7/22/16 Test
+        LOG_MA("requestData");
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {

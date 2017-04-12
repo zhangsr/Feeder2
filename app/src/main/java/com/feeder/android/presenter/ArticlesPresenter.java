@@ -54,7 +54,6 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
             ArticleModel.getInstance().requestFav();
         } else {
             ArticleModel.getInstance().requestData(mSubscriptionId);
-            ArticleModel.getInstance().requestNetwork(mSubscriptionId);
         }
     }
 

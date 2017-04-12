@@ -33,6 +33,7 @@ public class SubscriptionModel extends BaseModel {
 
     @Override
     public void requestData() {
+        LOG_MA("requestData");
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
@@ -67,6 +68,7 @@ public class SubscriptionModel extends BaseModel {
     }
 
     public void updateArticleInfo() {
+        LOG_MA("updateArticleInfo");
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {

@@ -41,10 +41,12 @@ public class ArticleModel extends BaseModel {
 
     @Override
     public List<Article> getDataSource() {
+        LOG_MA("getDataSource current");
         return mArticleList;
     }
 
     public List<Article> getDataSource(long subscriptionId) {
+        LOG_MA("getDataSource id=" + subscriptionId);
         if (mCurrentSubscriptionId != subscriptionId) {
             mCurrentSubscriptionId = subscriptionId;
             mArticleList.clear();
@@ -54,6 +56,7 @@ public class ArticleModel extends BaseModel {
 
     @Override
     public void requestData() {
+        LOG_MA("requestData all");
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
@@ -73,6 +76,7 @@ public class ArticleModel extends BaseModel {
     }
 
     public void requestData(final long subscriptionId) {
+        LOG_MA("requestData id=" + subscriptionId);
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
@@ -85,6 +89,7 @@ public class ArticleModel extends BaseModel {
     }
 
     public void requestFav() {
+        LOG_MA("requestFav");
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
@@ -128,6 +133,7 @@ public class ArticleModel extends BaseModel {
     }
 
     public void requestNetwork(final Subscription subscription) {
+        LOG_MA("requestNetwork name=" + subscription.getTitle());
         if (subscription == null) {
             ArticleModel.this.notifyAll(ResponseState.ERROR);
             return;
@@ -171,6 +177,7 @@ public class ArticleModel extends BaseModel {
                 if (newArticleList.size() != 0) {
                     // TODO: 10/18/16 how about error ?
                     DBManager.getArticleDao().insertInTx(newArticleList);
+                    SubscriptionModel.getInstance().updateArticleInfo();
                 }
                 updateMemoryIfNeed(subscriptionId, newArticleList, true);
             }
@@ -235,6 +242,7 @@ public class ArticleModel extends BaseModel {
     }
 
     public void markAllRead(final boolean read, final List<Article> articleList) {
+        LOG_MA("markAllRead");
         if (articleList == null || articleList.size() == 0) {
             return;
         }
@@ -245,6 +253,7 @@ public class ArticleModel extends BaseModel {
                     article.setRead(read);
                 }
                 DBManager.getArticleDao().updateInTx(articleList);
+                SubscriptionModel.getInstance().updateArticleInfo();
                 updateMemoryIfNeed(articleList.get(0).getSubscriptionId(), mArticleList, true);
             }
         });
@@ -258,6 +267,7 @@ public class ArticleModel extends BaseModel {
             @Override
             public void run() {
                 DBManager.getArticleDao().update(article);
+                SubscriptionModel.getInstance().updateArticleInfo();
             }
         });
     }
@@ -281,6 +291,7 @@ public class ArticleModel extends BaseModel {
                     article.setTrash(true);
                 }
                 DBManager.getArticleDao().updateInTx(articleListToTrash);
+                SubscriptionModel.getInstance().updateArticleInfo();
             }
         });
     }

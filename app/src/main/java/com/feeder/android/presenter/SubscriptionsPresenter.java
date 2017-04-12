@@ -36,7 +36,6 @@ import me.zsr.feeder.R;
 public class SubscriptionsPresenter implements MVPPresenter, DataObserver, SubscriptionViewObserver {
     private ISubscriptionsView mSubscriptionView;
     private Activity mActivity;
-    private List<Subscription> mSubscriptionList;
     private List<Category> mCategoryList = new ArrayList<>();
 
     public SubscriptionsPresenter(Activity activity, ISubscriptionsView subscriptionsView) {
@@ -48,8 +47,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     @Override
     public void onCreate() {
         mSubscriptionView.showLoading();
-        mSubscriptionList = SubscriptionModel.getInstance().getDataSource();
-        mCategoryList.add(new Category(mSubscriptionList));
+        mCategoryList.add(new Category(SubscriptionModel.getInstance().getDataSource()));
         mSubscriptionView.setDataSource(mCategoryList);
     }
 
@@ -58,9 +56,9 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
         SubscriptionModel.getInstance().registerObserver(this);
         SubscriptionModel.getInstance().requestData();
         ArticleModel.getInstance().registerObserver(this);
-//        ArticleModel.getInstance().requestData();
 
         // TODO: 12/18/16 verify
+        // TODO: 4/12/17 refresh after db return is better ?
         RefreshManager.getInstance().refreshAll(2000);
     }
 
@@ -89,8 +87,6 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
                     updateCategory();
                     mSubscriptionView.hideLoading();
                     mSubscriptionView.notifyDataChanged();
-                } else if (type == DataType.ARTICLE) {
-                    SubscriptionModel.getInstance().updateArticleInfo();
                 }
                 break;
             case NO_CHANGE:
@@ -141,7 +137,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
     private void updateCategory() {
         // construct temp category beyond new subscription list
         List<Category> tempCategoryList = new ArrayList<>();
-        for (Subscription subscription : mSubscriptionList) {
+        for (Subscription subscription : SubscriptionModel.getInstance().getDataSource()) {
             boolean existCategory = false;
             for (Category category : tempCategoryList) {
                 if (StringUtil.equals(category.getName(), subscription.getCategory())) {

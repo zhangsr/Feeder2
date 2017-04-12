@@ -1,5 +1,6 @@
 package com.feeder.domain.model;
 
+import com.feeder.common.LogUtil;
 import com.feeder.common.ThreadManager;
 
 import java.util.ArrayList;
@@ -18,10 +19,12 @@ public abstract class BaseModel {
     public abstract void requestData();
 
     public void registerObserver(DataObserver observer) {
+        LOG_MA("registerObserver " + observer + " to " + getClass().getSimpleName());
         mObserverList.add(observer);
     }
 
     public void unRegisterObserver(DataObserver observer) {
+        LOG_MA("unRegisterObserver " + observer + " to " + getClass().getSimpleName());
         mObserverList.remove(observer);
     }
 
@@ -37,6 +40,13 @@ public abstract class BaseModel {
                 }
             }
         });
+    }
+
+    /**
+     * Model Action
+     */
+    protected void LOG_MA(String action) {
+        LogUtil.d(getClass().getSimpleName() + " MA : " + action);
     }
 
     protected abstract DataType getDataType();
