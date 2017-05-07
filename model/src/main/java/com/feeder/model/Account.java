@@ -22,7 +22,7 @@ public class Account {
 
     private Long signUpTime;
 
-    private String ext1;
+    private String ext1; // unread count
 
     private String ext2;
 

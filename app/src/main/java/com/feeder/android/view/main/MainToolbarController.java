@@ -24,6 +24,7 @@ import com.feeder.common.LogUtil;
 import com.feeder.common.StringUtil;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.FeedlyUtils;
+import com.feeder.domain.model.AccountModel;
 import com.feeder.domain.model.SubscriptionModel;
 import com.feeder.domain.net.SubscriptionRequest;
 import com.feeder.domain.net.VolleySingleton;
@@ -68,13 +69,15 @@ public class MainToolbarController {
     private String mCurrentSearchText = "";
     private LinearLayout mHeaderContainer;
     private TextView mAddCustomSourceTextView;
+    private MainToolbarUIListener mListener;
 
     private static final String[] BLACK_LIST = new String[] {
         "http://feeds.feedburner.com/zhihu-daily"
     };
 
-    public MainToolbarController(Activity activity) {
+    public MainToolbarController(Activity activity, MainToolbarUIListener listener) {
         mActivity = activity;
+        mListener = listener;
         initToolbar();
     }
 
@@ -89,7 +92,7 @@ public class MainToolbarController {
         mToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
 
         mSearchView = (MaterialSearchView) mActivity.findViewById(R.id.search_view);
-        mSearchView.setHint(mActivity.getString(R.string.search_hint));
+        mSearchView.setHint(mActivity.getString(R.string.add_subscription_hint));
         mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -166,7 +169,8 @@ public class MainToolbarController {
                     return;
                 }
                 final FeedlyResult result = mResultList.get(position);
-                Subscription subscription = FeedlyUtils.result2Subscription(result);
+                Subscription subscription = FeedlyUtils.result2Subscription(result,
+                        AccountModel.getInstance().getCurrentAccount().getId());
                 SubscriptionModel.getInstance().insert(subscription);
                 mSearchView.closeSearch();
                 StatManager.statEvent(mActivity, StatManager.EVENT_SEARCH_RESULT_CLICK);
@@ -272,9 +276,22 @@ public class MainToolbarController {
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mSearchView.showSearch();
-                showDimLayer();
-                StatManager.statEvent(mActivity, StatManager.EVENT_MENU_SEARCH_CLICK);
+                // Delay to fix imm not show
+                ThreadManager.postDelay(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSearchView.showSearch();
+                        showDimLayer();
+                        StatManager.statEvent(mActivity, StatManager.EVENT_MENU_SEARCH_CLICK);
+                    }
+                }, 100);
+                return true;
+            }
+        });
+        menu.findItem(R.id.import_impl).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mListener.onImportOPMLClick();
                 return true;
             }
         });
@@ -319,5 +336,9 @@ public class MainToolbarController {
 
     private boolean likeRssAddr(String str) {
         return Patterns.WEB_URL.matcher(str).matches();
+    }
+
+    public interface MainToolbarUIListener {
+        void onImportOPMLClick();
     }
 }

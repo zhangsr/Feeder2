@@ -15,6 +15,7 @@ import com.feeder.android.util.Constants;
 import com.feeder.android.base.SubscriptionViewObserver;
 import com.feeder.android.view.articlelist.ArticleListActivity;
 import com.feeder.common.StringUtil;
+import com.feeder.domain.model.AccountModel;
 import com.feeder.domain.model.ArticleModel;
 import com.feeder.domain.model.DataObserver;
 import com.feeder.domain.model.DataType;
@@ -56,6 +57,7 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
         SubscriptionModel.getInstance().registerObserver(this);
         SubscriptionModel.getInstance().requestData();
         ArticleModel.getInstance().registerObserver(this);
+        AccountModel.getInstance().registerObserver(this);
 
         // TODO: 12/18/16 verify
         // TODO: 4/12/17 refresh after db return is better ?
@@ -87,6 +89,8 @@ public class SubscriptionsPresenter implements MVPPresenter, DataObserver, Subsc
                     updateCategory();
                     mSubscriptionView.hideLoading();
                     mSubscriptionView.notifyDataChanged();
+                } else if (type == DataType.ACCOUNT) {
+                    SubscriptionModel.getInstance().requestData();
                 }
                 break;
             case NO_CHANGE:

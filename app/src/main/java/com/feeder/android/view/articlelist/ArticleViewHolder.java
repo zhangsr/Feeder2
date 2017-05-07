@@ -68,7 +68,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
         mDescTextView.setText(HtmlUtil.getOptimizedDesc(article.getDescription()));
         mTimeTextView.setText(formatTime(article.getPublished()));
 
-        if (SPManager.getInt(KEY_ARTICLE_LIST_LAYOUT, LAYOUT_STYLE_SIMPLE) == LAYOUT_STYLE_RIGHT_IMAGE) {
+        if (SPManager.getInt(KEY_ARTICLE_LIST_LAYOUT, LAYOUT_STYLE_RIGHT_IMAGE) == LAYOUT_STYLE_RIGHT_IMAGE) {
             mImageView.setVisibility(View.VISIBLE);
         } else {
             mImageView.setVisibility(View.GONE);

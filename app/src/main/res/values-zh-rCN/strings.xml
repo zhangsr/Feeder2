@@ -16,7 +16,7 @@
     <string name="invalid_input">无效的输入</string>
     <string name="no_subscription_found">没有找到订阅</string>
     <string name="add_subscription_content">标题、网址或主题</string>
-    <string name="add_subscription_hint">例如输入：酷</string>
+    <string name="add_subscription_hint">标题、网址或源地址</string>
     <string name="none"/>
     <string name="got_it">知道了</string>
     <string name="all">全部</string>
@@ -66,6 +66,7 @@
     <string name="donate_summary">激励 Feeder 开发者</string>
     <string name="app_share_desc">Rss 阅读器，开源，Material Design</string>
     <string name="settings">设置</string>
+    <string name="search">搜索</string>
     <string name="import_opml">导入 OPML</string>
     <string name="import_failed">导入失败</string>
     <string name="import_failed_format">导入失败，文件格式无法识别</string>
@@ -85,9 +86,25 @@
     <string name="add_custom_success">添加成功</string>
     <string name="add_custom_failed">添加失败</string>
     <string name="send_to">发送到</string>
+    <string name="create">创建</string>
+    <string name="create_account">创建账号</string>
+    <string name="local_account">本地账号</string>
+    <string name="account_name">账号名</string>
+    <string name="create_account_first">请先创建账号</string>
+    <string name="rename">重命名</string>
+    <string name="delete">删除</string>
+    <string name="upper_confirm">确认</string>
+    <string name="upper_cancel">取消</string>
+    <string name="delete_account">删除账号</string>
+    <string name="delete_confirm_tip">删除账号及其订阅</string>
+    <string name="default_account_name">RSS</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>
         <item>@string/big</item>
+    </string-array>
+    <string-array name="account_long_click_menu">
+        <item>@string/rename</item>
+        <item>@string/delete</item>
     </string-array>
 </resources>

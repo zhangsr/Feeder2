@@ -8,6 +8,13 @@
         android:id="@+id/action_search"
         android:icon="@drawable/ic_add_white_24dp"
         android:orderInCategory="100"
-        android:title="@string/abc_search_hint"
-        app:showAsAction="always" />
+        android:title="@string/add_subscription"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/import_impl"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:orderInCategory="100"
+        android:title="@string/import_opml"
+        app:showAsAction="collapseActionView" />
 </menu>

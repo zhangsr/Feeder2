@@ -16,7 +16,7 @@
     <string name="invalid_input">Invalid Input</string>
     <string name="no_subscription_found">No Subscription Found</string>
     <string name="add_subscription_content">Title, URL or Topic</string>
-    <string name="add_subscription_hint">e.g. cool</string>
+    <string name="add_subscription_hint">Feed or Site URL ...</string>
     <string name="none"/>
     <string name="got_it">Got it</string>
     <string name="all">All</string>
@@ -67,6 +67,7 @@
     <string name="donate_summary">Inspire Feeder developer.</string>
     <string name="app_share_desc">Rss app with material design and open source.</string>
     <string name="settings">Settings</string>
+    <string name="search">Search</string>
     <string name="import_opml">Import OPML</string>
     <string name="import_failed">Import failed</string>
     <string name="import_failed_format">Import failed, unrecognizable file format</string>
@@ -86,9 +87,25 @@
     <string name="add_custom_success">Add Success</string>
     <string name="add_custom_failed">Add Failed</string>
     <string name="send_to">Send to</string>
+    <string name="create">Create</string>
+    <string name="create_account">Create Account</string>
+    <string name="local_account">Local Account</string>
+    <string name="account_name">Account Name</string>
+    <string name="create_account_first">Please create account first</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_confirm_tip">Delete account and subscriptions belong</string>
+    <string name="upper_confirm">CONFIRM</string>
+    <string name="upper_cancel">CANCEL</string>
+    <string name="default_account_name">RSS</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>
         <item>@string/big</item>
+    </string-array>
+    <string-array name="account_long_click_menu">
+        <item>@string/rename</item>
+        <item>@string/delete</item>
     </string-array>
 </resources>

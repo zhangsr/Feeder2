@@ -3,6 +3,7 @@ package com.feeder.android.view.main;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.feeder.android.base.IAccountsView;
 import com.feeder.android.base.ISubscriptionsView;
 import com.feeder.android.base.MVPPresenter;
@@ -24,6 +26,8 @@ import com.feeder.android.presenter.AccountsPresenter;
 import com.feeder.android.presenter.SubscriptionsPresenter;
 import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.Constants;
+import com.feeder.android.util.EventCenter;
+import com.feeder.android.util.MessageEvent;
 import com.feeder.android.util.OPMLHelper;
 import com.feeder.android.util.StatManager;
 import com.feeder.android.view.AboutActivity;
@@ -31,9 +35,13 @@ import com.feeder.android.view.BaseActivity;
 import com.feeder.android.view.SettingsActivity;
 import com.feeder.android.view.articlelist.ArticleListActivity;
 import com.feeder.common.ThreadManager;
+import com.feeder.domain.model.AccountModel;
 import com.feeder.domain.model.ArticleModel;
+import com.google.common.base.Strings;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import me.zsr.feeder.R;
 
@@ -43,7 +51,7 @@ import me.zsr.feeder.R;
  * @date: 7/18/16
  */
 // TODO: 12/17/16 reformat
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MainToolbarController.MainToolbarUIListener {
     private static final int OPML_FILE_SELECT_CODE = 1;
     private static final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private MVPPresenter mAccountsPresenter;
@@ -69,10 +77,13 @@ public class MainActivity extends BaseActivity {
         StatManager.trackAppOpened(getIntent());
     }
 
+
     private void initToolbar() {
-        mToolbarController = new MainToolbarController(this);
+        mToolbarController = new MainToolbarController(this, this);
         setSupportActionBar(mToolbarController.getToolbar());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_add_white_24dp);
+        mToolbarController.getToolbar().setOverflowIcon(drawable);
     }
 
     private void initDrawerPanel() {
@@ -80,27 +91,25 @@ public class MainActivity extends BaseActivity {
         IAccountsView accountsView = new AccountsView(this);
         LinearLayout.LayoutParams accountsViewLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);
         drawerPanel.addView(accountsView, accountsViewLp);
-        mAccountsPresenter = new AccountsPresenter(accountsView);
+        mAccountsPresenter = new AccountsPresenter(this, accountsView);
 
-        View importEntrance = LayoutInflater.from(this).inflate(R.layout.import_entrance, drawerPanel, false);
-        drawerPanel.addView(importEntrance);
-        ((ImageView) importEntrance.findViewById(R.id.import_img)).setColorFilter(getResources().getColor(R.color.main_grey_normal));
-        importEntrance.setOnClickListener(new View.OnClickListener() {
+        View createAccountEntrance = LayoutInflater.from(this).inflate(R.layout.create_account_entrance, drawerPanel, false);
+        drawerPanel.addView(createAccountEntrance);
+        ((ImageView) createAccountEntrance.findViewById(R.id.create_account_img)).setColorFilter(getResources().getColor(R.color.main_grey_normal));
+        createAccountEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.WRITE_CALENDAR);
-                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                    pickFile();
-                    closeDrawer(1000);
-                } else {
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
-                    closeDrawer(0);
-                }
-
-                StatManager.statEvent(MainActivity.this, StatManager.EVENT_IMPORT_OPML_CLICK);
+                new MaterialDialog.Builder(MainActivity.this)
+                        .title(R.string.create)
+                        .content(R.string.local_account)
+                        .input(R.string.account_name, R.string.none, new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                if (!Strings.isNullOrEmpty(input.toString())) {
+                                    AccountModel.getInstance().insert(input.toString());
+                                }
+                            }
+                        }).show();
             }
         });
 
@@ -170,6 +179,7 @@ public class MainActivity extends BaseActivity {
 
         mAccountsPresenter.onStart();
         mSubscriptionsPresenter.onStart();
+        EventCenter.register(this);
     }
 
     @Override
@@ -178,6 +188,16 @@ public class MainActivity extends BaseActivity {
 
         mAccountsPresenter.onStop();
         mSubscriptionsPresenter.onStop();
+        EventCenter.unregister(this);
+    }
+
+    @Subscribe
+    public void onMessageEvent(String msg) {
+        switch (msg) {
+            case MessageEvent.MSG_SWITCH_ACCOUNT:
+                closeDrawer(300);
+                break;
+        }
     }
 
     @Override
@@ -242,7 +262,7 @@ public class MainActivity extends BaseActivity {
         if (requestCode == OPML_FILE_SELECT_CODE && resultCode == RESULT_OK) {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
             StatManager.statEvent(MainActivity.this, StatManager.EVENT_IMPORT_OPML_GET_FILE);
-            OPMLHelper.getInstance().add(filePath, MainActivity.this);
+            OPMLHelper.getInstance().add(filePath, MainActivity.this, AccountModel.getInstance().getCurrentAccount().getId());
         }
     }
 
@@ -257,5 +277,22 @@ public class MainActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void onImportOPMLClick() {
+        int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.WRITE_CALENDAR);
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            pickFile();
+            closeDrawer(1000);
+        } else {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
+            closeDrawer(0);
+        }
+
+        StatManager.statEvent(MainActivity.this, StatManager.EVENT_IMPORT_OPML_CLICK);
     }
 }

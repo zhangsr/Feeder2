@@ -10,7 +10,7 @@ import com.feeder.model.Subscription;
  */
 
 public class FeedlyUtils {
-    public static Subscription result2Subscription(FeedlyResult result) {
+    public static Subscription result2Subscription(FeedlyResult result, Long accountId) {
         if (result == null) {
             return null;
         }
@@ -27,7 +27,7 @@ public class FeedlyUtils {
                 "",
                 0L,
                 0L,
-                0L,
+                accountId,
                 "",
                 "",
                 ""

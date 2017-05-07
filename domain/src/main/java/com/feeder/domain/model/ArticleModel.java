@@ -62,7 +62,6 @@ public class ArticleModel extends BaseModel {
             public void run() {
                 mCurrentSubscriptionId = ID_ALL;
                 mArticleList.clear();
-                // TODO: 11/15/16 too heavy ?
                 mArticleList.addAll(DBManager.getArticleDao().queryBuilder().where(
                         ArticleDao.Properties.Trash.eq(false)).list());
                 ArticleModel.this.notifyAll(ResponseState.SUCCESS);
@@ -178,6 +177,7 @@ public class ArticleModel extends BaseModel {
                     // TODO: 10/18/16 how about error ?
                     DBManager.getArticleDao().insertInTx(newArticleList);
                     SubscriptionModel.getInstance().updateArticleInfo();
+                    AccountModel.getInstance().updateArticleInfo();
                 }
                 updateMemoryIfNeed(subscriptionId, newArticleList, true);
             }
@@ -254,6 +254,7 @@ public class ArticleModel extends BaseModel {
                 }
                 DBManager.getArticleDao().updateInTx(articleList);
                 SubscriptionModel.getInstance().updateArticleInfo();
+                AccountModel.getInstance().updateArticleInfo();
                 updateMemoryIfNeed(articleList.get(0).getSubscriptionId(), mArticleList, true);
             }
         });
@@ -268,6 +269,7 @@ public class ArticleModel extends BaseModel {
             public void run() {
                 DBManager.getArticleDao().update(article);
                 SubscriptionModel.getInstance().updateArticleInfo();
+                AccountModel.getInstance().updateArticleInfo();
             }
         });
     }
@@ -292,6 +294,7 @@ public class ArticleModel extends BaseModel {
                 }
                 DBManager.getArticleDao().updateInTx(articleListToTrash);
                 SubscriptionModel.getInstance().updateArticleInfo();
+                AccountModel.getInstance().updateArticleInfo();
             }
         });
     }

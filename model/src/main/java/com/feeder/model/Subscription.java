@@ -9,6 +9,7 @@ import org.greenrobot.greendao.annotation.Index;
  * @description:
  * @author: Match
  * @date: 7/22/16
+ * // TODO: 22/04/2017 import same source in different account
  */
 @Entity
 public class Subscription {

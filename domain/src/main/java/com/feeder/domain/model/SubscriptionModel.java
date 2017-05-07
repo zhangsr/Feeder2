@@ -5,6 +5,9 @@ import com.feeder.domain.DBManager;
 import com.feeder.domain.RefreshManager;
 import com.feeder.model.ArticleDao;
 import com.feeder.model.Subscription;
+import com.feeder.model.SubscriptionDao;
+
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +41,8 @@ public class SubscriptionModel extends BaseModel {
             @Override
             public void run() {
                 mSubscriptionList.clear();
-                mSubscriptionList.addAll(DBManager.getSubscriptionDao().loadAll());
+                mSubscriptionList.addAll(DBManager.getSubscriptionDao().queryBuilder().where(
+                        SubscriptionDao.Properties.AccountId.eq(AccountModel.getInstance().getCurrentAccount().getId())).list());
                 // TODO: 10/22/16 network sync
                 fillAndNotifySync();
             }
@@ -101,5 +105,11 @@ public class SubscriptionModel extends BaseModel {
                 SubscriptionModel.this.notifyAll(ResponseState.SUCCESS);
             }
         });
+    }
+
+    List<Subscription> queryByAccountIdSync(long accountId) {
+        QueryBuilder qb = DBManager.getSubscriptionDao().queryBuilder();
+        qb.where(SubscriptionDao.Properties.AccountId.eq(accountId));
+        return qb.list();
     }
 }

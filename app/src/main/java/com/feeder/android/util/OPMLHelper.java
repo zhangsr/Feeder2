@@ -41,7 +41,7 @@ public class OPMLHelper {
         return sInstance;
     }
 
-    public void add(String filePath, Activity activity) {
+    public void add(String filePath, Activity activity, Long accountId) {
         if (Strings.isNullOrEmpty(filePath)) {
             return;
         }
@@ -55,7 +55,7 @@ public class OPMLHelper {
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(fis, null);
             parser.nextTag();
-            List<Subscription> subscriptionList = readOPML(parser);
+            List<Subscription> subscriptionList = readOPML(parser, accountId);
             SubscriptionModel.getInstance().insert(subscriptionList);
 
             StatManager.statEvent(activity, StatManager.EVENT_IMPORT_OPML_SUCCESS);
@@ -71,7 +71,7 @@ public class OPMLHelper {
         }
     }
 
-    private List<Subscription> readOPML(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private List<Subscription> readOPML(XmlPullParser parser, Long accountId) throws IOException, XmlPullParserException {
         List<Subscription> subscriptionList = new ArrayList<>();
         parser.require(XmlPullParser.START_TAG, null, OPML);
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -81,7 +81,7 @@ public class OPMLHelper {
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals(BODY)) {
-                subscriptionList.addAll(readBody(parser));
+                subscriptionList.addAll(readBody(parser, accountId));
             } else {
                 skip(parser);
             }
@@ -89,7 +89,7 @@ public class OPMLHelper {
         return subscriptionList;
     }
 
-    private List<Subscription> readBody(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private List<Subscription> readBody(XmlPullParser parser, Long accountId) throws IOException, XmlPullParserException {
         List<Subscription> subscriptionList = new ArrayList<>();
         parser.require(XmlPullParser.START_TAG, null, BODY);
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -99,7 +99,7 @@ public class OPMLHelper {
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals(OUTLINE)) {
-                subscriptionList.addAll(readOutline(parser));
+                subscriptionList.addAll(readOutline(parser, accountId));
             } else {
                 skip(parser);
             }
@@ -107,11 +107,11 @@ public class OPMLHelper {
         return subscriptionList;
     }
 
-    private List<Subscription> readOutline(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private List<Subscription> readOutline(XmlPullParser parser, Long accountId) throws IOException, XmlPullParserException {
         List<Subscription> subscriptionList = new ArrayList<>();
         String type = parser.getAttributeValue(null, "type");
         if (StringUtil.equals(type, "rss")) {
-            subscriptionList.add(parseSubscription(parser));
+            subscriptionList.add(parseSubscription(parser, accountId));
             parser.nextTag();
         } else {
             parser.require(XmlPullParser.START_TAG, null, OUTLINE);
@@ -122,7 +122,7 @@ public class OPMLHelper {
                 String name = parser.getName();
                 // Starts by looking for the entry tag
                 if (name.equals(OUTLINE)) {
-                    subscriptionList.addAll(readOutline(parser));
+                    subscriptionList.addAll(readOutline(parser, accountId));
                 } else {
                     skip(parser);
                 }
@@ -131,7 +131,7 @@ public class OPMLHelper {
         return subscriptionList;
     }
 
-    private Subscription parseSubscription(XmlPullParser parser) {
+    private Subscription parseSubscription(XmlPullParser parser, Long accountId) {
         String text = parser.getAttributeValue(null, "text");
         String title = parser.getAttributeValue(null, "title");
         String xmlUrl = parser.getAttributeValue(null, "xmlUrl");
@@ -160,7 +160,7 @@ public class OPMLHelper {
                 "",
                 0L,
                 0L,
-                0L,
+                accountId,
                 "",
                 "",
                 ""

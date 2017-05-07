@@ -51,7 +51,7 @@ public class AccountsView extends IAccountsView {
 
     @Override
     public void setDataSource(List<Account> accountList) {
-        mAdapter = new AccountsAdapter(accountList);
+        mAdapter = new AccountsAdapter(accountList, mObserver);
         mRecyclerView.setAdapter(mAdapter);
     }
 }

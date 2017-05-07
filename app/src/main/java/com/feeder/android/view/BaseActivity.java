@@ -19,7 +19,7 @@ import me.zsr.feeder.R;
  * @author: Match
  * @date: 7/18/16
  */
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
