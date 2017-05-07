@@ -35,7 +35,7 @@ public class ArticleUtil {
         } catch (IndexOutOfBoundsException e) {
             StatManager.statEvent(context, StatManager.EXCEPTION_SET_HTML,
                     "subscription=" + subscriptionName + ", desc=" + article.getDescription());
-        } catch (EmptyStackException e) {
+        } catch (RuntimeException e) {
             StatManager.statEvent(context, StatManager.EXCEPTION_PARSE_HTML,
                     "subscription=" + subscriptionName + ", desc=" + article.getDescription()
                             + ", message=" + e.getMessage());
