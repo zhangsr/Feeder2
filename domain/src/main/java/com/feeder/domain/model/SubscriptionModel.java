@@ -84,19 +84,33 @@ public class SubscriptionModel extends BaseModel {
 
     public void updateArticleInfo() {
         LOG_MA("updateArticleInfo");
+        final List<Subscription> list = new ArrayList<>();
+        list.addAll(mSubscriptionList);
+
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
-                for (Subscription subscription : mSubscriptionList) {
-                    long totalCount = DBManager.getArticleDao().queryBuilder().where(
+                for (final Subscription subscription : list) {
+                    final long totalCount = DBManager.getArticleDao().queryBuilder().where(
                             ArticleDao.Properties.SubscriptionId.eq(subscription.getId())).count();
-                    long unreadCount = DBManager.getArticleDao().queryBuilder().where(
+                    final long unreadCount = DBManager.getArticleDao().queryBuilder().where(
                             ArticleDao.Properties.SubscriptionId.eq(subscription.getId()),
                             ArticleDao.Properties.Read.eq(false)).count();
-                    subscription.setTotalCount(totalCount);
-                    subscription.setUnreadCount(unreadCount);
+
+                    ThreadManager.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            subscription.setTotalCount(totalCount);
+                            subscription.setUnreadCount(unreadCount);
+                        }
+                    });
                 }
-                SubscriptionModel.this.notifyAll(ResponseState.SUCCESS);
+                ThreadManager.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        SubscriptionModel.this.notifyAll(ResponseState.SUCCESS);
+                    }
+                });
             }
         });
     }
