@@ -34,6 +34,9 @@ public class AccountModel extends BaseModel {
             insertFirst();
         } else {
             int index = SPManager.getInt(Constants.KEY_ACCOUNT_INDEX, 0);
+            if (index >= mAccountList.size()) {
+                index = 0;
+            }
             mCurrentAccount = mAccountList.get(index);
         }
     }

@@ -40,11 +40,17 @@ public class SubscriptionModel extends BaseModel {
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
-                mSubscriptionList.clear();
-                mSubscriptionList.addAll(DBManager.getSubscriptionDao().queryBuilder().where(
-                        SubscriptionDao.Properties.AccountId.eq(AccountModel.getInstance().getCurrentAccount().getId())).list());
-                // TODO: 10/22/16 network sync
-                fillAndNotifySync();
+                final List<Subscription> list = DBManager.getSubscriptionDao().queryBuilder().where(
+                        SubscriptionDao.Properties.AccountId.eq(AccountModel.getInstance().getCurrentAccount().getId())).list();
+                ThreadManager.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSubscriptionList.clear();
+                        mSubscriptionList.addAll(list);
+                        // TODO: 10/22/16 network sync
+                        updateArticleInfo();
+                    }
+                });
             }
         });
     }
@@ -63,10 +69,15 @@ public class SubscriptionModel extends BaseModel {
             @Override
             public void run() {
                 DBManager.getSubscriptionDao().insertOrReplaceInTx(subscriptions);
-                mSubscriptionList.addAll(subscriptions);
-                fillAndNotifySync();
-                RefreshManager.getInstance().refresh(subscriptions);
-                // TODO: 10/18/16 how about error ?
+                ThreadManager.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSubscriptionList.addAll(subscriptions);
+                        updateArticleInfo();
+                        RefreshManager.getInstance().refresh(subscriptions);
+                        // TODO: 10/18/16 how about error ?
+                    }
+                });
             }
         });
     }
@@ -76,22 +87,18 @@ public class SubscriptionModel extends BaseModel {
         ThreadManager.postInBackground(new Runnable() {
             @Override
             public void run() {
-                fillAndNotifySync();
+                for (Subscription subscription : mSubscriptionList) {
+                    long totalCount = DBManager.getArticleDao().queryBuilder().where(
+                            ArticleDao.Properties.SubscriptionId.eq(subscription.getId())).count();
+                    long unreadCount = DBManager.getArticleDao().queryBuilder().where(
+                            ArticleDao.Properties.SubscriptionId.eq(subscription.getId()),
+                            ArticleDao.Properties.Read.eq(false)).count();
+                    subscription.setTotalCount(totalCount);
+                    subscription.setUnreadCount(unreadCount);
+                }
+                SubscriptionModel.this.notifyAll(ResponseState.SUCCESS);
             }
         });
-    }
-
-    private synchronized void fillAndNotifySync() {
-        for (Subscription subscription : mSubscriptionList) {
-            long totalCount = DBManager.getArticleDao().queryBuilder().where(
-                    ArticleDao.Properties.SubscriptionId.eq(subscription.getId())).count();
-            long unreadCount = DBManager.getArticleDao().queryBuilder().where(
-                    ArticleDao.Properties.SubscriptionId.eq(subscription.getId()),
-                    ArticleDao.Properties.Read.eq(false)).count();
-            subscription.setTotalCount(totalCount);
-            subscription.setUnreadCount(unreadCount);
-        }
-        SubscriptionModel.this.notifyAll(ResponseState.SUCCESS);
     }
 
     public void delete(final Subscription subscription) {
@@ -101,8 +108,13 @@ public class SubscriptionModel extends BaseModel {
                 DBManager.getArticleDao().deleteInTx(ArticleModel.getInstance()
                         .queryBySubscriptionIdSync(subscription.getId()));
                 DBManager.getSubscriptionDao().delete(subscription);
-                mSubscriptionList.remove(subscription);
-                SubscriptionModel.this.notifyAll(ResponseState.SUCCESS);
+                ThreadManager.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSubscriptionList.remove(subscription);
+                        SubscriptionModel.this.notifyAll(ResponseState.SUCCESS);
+                    }
+                });
             }
         });
     }

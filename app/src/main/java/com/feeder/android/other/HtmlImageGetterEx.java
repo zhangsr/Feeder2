@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.feeder.android.htmltextview.HtmlTextView;
+import com.feeder.android.util.StatManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 
@@ -104,7 +105,12 @@ public class HtmlImageGetterEx implements ImageGetter {
             // redraw the image by invalidating the container
             imageGetter.container.invalidate();
             // re-set text to fix images overlapping text
-            imageGetter.container.setText(imageGetter.container.getText());
+            try {
+                imageGetter.container.setText(imageGetter.container.getText());
+            } catch (IndexOutOfBoundsException e) {
+                StatManager.statEvent(imageGetter.container.getContext(), StatManager.EXCEPTION_SET_HTML,
+                        "content=" + imageGetter.container.getText());
+            }
         }
 
         /**
