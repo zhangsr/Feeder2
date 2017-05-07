@@ -13,8 +13,8 @@ android {
         applicationId "me.zsr.feeder"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 28
-        versionName "2.5.0"
+        versionCode 29
+        versionName "2.5.1"
 
         buildConfigField("String", "AVOS_APP_ID", "\"${AVOS_APP_ID}\"")
         buildConfigField("String", "AVOS_CLIENT_KEY", "\"${AVOS_CLIENT_KEY}\"");
