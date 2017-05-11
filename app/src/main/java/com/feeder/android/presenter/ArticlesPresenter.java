@@ -87,6 +87,10 @@ public class ArticlesPresenter implements MVPPresenter, DataObserver, ArticleVie
 
     @Override
     public void onItemClick(View view, List<Article> dataList, int pos) {
+        if (dataList == null || pos >= dataList.size()) {
+            return;
+        }
+
         Article data = dataList.get(pos);
         if (!data.getRead()) {
             ArticleModel.getInstance().markAllRead(true, data);
