@@ -89,6 +89,7 @@
     <string name="create">创建</string>
     <string name="create_account">创建账号</string>
     <string name="local_account">本地账号</string>
+    <string name="ino_account">Inoreader 账号</string>
     <string name="account_name">账号名</string>
     <string name="create_account_first">请先创建账号</string>
     <string name="rename">重命名</string>
@@ -106,5 +107,9 @@
     <string-array name="account_long_click_menu">
         <item>@string/rename</item>
         <item>@string/delete</item>
+    </string-array>
+    <string-array name="account_type_selection">
+        <item>@string/local_account</item>
+        <item>@string/ino_account</item>
     </string-array>
 </resources>

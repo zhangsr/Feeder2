@@ -25,6 +25,7 @@ import java.util.List;
  */
 
 public class ArticleModel extends BaseModel {
+    private static List<DataObserver> mObserverList = new ArrayList<>();
     public static final long ID_FAV = -2L;
     private static final long ID_UNKNOWN = -1L;
     private static final long ID_ALL = 0L;
@@ -67,6 +68,11 @@ public class ArticleModel extends BaseModel {
                 ArticleModel.this.notifyAll(ResponseState.SUCCESS);
             }
         });
+    }
+
+    @Override
+    public List<DataObserver> getObserverList() {
+        return mObserverList;
     }
 
     @Override

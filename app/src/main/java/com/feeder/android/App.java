@@ -9,6 +9,7 @@ import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.AssertManager;
 import com.feeder.domain.DBManager;
+import com.feeder.domain.inoreader.InoreaderManager;
 import com.feeder.domain.model.AccountModel;
 import com.feeder.domain.net.VolleySingleton;
 
@@ -43,6 +44,8 @@ public class App extends Application {
         ImageLoaderManager.init(this);
 
         AssertManager.setEnabled(BuildConfig.DEBUG);
+
+        InoreaderManager.getInstance().init(BuildConfig.INOREADER_CLIENT_SECRET);
 
         // Need to init first end ******************
 

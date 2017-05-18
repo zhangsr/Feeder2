@@ -24,7 +24,7 @@ public class Account {
 
     private String ext1; // unread count
 
-    private String ext2;
+    private String ext2; // type
 
     private String ext3;
 

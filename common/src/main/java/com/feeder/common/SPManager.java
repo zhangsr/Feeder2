@@ -37,4 +37,14 @@ public class SPManager {
         editor.putInt(key, value);
         editor.apply();
     }
+
+    public static void setString(String key, String value) {
+        SharedPreferences.Editor editor = sSharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static String getString(String key, String defValue) {
+        return sSharedPreferences.getString(key, defValue);
+    }
 }

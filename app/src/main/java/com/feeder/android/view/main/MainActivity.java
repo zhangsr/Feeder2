@@ -31,10 +31,13 @@ import com.feeder.android.util.MessageEvent;
 import com.feeder.android.util.OPMLHelper;
 import com.feeder.android.util.StatManager;
 import com.feeder.android.view.AboutActivity;
+import com.feeder.android.view.AuthInoreaderActivity;
 import com.feeder.android.view.BaseActivity;
 import com.feeder.android.view.SettingsActivity;
 import com.feeder.android.view.articlelist.ArticleListActivity;
 import com.feeder.common.ThreadManager;
+import com.feeder.domain.inoreader.InoUserInfo;
+import com.feeder.domain.inoreader.InoreaderManager;
 import com.feeder.domain.model.AccountModel;
 import com.feeder.domain.model.ArticleModel;
 import com.google.common.base.Strings;
@@ -53,6 +56,7 @@ import me.zsr.feeder.R;
 // TODO: 12/17/16 reformat
 public class MainActivity extends BaseActivity implements MainToolbarController.MainToolbarUIListener {
     private static final int OPML_FILE_SELECT_CODE = 1;
+    public static final int AUTH_INO_CODE = 2;
     private static final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private MVPPresenter mAccountsPresenter;
     private MVPPresenter mSubscriptionsPresenter;
@@ -99,17 +103,7 @@ public class MainActivity extends BaseActivity implements MainToolbarController.
         createAccountEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MaterialDialog.Builder(MainActivity.this)
-                        .title(R.string.create)
-                        .content(R.string.local_account)
-                        .input(R.string.account_name, R.string.none, new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                if (!Strings.isNullOrEmpty(input.toString())) {
-                                    AccountModel.getInstance().insert(input.toString());
-                                }
-                            }
-                        }).show();
+                MainDialogHelper.showCreateAccountDialog(MainActivity.this);
             }
         });
 
@@ -263,6 +257,17 @@ public class MainActivity extends BaseActivity implements MainToolbarController.
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
             StatManager.statEvent(MainActivity.this, StatManager.EVENT_IMPORT_OPML_GET_FILE);
             OPMLHelper.getInstance().add(filePath, MainActivity.this, AccountModel.getInstance().getCurrentAccount().getId());
+        } else if (requestCode == AUTH_INO_CODE && resultCode == AuthInoreaderActivity.AUTH_SUCCESS) {
+            InoreaderManager.getInstance().requestUserInfo(new InoreaderManager.UserInfoCallBack() {
+                @Override
+                public void onResult(InoUserInfo userInfo) {
+                    String name = userInfo.userName;
+                    if (Strings.isNullOrEmpty(name)) {
+                        name = userInfo.userEmail;
+                    }
+                    AccountModel.getInstance().insert(name, null, InoreaderManager.TYPE);
+                }
+            });
         }
     }
 

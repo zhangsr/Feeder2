@@ -90,6 +90,7 @@
     <string name="create">Create</string>
     <string name="create_account">Create Account</string>
     <string name="local_account">Local Account</string>
+    <string name="ino_account">Inoreader Account</string>
     <string name="account_name">Account Name</string>
     <string name="create_account_first">Please create account first</string>
     <string name="rename">Rename</string>
@@ -107,5 +108,9 @@
     <string-array name="account_long_click_menu">
         <item>@string/rename</item>
         <item>@string/delete</item>
+    </string-array>
+    <string-array name="account_type_selection">
+        <item>@string/local_account</item>
+        <item>@string/ino_account</item>
     </string-array>
 </resources>

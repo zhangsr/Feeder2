@@ -4,6 +4,7 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def AVOS_APP_ID = properties.getProperty('avos.app.id')
 def AVOS_CLIENT_KEY = properties.getProperty('avos.client.key')
+def INOREADER_CLIENT_SECRET = properties.getProperty('inoreader.client.secret')
 
 android {
     compileSdkVersion 24
@@ -18,6 +19,7 @@ android {
 
         buildConfigField("String", "AVOS_APP_ID", "\"${AVOS_APP_ID}\"")
         buildConfigField("String", "AVOS_CLIENT_KEY", "\"${AVOS_CLIENT_KEY}\"");
+        buildConfigField("String", "INOREADER_CLIENT_SECRET", "\"${INOREADER_CLIENT_SECRET}\"");
     }
 
     productFlavors {

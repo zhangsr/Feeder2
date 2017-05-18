@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.feeder.common.StringUtil;
+import com.feeder.domain.inoreader.InoreaderManager;
 import com.feeder.domain.model.AccountModel;
 import com.feeder.model.Account;
 
@@ -37,7 +39,11 @@ public class AccountViewHolder extends RecyclerView.ViewHolder {
         }
         mItemView.setOnClickListener(clickListener);
         mItemView.setOnLongClickListener(longClickListener);
-        mAvatarImageView.setImageResource(R.drawable.ic_rss_feed_white_24dp);
+        if (StringUtil.equals(account.getExt2(), InoreaderManager.TYPE)) {
+            mAvatarImageView.setImageResource(R.drawable.ic_ino);
+        } else {
+            mAvatarImageView.setImageResource(R.drawable.ic_rss_feed_white_24dp);
+        }
         mNameTextView.setText(account.getName());
         mUnreadTextView.setText(account.getExt1());
 

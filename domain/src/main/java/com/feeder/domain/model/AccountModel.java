@@ -1,6 +1,7 @@
 package com.feeder.domain.model;
 
 import com.feeder.common.SPManager;
+import com.feeder.common.StringUtil;
 import com.feeder.common.ThreadManager;
 import com.feeder.domain.AssertManager;
 import com.feeder.domain.Constants;
@@ -19,10 +20,11 @@ import java.util.List;
  * @date: 7/22/16
  */
 public class AccountModel extends BaseModel {
+    private static List<DataObserver> mObserverList = new ArrayList<>();
     public static final Long DEFAULT_ACCOUNT_ID = 0L;
     private static String sDefaultAccountName = "Default";
     private static AccountModel sModel;
-    private List<Account> mAccountList = new ArrayList<>();
+    private final List<Account> mAccountList = new ArrayList<>();
     private Account mCurrentAccount;
 
     private AccountModel(){
@@ -70,11 +72,16 @@ public class AccountModel extends BaseModel {
                     public void run() {
                         mAccountList.clear();
                         mAccountList.addAll(accountList);
-                        fillAndNotifySync();
+                        updateArticleInfo();
                     }
                 });
             }
         });
+    }
+
+    @Override
+    public List<DataObserver> getObserverList() {
+        return mObserverList;
     }
 
     @Override
@@ -87,6 +94,10 @@ public class AccountModel extends BaseModel {
     }
 
     public void insert(final String name, final Long id) {
+        insert(name, id, "");
+    }
+
+    public void insert(final String name, final Long id, final String type) {
         if (Strings.isNullOrEmpty(name)) {
             return;
         }
@@ -100,7 +111,7 @@ public class AccountModel extends BaseModel {
                         "",
                         System.currentTimeMillis(),
                         "",
-                        "",
+                        type,
                         ""
                 );
                 DBManager.getAccountDao().insertOrReplaceInTx(account);
@@ -113,7 +124,7 @@ public class AccountModel extends BaseModel {
                         AccountModel.this.notifyAll(ResponseState.SUCCESS);
                     }
                 });
-                fillAndNotifySync();
+                updateArticleInfo();
             }
         });
     }
@@ -139,7 +150,7 @@ public class AccountModel extends BaseModel {
             @Override
             public void run() {
                 DBManager.getAccountDao().insertOrReplaceInTx(account);
-                fillAndNotifySync();
+                updateArticleInfo();
             }
         });
     }
@@ -204,7 +215,7 @@ public class AccountModel extends BaseModel {
 
     void updateArticleInfo() {
         LOG_MA("updateArticleInfo");
-        ThreadManager.postInBackground(new Runnable() {
+        ThreadManager.post(new Runnable() {
             @Override
             public void run() {
                 fillAndNotifySync();
@@ -212,23 +223,28 @@ public class AccountModel extends BaseModel {
         });
     }
 
-    private synchronized void fillAndNotifySync() {
+    private void fillAndNotifySync() {
         for (final Account account : mAccountList) {
-            int count = 0;
-            List<Subscription> subscriptionList = SubscriptionModel.getInstance().queryByAccountIdSync(account.getId());
-            for (Subscription subscription : subscriptionList) {
-                long unreadCount = DBManager.getArticleDao().queryBuilder().where(
-                        ArticleDao.Properties.SubscriptionId.eq(subscription.getId()),
-                        ArticleDao.Properties.Read.eq(false)).count();
-                count += unreadCount;
-            }
-
-            final int finalCount = count;
-            ThreadManager.post(new Runnable() {
+            ThreadManager.postInBackground(new Runnable() {
                 @Override
                 public void run() {
-                    account.setExt1(String.valueOf(finalCount));
-                    AccountModel.this.notifyAll(ResponseState.SUCCESS);
+                    int count = 0;
+                    List<Subscription> subscriptionList = SubscriptionModel.getInstance().queryByAccountIdSync(account.getId());
+                    for (Subscription subscription : subscriptionList) {
+                        long unreadCount = DBManager.getArticleDao().queryBuilder().where(
+                                ArticleDao.Properties.SubscriptionId.eq(subscription.getId()),
+                                ArticleDao.Properties.Read.eq(false)).count();
+                        count += unreadCount;
+                    }
+
+                    final int finalCount = count;
+                    ThreadManager.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            account.setExt1(String.valueOf(finalCount));
+                            AccountModel.this.notifyAll(ResponseState.SUCCESS);
+                        }
+                    });
                 }
             });
         }
@@ -260,5 +276,15 @@ public class AccountModel extends BaseModel {
                 AccountModel.this.notifyAll(ResponseState.SUCCESS);
             }
         });
+    }
+
+    // TODO: 18/05/2017 add must run in uithread annotation
+    public boolean isTypeExist(String type) {
+        for (Account account : mAccountList) {
+            if (StringUtil.equals(type, account.getExt2())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
