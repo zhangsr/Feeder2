@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity implements MainToolbarController.
         createAccountEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainDialogHelper.showCreateAccountDialog(MainActivity.this);
+                MainDialogHelper.showCreateLocalAccountDialog(MainActivity.this);
             }
         });
 

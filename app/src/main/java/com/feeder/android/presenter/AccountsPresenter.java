@@ -109,7 +109,7 @@ public class AccountsPresenter implements MVPPresenter, DataObserver, AccountVie
         String hint = mActivity.getResources().getString(R.string.account_name);
         new MaterialDialog.Builder(mActivity)
                 .title(R.string.rename)
-                .content(R.string.local_account)
+//                .content(R.string.local_account)
                 .input(hint, account.getName(), new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {

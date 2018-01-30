@@ -25,7 +25,7 @@ public class MainDialogHelper {
     public static void showCreateLocalAccountDialog(MainActivity activity) {
         new MaterialDialog.Builder(activity)
                 .title(R.string.create)
-                .content(R.string.local_account)
+//                .content(R.string.local_account)
                 .input(R.string.account_name, R.string.none, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {

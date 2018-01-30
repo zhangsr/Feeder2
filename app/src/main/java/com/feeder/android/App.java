@@ -21,6 +21,7 @@ import me.zsr.feeder.R;
  * @author: Match
  * @date: 7/22/16
  */
+// Mark : use account as collection
 public class App extends Application {
 
     @Override

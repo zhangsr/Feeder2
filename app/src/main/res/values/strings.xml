@@ -88,18 +88,18 @@
     <string name="add_custom_failed">Add Failed</string>
     <string name="send_to">Send to</string>
     <string name="create">Create</string>
-    <string name="create_account">Create Account</string>
+    <string name="create_account">Create Collection</string>
     <string name="local_account">Local Account</string>
     <string name="ino_account">Inoreader Account</string>
-    <string name="account_name">Account Name</string>
+    <string name="account_name">Collection Name</string>
     <string name="create_account_first">Please create account first</string>
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
-    <string name="delete_account">Delete Account</string>
-    <string name="delete_confirm_tip">Delete account and subscriptions belong</string>
+    <string name="delete_account">Delete Collection</string>
+    <string name="delete_confirm_tip">Delete collection and subscriptions belong</string>
     <string name="upper_confirm">CONFIRM</string>
     <string name="upper_cancel">CANCEL</string>
-    <string name="default_account_name">RSS</string>
+    <string name="default_account_name">Default Collection</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>
