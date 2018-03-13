@@ -13,6 +13,7 @@ import com.feeder.android.base.MVPPresenter;
 import com.feeder.android.presenter.ArticlesPresenter;
 import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.Constants;
+import com.feeder.android.util.StatManager;
 import com.feeder.android.view.BaseSwipeActivity;
 import com.feeder.common.SPManager;
 import com.feeder.common.ThreadManager;
@@ -35,6 +36,12 @@ public class ArticleListActivity extends BaseSwipeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getExtras() == null) {
+            StatManager.statEvent(this, StatManager.EXCEPTION_EXTRAS_IS_NULL);
+            finish();
+            return;
+        }
 
         final Long id = getIntent().getExtras().getLong(Constants.KEY_BUNDLE_SUBSCRIPTION_ID);
         String title = getIntent().getExtras().getString(Constants.KEY_BUNDLE_SUBSCRIPTION_TITLE);

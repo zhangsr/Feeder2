@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.feeder.android.util.AnimationHelper;
 import com.feeder.android.util.Constants;
+import com.feeder.android.util.StatManager;
 import com.feeder.android.view.BaseActivity;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -35,6 +36,12 @@ public class PicActivity extends BaseActivity implements View.OnClickListener,
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+
+        if (bundle == null) {
+            StatManager.statEvent(this, StatManager.EXCEPTION_EXTRAS_IS_NULL);
+            finish();
+            return;
+        }
 
         mImageUrl = bundle.getString(Constants.KEY_BUNDLE_IMAGE_URL);
 

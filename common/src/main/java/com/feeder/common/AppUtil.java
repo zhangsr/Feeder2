@@ -19,6 +19,8 @@ public class AppUtil {
             installed = true;
         } catch (PackageManager.NameNotFoundException e) {
             installed = false;
+        } catch (RuntimeException e) {
+            installed = false;
         }
         return installed;
     }
